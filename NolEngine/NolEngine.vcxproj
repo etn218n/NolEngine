@@ -11,11 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="include\stb\stbimage.h" />
     <ClInclude Include="src\Core\Log.h" />
-    <ClInclude Include="src\Core\NolAPI.h" />
+    <ClInclude Include="src\NolAPI.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\NolEngine.h" />
     <ClInclude Include="src\Core\Test.h" />
+    <ClInclude Include="src\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Log.cpp" />
@@ -23,6 +26,7 @@
     <ClCompile Include="src\External\spdlog.cpp" />
     <ClCompile Include="src\Core\Test.cpp" />
     <ClCompile Include="src\External\stbimage.cpp" />
+    <ClCompile Include="src\Core\Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -71,7 +75,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>NOL_BUILD_DLL;DEBUG;SPDLOG_COMPILED_LIB;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)NolEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NolEngine\src;$(SolutionDir)NolEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /y "$(OutDir)NolEngine.dll" "$(SolutionDir)Sandbox\bin\$(Configuration)\"</Command>
