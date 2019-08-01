@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Log.cpp" />
+    <ClCompile Include="src\External\spdlog.cpp" />
     <ClCompile Include="src\Core\Test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -66,7 +67,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>NOL_BUILD_DLL;DEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOL_BUILD_DLL;DEBUG;SPDLOG_COMPILED_LIB;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)NolEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
