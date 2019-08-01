@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\stb\stbimage.h" />
     <ClInclude Include="src\Core\Log.h" />
     <ClInclude Include="src\Core\NolAPI.h" />
     <ClInclude Include="src\NolEngine.h" />
@@ -20,6 +21,7 @@
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\External\spdlog.cpp" />
     <ClCompile Include="src\Core\Test.cpp" />
+    <ClCompile Include="src\External\stbimage.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

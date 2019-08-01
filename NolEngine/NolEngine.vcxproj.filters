@@ -27,6 +27,9 @@
     <ClInclude Include="src\Core\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\stb\stbimage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Test.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\External\spdlog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\External\stbimage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
