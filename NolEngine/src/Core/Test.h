@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NolAPI.h"
+#include "PCH.h"
 
 namespace Nol
 {

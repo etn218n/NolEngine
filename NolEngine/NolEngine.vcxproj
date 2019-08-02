@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PCH.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="include\stb\stbimage.h" />
     <ClInclude Include="src\Core\Log.h" />
@@ -21,6 +22,9 @@
     <ClInclude Include="src\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\PCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\External\glad.c" />
     <ClCompile Include="src\External\spdlog.cpp" />
@@ -95,6 +99,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>NOL_BUILD_DLL;SPDLOG_COMPILED_LIB;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)NolEngine\src;$(SolutionDir)NolEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

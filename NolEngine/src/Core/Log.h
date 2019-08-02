@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NolAPI.h"
-#include <memory>
+#include "PCH.h"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"

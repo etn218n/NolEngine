@@ -1,5 +1,4 @@
 #include "Test.h"
-#include "Log.h"
 
 namespace Nol
 {

@@ -39,6 +39,9 @@
     <ClInclude Include="src\NolAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\PCH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Test.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PCH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
