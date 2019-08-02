@@ -1,39 +1,56 @@
 #pragma once
 
 #include "NolAPI.h"
+#include "PCH.h"
 
 namespace Nol
 {
-	enum class EventType
+	class NOL_API EventArgs
 	{
-		None,
-		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		KeyPressed, KeyReleased, KeyTyped,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+	private:
+		void* _sender;
+
+	public:
+		EventArgs(void* sender) : _sender(sender) {}
+		inline void* GetSender() const { return _sender; }
 	};
 
-	enum EventCategory
+	class NOL_API EventHandler
 	{
-		None = 0,
-		EventCategoryApplication = (1 << 0),
-		EventCategoryInput		 = (1 << 1),
-		EventCategoryKeyboard	 = (1 << 2),
-		EventCategoryMouse		 = (1 << 3),
-		EventCategoryMouseButton = (1 << 4),
+	private:
+		std::function<void(EventArgs)> _fn;
+
+	private:
+		template<typename T, typename... U>
+		size_t GetAddress(std::function<T(U...)> f) 
+		{
+			typedef T(fnType)(U...);
+			fnType ** fnPointer = f.template target<fnType*>();
+			return (size_t)*fnPointer;
+		}
+
+	public:
+		EventHandler(std::function<void(EventArgs)> fn) : _fn(fn) { }
+
+		inline void Invoke(EventArgs args) { _fn(args); }
+		inline bool operator==(const EventHandler& other) { return GetAddress(_fn) == GetAddress(other._fn); }
+		inline size_t GetFnAddress() { return GetAddress(_fn); }
 	};
 
 	class NOL_API Event
 	{
 	private:
-		bool _isHandled;
+		std::list<EventHandler> subcriberList;
 
 	public:
-		virtual EventType GetEventType() const = 0;
-		virtual int GetCategoryFlags()   const = 0;
+		Event();
+		~Event();
 
-		inline bool IsInCategory(EventCategory category)
-		{
-			return GetCategoryFlags() & category;
-		}
+		void Invoke(EventArgs args);
+		void AddSubcriber(EventHandler handler);
+		void AddSubcriber(std::function<void(EventArgs)> fn);
+		void RemoveSubcriber(EventHandler handler);
 	};
+
+	
 }

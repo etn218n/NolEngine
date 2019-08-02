@@ -22,6 +22,7 @@
     <ClInclude Include="src\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Event\Event.cpp" />
     <ClCompile Include="src\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
