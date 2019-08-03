@@ -11,18 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Event\Observable.h" />
     <ClInclude Include="src\PCH.h" />
-    <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="include\stb\stbimage.h" />
     <ClInclude Include="src\Core\Log.h" />
     <ClInclude Include="src\NolAPI.h" />
-    <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\NolEngine.h" />
     <ClInclude Include="src\Core\Test.h" />
     <ClInclude Include="src\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Event\Event.cpp" />
     <ClCompile Include="src\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>

@@ -11,14 +11,14 @@ namespace Nol
 	class NOL_API Log
 	{
 	private:
-		static std::shared_ptr<spdlog::logger> _engineLogger;
-		static std::shared_ptr<spdlog::logger> _clientLogger;
+		static std::shared_ptr<spdlog::logger> mEngineLogger;
+		static std::shared_ptr<spdlog::logger> mClientLogger;
 
 	public:
 		static void Init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return _engineLogger; }
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return _clientLogger; }
+		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return mEngineLogger; }
+		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return mClientLogger; }
 	};
 }
 

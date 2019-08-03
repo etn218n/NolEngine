@@ -1,28 +1,22 @@
 #include <NolEngine.h>
 
-void Foo(Nol::EventArgs args)
+void Foo()
 {
-	int *b = (int*)args.GetSender();
-	std::cout << *b << std::endl;
+	std::cout << "Foo" << std::endl;
 }
-
-Nol::EventHandler handler(Foo);
+void Bar()
+{
+	std::cout << "Bar" << std::endl;
+}
 
 int main()
 {
 	Nol::Log::Init();
-	
-	Nol::Event myEvent;
-	//myEvent.AddSubcriber([](Nol::EventArgs e) {std::cout << *(int*)e.GetSender() << std::endl; });
-	myEvent.AddSubcriber(Foo);
-	myEvent.AddSubcriber(Foo);
-	myEvent.RemoveSubcriber(handler);
-	myEvent.RemoveSubcriber(handler);
-	int a = 5;
 
-	Nol::EventArgs arg((int*)&a);
-
-	myEvent.Invoke(arg);
+	Nol::Test::OnEnterLoop.Add(Foo);
+	Nol::Test::OnEnterLoop.Add(Bar);
+	Nol::Test::OnEnterLoop.Remove(Foo);
+	Nol::Test::OnEnterLoop.Add(Foo);
 
 	Nol::Test::InfiniteLoop();
 	return 0;

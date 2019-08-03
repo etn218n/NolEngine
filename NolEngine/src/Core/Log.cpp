@@ -2,14 +2,14 @@
 
 namespace Nol
 {
-	std::shared_ptr<spdlog::logger> Log::_engineLogger;
-	std::shared_ptr<spdlog::logger> Log::_clientLogger;
+	std::shared_ptr<spdlog::logger> Log::mEngineLogger;
+	std::shared_ptr<spdlog::logger> Log::mClientLogger;
 
 	void Log::Init()
 	{
 		spdlog::set_pattern("[%n]: %v%$");
 
-		_engineLogger = spdlog::stdout_color_mt("Engine");
-		_clientLogger = spdlog::stdout_color_mt("Client");
+		mEngineLogger = spdlog::stdout_color_mt("Engine");
+		mClientLogger = spdlog::stdout_color_mt("Client");
 	}
 }
