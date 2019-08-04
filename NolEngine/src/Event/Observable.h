@@ -11,7 +11,7 @@ namespace Nol
 	using Callback = std::function<void(Args... args)>;
 
 	private:
-		std::list<Callback> mCallbackList;
+		std::list<Callback> callbackList;
 
 	private:
 		template<typename T, typename... U>
@@ -29,13 +29,13 @@ namespace Nol
 		{
 			size_t fnAddress = GetAddress(fn);
 
-			for (const auto& callback : mCallbackList)
+			for (const auto& callback : callbackList)
 			{
 				if (fnAddress == GetAddress(callback))
 					return;
 			}
 
-			mCallbackList.push_back(fn);
+			callbackList.push_back(fn);
 		}
 
 		void Remove(Callback fn)
@@ -44,11 +44,11 @@ namespace Nol
 
 			typename std::list<Callback>::iterator it;
 
-			for (it = mCallbackList.begin(); it != mCallbackList.end(); it++)
+			for (it = callbackList.begin(); it != callbackList.end(); it++)
 			{
 				if (fnAddress == GetAddress(*it))
 				{
-					mCallbackList.erase(it);
+					callbackList.erase(it);
 					return;
 				}
 			}
@@ -56,10 +56,10 @@ namespace Nol
 
 		void Publish(Args... args)
 		{
-			if (mCallbackList.size() == 0)
+			if (callbackList.size() == 0)
 				return;
 
-			for (const auto& callback : mCallbackList)
+			for (const auto& callback : callbackList)
 				callback(args...);
 		}	
 	};
