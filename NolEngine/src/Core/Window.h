@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NolAPI.h"
 #include "PCH.h"
+#include "NolAPI.h"
 
 #include "Event/Observable.h"
 
@@ -10,7 +10,7 @@
 
 namespace Nol
 {
-	class NOL_API Window
+	class Window
 	{
 	public:
 		Observable<Window*> OnWindowClosed;
@@ -24,19 +24,19 @@ namespace Nol
 		bool isClosed;
 
 	public:
-		Window(const std::string& title = "Untitled", unsigned int width = 800, unsigned int height = 600, bool isVsyncEnable = false);
-		Window(const Window& other) = delete;
-		virtual ~Window();
+		NOL_API Window(const std::string& title = "Untitled", unsigned int width = 800, unsigned int height = 600, bool isVsyncEnable = false);
+		NOL_API Window(const Window& other) = delete;
+		NOL_API virtual ~Window();
 
-		void Update();
-		void Close();
-		void SetVsync(bool val);
+		NOL_API void Update();
+		NOL_API void Close();
+		NOL_API void SetVsync(bool val);
 
-		inline const std::string& GetTitle()  const { return title;			 }
-		inline const unsigned int GetWidth()  const { return width;			 }
-		inline const unsigned int GetHeight() const { return height;		 }
-		inline const bool IsVsyncEnabled()    const { return isVsyncEnabled; }
-		inline const bool IsClosed()		  const { return isClosed;		 }
+		NOL_API inline const std::string& GetTitle()  const { return title;			 }
+		NOL_API inline const unsigned int GetWidth()  const { return width;			 }
+		NOL_API inline const unsigned int GetHeight() const { return height;		 }
+		NOL_API inline const bool IsVsyncEnabled()    const { return isVsyncEnabled; }
+		NOL_API inline const bool IsClosed()		  const { return isClosed;		 }
 
 	private:
 		void SetupWindowEvent();

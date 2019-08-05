@@ -1,17 +1,17 @@
 #pragma once
 
-#include "NolAPI.h"
 #include "PCH.h"
+#include "NolAPI.h"
 #include "Event/Observable.h"
 
 namespace Nol
 {
-	class NOL_API Test
+	class Test
 	{
 	public:
-		static Observable<> OnEnterLoop;
+		NOL_API static Observable<> OnEnterLoop;
 
 	public:
-		static void InfiniteLoop();
+		NOL_API static void InfiniteLoop();
 	};
 }

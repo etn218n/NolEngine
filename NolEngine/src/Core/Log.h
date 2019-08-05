@@ -1,24 +1,24 @@
 #pragma once
 
-#include "NolAPI.h"
 #include "PCH.h"
+#include "NolAPI.h"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace Nol
 {
-	class NOL_API Log
+	class Log
 	{
 	private:
 		static std::shared_ptr<spdlog::logger> engineLogger;
 		static std::shared_ptr<spdlog::logger> clientLogger;
 
 	public:
-		static void Init();
+		NOL_API static void Init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return engineLogger; }
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return clientLogger; }
+		NOL_API inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return engineLogger; }
+		NOL_API inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return clientLogger; }
 	};
 }
 
