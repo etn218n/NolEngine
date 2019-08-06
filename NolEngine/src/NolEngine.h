@@ -7,3 +7,5 @@
 #include "Core/Window.h"
 
 #include "Event/Observable.h"
+
+#include "Input/Keycode.h"

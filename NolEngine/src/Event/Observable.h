@@ -15,10 +15,10 @@ namespace Nol
 
 	private:
 		template<typename T, typename... U>
-		size_t GetAddress(std::function<T(U...)> f)
+		size_t GetAddress(std::function<T(U...)> fn)
 		{
 			typedef T(fnType)(U...);
-			fnType ** fnPointer = f.template target<fnType*>();
+			fnType ** fnPointer = fn.template target<fnType*>();
 			return (size_t)*fnPointer;
 		}
 

@@ -35,13 +35,15 @@ namespace Nol
 
 	Window::~Window()
 	{
-		glfwDestroyWindow(glfwWindow);
 	}
 
 	void Window::Update()
 	{
 		if (isClosed)
+		{
+			WARN("(Window Title: \"{0}\") Trying to update a closed window.", title);
 			return;
+		}
 
 		glfwSwapBuffers(glfwWindow);
 		glfwPollEvents();
@@ -58,6 +60,7 @@ namespace Nol
 		OnWindowClosed.Publish(this);
 		isClosed = true;
 		glfwTerminate();
+		glfwDestroyWindow(glfwWindow);
 
 		INFO("(Window Title: \"{0}\") Window successfully close.", title);
 	}
@@ -88,7 +91,7 @@ namespace Nol
 			if (isFocused)
 			{
 				currentWindow->OnWindowFocused.Publish(currentWindow);
-				INFO("(Window Title: \"{0}\") Window got focus.", currentWindow->GetTitle());
+				INFO("(Window Title: \"{0}\") Window gained focus.", currentWindow->GetTitle());
 			}
 			else
 			{
@@ -101,20 +104,27 @@ namespace Nol
 		{
 			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
 
-			if (action == GLFW_PRESS)
+			switch (action)
 			{
-				currentWindow->OnKeyPressed.Publish(currentWindow, key);
-				INFO("(Window Title: \"{0}\") Key pressed: {1}.", currentWindow->GetTitle(), key);
-			}
-			else if (action == GLFW_REPEAT)
-			{
-				currentWindow->OnKeyHold.Publish(currentWindow, key);
-				INFO("(Window Title: \"{0}\") Key hold: {1}.", currentWindow->GetTitle(), key);
-			}
-			else if (action == GLFW_RELEASE)
-			{
-				currentWindow->OnKeyReleased.Publish(currentWindow, key);
-				INFO("(Window Title: \"{0}\") Key released: {1}.", currentWindow->GetTitle(), key);
+				case GLFW_PRESS: {
+						currentWindow->OnKeyPressed.Publish(currentWindow, (Keycode)key);
+						INFO("(Window Title: \"{0}\") Key pressed: {1}.", currentWindow->GetTitle(), key);
+						break;
+				}
+				case GLFW_REPEAT: {
+						currentWindow->OnKeyHold.Publish(currentWindow, (Keycode)key);
+						INFO("(Window Title: \"{0}\") Key hold: {1}.", currentWindow->GetTitle(), key);
+						break;
+				}
+				case GLFW_RELEASE: {
+						currentWindow->OnKeyReleased.Publish(currentWindow, (Keycode)key);
+						INFO("(Window Title: \"{0}\") Key released: {1}.", currentWindow->GetTitle(), key);
+						break;
+				}
+				default: {
+					WARN("(Window Title: \"{0}\") Unkown keyaction.", currentWindow->GetTitle());
+					break;
+				}
 			}
 		});
 	}

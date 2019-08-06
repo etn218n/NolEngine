@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Event\Observable.h" />
+    <ClInclude Include="src\Input\Keycode.h" />
     <ClInclude Include="src\PCH.h" />
     <ClInclude Include="include\stb\stbimage.h" />
     <ClInclude Include="src\Core\Log.h" />

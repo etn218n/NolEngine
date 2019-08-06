@@ -4,6 +4,7 @@
 #include "NolAPI.h"
 
 #include "Event/Observable.h"
+#include "Input/Keycode.h"
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
@@ -17,9 +18,9 @@ namespace Nol
 		Observable<Window*> OnWindowFocused;
 		Observable<Window*> OnWindowLostFocus;
 
-		Observable<Window*, int> OnKeyPressed;
-		Observable<Window*, int> OnKeyHold;
-		Observable<Window*, int> OnKeyReleased;
+		Observable<Window*, Keycode> OnKeyPressed;
+		Observable<Window*, Keycode> OnKeyHold;
+		Observable<Window*, Keycode> OnKeyReleased;
 
 	private:
 		GLFWwindow*  glfwWindow;
