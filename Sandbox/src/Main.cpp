@@ -2,12 +2,12 @@
 
 void Foo(Nol::Window* window)
 {
-	std::cout << "Foo window: " + window->GetTitle() << std::endl;
+	std::cout << "Focus window: " + window->GetTitle() << std::endl;
 }
 
-void Bar()
+void Bar(Nol::Window* window)
 {
-	std::cout << "Bar" << std::endl;
+	std::cout << "Lost window: " + window->GetTitle() << std::endl;
 }
 
 int main()
@@ -15,7 +15,8 @@ int main()
 	Nol::Log::Init();
 
 	Nol::Window* win = new Nol::Window("Ol", 1280, 720);
-	win->OnWindowClosed.Add(Foo);
+	win->OnWindowFocused.Add(Foo);
+	win->OnWindowLostFocus.Add(Bar);
 
 	while (win->IsClosed() == false)
 	{

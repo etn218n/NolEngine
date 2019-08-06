@@ -14,6 +14,8 @@ namespace Nol
 	{
 	public:
 		Observable<Window*> OnWindowClosed;
+		Observable<Window*> OnWindowFocused;
+		Observable<Window*> OnWindowLostFocus;
 
 	private:
 		GLFWwindow*  glfwWindow;

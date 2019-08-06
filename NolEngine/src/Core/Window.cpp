@@ -74,11 +74,27 @@ namespace Nol
 
 	void Window::SetupWindowEvent()
 	{
-		glfwSetWindowCloseCallback(glfwWindow, [](GLFWwindow* win) 
+		glfwSetWindowCloseCallback(this->glfwWindow, [](GLFWwindow* win) 
 		{
 			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
 
 			currentWindow->Close();
+		});
+
+		glfwSetWindowFocusCallback(this->glfwWindow, [](GLFWwindow* win, int isFocused)
+		{
+			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
+
+			if (isFocused)
+			{
+				currentWindow->OnWindowFocused.Publish(currentWindow);
+				INFO("Focus GLFW window.(Window Title: \"{0}\")", currentWindow->GetTitle());
+			}
+			else
+			{
+				currentWindow->OnWindowLostFocus.Publish(currentWindow);
+				INFO("Lost focus GLFW window.(Window Title: \"{0}\")", currentWindow->GetTitle());
+			}
 		});
 	}
 }
