@@ -15,18 +15,18 @@ namespace Nol
 
 		if (glfwWindow == nullptr)
 		{
-			ERR("Failed to create GLFW window.(Window Title: \"{0}\")", title);
+			ERR("(Window Title: \"{0}\") Failed to create GLFW window.", title);
 			glfwTerminate();
 			return;
 		}
-		INFO("Successful to create GLFW window.(Window Title: \"{0}\")", title);
+		INFO("(Window Title: \"{0}\") Successful to create GLFW window.", title);
 
 		glfwMakeContextCurrent(glfwWindow);
 		glfwSetWindowUserPointer(glfwWindow, this);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			ERR("Failed to initialize GLAD.");
+			ERR("(Window Title: \"{0}\") Failed to initialize GLAD.", title);
 			return;
 		}
 
@@ -51,7 +51,7 @@ namespace Nol
 	{
 		if (isClosed)
 		{
-			WARN("GLFW window is already closed.(Window Title: \"{0}\")", title);
+			WARN("(Window Title: \"{0}\") Window is already closed.", title);
 			return;
 		}
 
@@ -59,7 +59,7 @@ namespace Nol
 		isClosed = true;
 		glfwTerminate();
 
-		INFO("Successful to close GLFW window.(Window Title: \"{0}\")", title);
+		INFO("(Window Title: \"{0}\") Window successfully close.", title);
 	}
 
 	void Window::SetVsync(bool val)
@@ -88,12 +88,33 @@ namespace Nol
 			if (isFocused)
 			{
 				currentWindow->OnWindowFocused.Publish(currentWindow);
-				INFO("Focus GLFW window.(Window Title: \"{0}\")", currentWindow->GetTitle());
+				INFO("(Window Title: \"{0}\") Window got focus.", currentWindow->GetTitle());
 			}
 			else
 			{
 				currentWindow->OnWindowLostFocus.Publish(currentWindow);
-				INFO("Lost focus GLFW window.(Window Title: \"{0}\")", currentWindow->GetTitle());
+				INFO("(Window Title: \"{0}\") Window lost focus.", currentWindow->GetTitle());
+			}
+		});
+
+		glfwSetKeyCallback(this->glfwWindow, [](GLFWwindow* win, int key, int scancode, int action, int mods)
+		{
+			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
+
+			if (action == GLFW_PRESS)
+			{
+				currentWindow->OnKeyPressed.Publish(currentWindow, key);
+				INFO("(Window Title: \"{0}\") Key pressed: {1}.", currentWindow->GetTitle(), key);
+			}
+			else if (action == GLFW_REPEAT)
+			{
+				currentWindow->OnKeyHold.Publish(currentWindow, key);
+				INFO("(Window Title: \"{0}\") Key hold: {1}.", currentWindow->GetTitle(), key);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				currentWindow->OnKeyReleased.Publish(currentWindow, key);
+				INFO("(Window Title: \"{0}\") Key released: {1}.", currentWindow->GetTitle(), key);
 			}
 		});
 	}

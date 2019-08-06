@@ -17,6 +17,10 @@ namespace Nol
 		Observable<Window*> OnWindowFocused;
 		Observable<Window*> OnWindowLostFocus;
 
+		Observable<Window*, int> OnKeyPressed;
+		Observable<Window*, int> OnKeyHold;
+		Observable<Window*, int> OnKeyReleased;
+
 	private:
 		GLFWwindow*  glfwWindow;
 		std::string  title;

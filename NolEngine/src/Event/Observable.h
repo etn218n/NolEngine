@@ -24,7 +24,7 @@ namespace Nol
 
 	public:
 		Observable() {}
-
+		
 		void Add(Callback fn)
 		{
 			size_t fnAddress = GetAddress(fn);
@@ -40,6 +40,11 @@ namespace Nol
 
 		void Remove(Callback fn)
 		{
+			if (!std::is_assignable(fn))
+			{
+				return;
+			}
+
 			size_t fnAddress = GetAddress(fn);
 
 			typename std::list<Callback>::iterator it;
