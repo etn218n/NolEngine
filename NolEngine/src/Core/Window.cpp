@@ -45,6 +45,11 @@ namespace Nol
 			return;
 		}
 
+		glfwMakeContextCurrent(this->glfwWindow);
+
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		glfwSwapBuffers(glfwWindow);
 		glfwPollEvents();
 	}
@@ -57,9 +62,8 @@ namespace Nol
 			return;
 		}
 
-		OnWindowClosed.Publish(this);
+		OnClosed.Publish(this);
 		isClosed = true;
-		glfwTerminate();
 		glfwDestroyWindow(glfwWindow);
 
 		INFO("(Window Title: \"{0}\") Window successfully close.", title);
@@ -90,12 +94,12 @@ namespace Nol
 
 			if (isFocused)
 			{
-				currentWindow->OnWindowFocused.Publish(currentWindow);
+				currentWindow->OnFocused.Publish(currentWindow);
 				INFO("(Window Title: \"{0}\") Window gained focus.", currentWindow->GetTitle());
 			}
 			else
 			{
-				currentWindow->OnWindowLostFocus.Publish(currentWindow);
+				currentWindow->OnLostFocus.Publish(currentWindow);
 				INFO("(Window Title: \"{0}\") Window lost focus.", currentWindow->GetTitle());
 			}
 		});

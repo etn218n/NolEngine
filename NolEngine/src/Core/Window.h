@@ -14,9 +14,9 @@ namespace Nol
 	class Window
 	{
 	public:
-		Observable<Window*> OnWindowClosed;
-		Observable<Window*> OnWindowFocused;
-		Observable<Window*> OnWindowLostFocus;
+		Observable<Window*> OnClosed;
+		Observable<Window*> OnFocused;
+		Observable<Window*> OnLostFocus;
 
 		Observable<Window*, Keycode> OnKeyPressed;
 		Observable<Window*, Keycode> OnKeyHold;
