@@ -5,6 +5,7 @@
 
 #include "Event/Observable.h"
 #include "Input/Keycode.h"
+#include "Input/Input.h"
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
@@ -17,14 +18,21 @@ namespace Nol
 		Observable<Window*> OnClosed;
 		Observable<Window*> OnFocused;
 		Observable<Window*> OnLostFocus;
+		Observable<Window*> OnResized;
+
+		Observable<Window*, int, int> OnPositionChanged;
+		Observable<Window*, double, double> OnMouseMoved;
 
 		Observable<Window*, Keycode> OnKeyPressed;
 		Observable<Window*, Keycode> OnKeyHold;
 		Observable<Window*, Keycode> OnKeyReleased;
 
+		Observable<Window*, Keycode> OnMousePressed;
+		Observable<Window*, Keycode> OnMouseReleased;
+
 	private:
-		GLFWwindow*  glfwWindow;
-		std::string  title;
+		GLFWwindow* glfwWindow;
+		std::string title;
 		unsigned int width;
 		unsigned int height;
 		bool isVsyncEnabled;
@@ -39,10 +47,11 @@ namespace Nol
 		NOL_API void Close();
 		NOL_API void SetVsync(bool val);
 
+		NOL_API inline GLFWwindow* GetGLFWWindow()    const { return glfwWindow;	 }
 		NOL_API inline const std::string& GetTitle()  const { return title;			 }
 		NOL_API inline const unsigned int GetWidth()  const { return width;			 }
 		NOL_API inline const unsigned int GetHeight() const { return height;		 }
-		NOL_API inline const bool IsVsyncEnabled()    const { return isVsyncEnabled; }
+		NOL_API inline const bool IsVsyncEnabled()	  const { return isVsyncEnabled; }
 		NOL_API inline const bool IsClosed()		  const { return isClosed;		 }
 
 	private:

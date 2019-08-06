@@ -15,22 +15,24 @@ namespace Nol
 
 		if (glfwWindow == nullptr)
 		{
-			ERR("(Window Title: \"{0}\") Failed to create GLFW window.", title);
+			ERR("(Window \"{0}\") Failed to create GLFW window.", title);
 			glfwTerminate();
 			return;
 		}
-		INFO("(Window Title: \"{0}\") Successful to create GLFW window.", title);
+		INFO("(Window \"{0}\") Successful to create GLFW window.", title);
 
 		glfwMakeContextCurrent(glfwWindow);
 		glfwSetWindowUserPointer(glfwWindow, this);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			ERR("(Window Title: \"{0}\") Failed to initialize GLAD.", title);
+			ERR("(Window \"{0}\") Failed to initialize GLAD.", title);
 			return;
 		}
 
 		SetupWindowEvent();
+
+		glfwMakeContextCurrent(NULL);
 	}
 
 	Window::~Window()
@@ -41,7 +43,7 @@ namespace Nol
 	{
 		if (isClosed)
 		{
-			WARN("(Window Title: \"{0}\") Trying to update a closed window.", title);
+			WARN("(Window \"{0}\") Trying to update a closed window.", title);
 			return;
 		}
 
@@ -58,7 +60,7 @@ namespace Nol
 	{
 		if (isClosed)
 		{
-			WARN("(Window Title: \"{0}\") Window is already closed.", title);
+			WARN("(Window \"{0}\") Window is already closed.", title);
 			return;
 		}
 
@@ -66,7 +68,7 @@ namespace Nol
 		isClosed = true;
 		glfwDestroyWindow(glfwWindow);
 
-		INFO("(Window Title: \"{0}\") Window successfully close.", title);
+		INFO("(Window \"{0}\") Window successfully close.", title);
 	}
 
 	void Window::SetVsync(bool val)
@@ -94,13 +96,43 @@ namespace Nol
 
 			if (isFocused)
 			{
+				Input::activeWindow = currentWindow;
 				currentWindow->OnFocused.Publish(currentWindow);
-				INFO("(Window Title: \"{0}\") Window gained focus.", currentWindow->GetTitle());
+				INFO("(Window \"{0}\") Window gained focus.", currentWindow->GetTitle());
 			}
 			else
 			{
+				Input::activeWindow = nullptr;
 				currentWindow->OnLostFocus.Publish(currentWindow);
-				INFO("(Window Title: \"{0}\") Window lost focus.", currentWindow->GetTitle());
+				INFO("(Window \"{0}\") Window lost focus.", currentWindow->GetTitle());
+			}
+		});
+
+		glfwSetCursorPosCallback(this->glfwWindow, [](GLFWwindow* win, double x, double y)
+		{
+			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
+
+			currentWindow->OnMouseMoved.Publish(currentWindow, x, y);
+		});
+
+		glfwSetMouseButtonCallback(this->glfwWindow, [](GLFWwindow* win, int button, int action, int mods)
+		{
+			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
+
+			switch (action)
+			{
+				case GLFW_PRESS: {
+					currentWindow->OnMousePressed.Publish(currentWindow, (Keycode)button);
+					break;
+				}
+				case GLFW_RELEASE: {
+					currentWindow->OnMouseReleased.Publish(currentWindow, (Keycode)button);
+					break;
+				}
+				default: {
+					WARN("(Window \"{0}\") Unkown mouse button action.", currentWindow->GetTitle());
+					break;
+				}
 			}
 		});
 
@@ -111,25 +143,29 @@ namespace Nol
 			switch (action)
 			{
 				case GLFW_PRESS: {
-						currentWindow->OnKeyPressed.Publish(currentWindow, (Keycode)key);
-						INFO("(Window Title: \"{0}\") Key pressed: {1}.", currentWindow->GetTitle(), key);
-						break;
+					currentWindow->OnKeyPressed.Publish(currentWindow, (Keycode)key);
+					break;
 				}
 				case GLFW_REPEAT: {
-						currentWindow->OnKeyHold.Publish(currentWindow, (Keycode)key);
-						INFO("(Window Title: \"{0}\") Key hold: {1}.", currentWindow->GetTitle(), key);
-						break;
+					currentWindow->OnKeyHold.Publish(currentWindow, (Keycode)key);
+					break;
 				}
 				case GLFW_RELEASE: {
-						currentWindow->OnKeyReleased.Publish(currentWindow, (Keycode)key);
-						INFO("(Window Title: \"{0}\") Key released: {1}.", currentWindow->GetTitle(), key);
-						break;
+					currentWindow->OnKeyReleased.Publish(currentWindow, (Keycode)key);
+					break;
 				}
 				default: {
-					WARN("(Window Title: \"{0}\") Unkown keyaction.", currentWindow->GetTitle());
+					WARN("(Window \"{0}\") Unkown key action.", currentWindow->GetTitle());
 					break;
 				}
 			}
+		});
+
+		glfwSetWindowPosCallback(this->glfwWindow, [](GLFWwindow* win, int x, int y)
+		{
+			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
+
+			currentWindow->OnPositionChanged.Publish(currentWindow, x, y);
 		});
 	}
 }

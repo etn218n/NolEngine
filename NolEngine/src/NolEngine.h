@@ -8,4 +8,5 @@
 
 #include "Event/Observable.h"
 
+#include "Input/Input.h"
 #include "Input/Keycode.h"
