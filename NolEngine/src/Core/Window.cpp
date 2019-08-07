@@ -32,6 +32,10 @@ namespace Nol
 
 		SetupWindowEvent();
 
+		SetVsync(isVsyncEnable);
+
+		Input::activeWindow = this;
+
 		glfwMakeContextCurrent(NULL);
 	}
 
@@ -51,6 +55,9 @@ namespace Nol
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		if (Input::activeWindow == this)
+			Input::ClearInputFlags();
 
 		glfwSwapBuffers(glfwWindow);
 		glfwPollEvents();
@@ -97,6 +104,7 @@ namespace Nol
 			if (isFocused)
 			{
 				Input::activeWindow = currentWindow;
+				Input::ClearInputFlags();
 				currentWindow->OnFocused.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window gained focus.", currentWindow->GetTitle());
 			}
@@ -123,10 +131,16 @@ namespace Nol
 			{
 				case GLFW_PRESS: {
 					currentWindow->OnMousePressed.Publish(currentWindow, (Keycode)button);
+					Input::stateArray[button] = KeyState::Pressed;
+					Input::indexOfClearKeys.push_back(button);
+					Input::OnMousePressed.Publish((Keycode)button);
 					break;
 				}
 				case GLFW_RELEASE: {
 					currentWindow->OnMouseReleased.Publish(currentWindow, (Keycode)button);
+					Input::stateArray[button] = KeyState::Released;
+					Input::indexOfClearKeys.push_back(button);
+					Input::OnMouseReleased.Publish((Keycode)button);
 					break;
 				}
 				default: {
@@ -144,14 +158,22 @@ namespace Nol
 			{
 				case GLFW_PRESS: {
 					currentWindow->OnKeyPressed.Publish(currentWindow, (Keycode)key);
+					Input::stateArray[key] = KeyState::Pressed;
+					Input::indexOfClearKeys.push_back(key);
+					Input::OnKeyPressed.Publish((Keycode)key);
 					break;
 				}
 				case GLFW_REPEAT: {
 					currentWindow->OnKeyHold.Publish(currentWindow, (Keycode)key);
+					Input::stateArray[key] = KeyState::Hold;
+					Input::OnKeyHold.Publish((Keycode)key);
 					break;
 				}
 				case GLFW_RELEASE: {
 					currentWindow->OnKeyReleased.Publish(currentWindow, (Keycode)key);
+					Input::stateArray[key] = KeyState::Released;
+					Input::indexOfClearKeys.push_back(key);
+					Input::OnKeyReleased.Publish((Keycode)key);
 					break;
 				}
 				default: {
