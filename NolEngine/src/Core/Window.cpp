@@ -3,8 +3,8 @@
 
 namespace Nol
 {
-	Window::Window(const std::string& title, unsigned int width, unsigned int height, bool isVsyncEnable) :
-		title(title), width(width), height(height), isVsyncEnabled(isVsyncEnable), isClosed(false)
+	Window::Window(const std::string& title, unsigned int width, unsigned int height, bool isVsyncEnabled) :
+		title(title), width(width), height(height), isVsyncEnabled(isVsyncEnabled), isClosed(false)
 	{
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -32,15 +32,11 @@ namespace Nol
 
 		SetupWindowEvent();
 
-		SetVsync(isVsyncEnable);
+		SetVsync(isVsyncEnabled);
 
 		Input::activeWindow = this;
 
 		glfwMakeContextCurrent(NULL);
-	}
-
-	Window::~Window()
-	{
 	}
 
 	void Window::Update()
@@ -51,13 +47,15 @@ namespace Nol
 			return;
 		}
 
+		double currentTime = glfwGetTime();
+
 		glfwMakeContextCurrent(this->glfwWindow);
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (Input::activeWindow == this)
-			Input::ClearInputFlags();
+			Input::ClearInputFlags(currentTime);
 
 		glfwSwapBuffers(glfwWindow);
 		glfwPollEvents();
@@ -104,13 +102,14 @@ namespace Nol
 			if (isFocused)
 			{
 				Input::activeWindow = currentWindow;
-				Input::ClearInputFlags();
+				Input::ClearInputFlags(glfwGetTime());
 				currentWindow->OnFocused.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window gained focus.", currentWindow->GetTitle());
 			}
 			else
 			{
 				Input::activeWindow = nullptr;
+				WARN("Input::activeWindow is NULL.");
 				currentWindow->OnLostFocus.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window lost focus.", currentWindow->GetTitle());
 			}
@@ -133,6 +132,8 @@ namespace Nol
 					currentWindow->OnMousePressed.Publish(currentWindow, (Keycode)button);
 					Input::stateArray[button] = KeyState::Pressed;
 					Input::indexOfClearKeys.push_back(button);
+					Input::holdKeys[button].first  = KeyState::Pressed;
+					Input::holdKeys[button].second = glfwGetTime();
 					Input::OnMousePressed.Publish((Keycode)button);
 					break;
 				}
@@ -140,6 +141,7 @@ namespace Nol
 					currentWindow->OnMouseReleased.Publish(currentWindow, (Keycode)button);
 					Input::stateArray[button] = KeyState::Released;
 					Input::indexOfClearKeys.push_back(button);
+					Input::holdKeys[button].first = KeyState::Released;
 					Input::OnMouseReleased.Publish((Keycode)button);
 					break;
 				}
