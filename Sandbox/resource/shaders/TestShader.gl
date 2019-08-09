@@ -1,0 +1,35 @@
+#define vertex
+#version 330 core
+
+layout(location = 0) in vec3 Position;
+layout(location = 1) in vec3 Normal;
+layout(location = 2) in vec2 TexCoord;
+
+out vec3 VertexNormal;
+out vec2 VertexTexCoord;
+
+uniform mat4 uModel;
+uniform mat4 uProjection;
+uniform mat4 uView;
+
+void main()
+{
+	gl_Position    = uProjection * uView * uModel * vec4(Position, 1.0);
+	VertexNormal   = Normal;
+	VertexTexCoord = TexCoord;
+}
+
+#define fragment
+#version 330 core
+
+in vec3 VertexNormal;
+in vec2 VertexTexCoord;
+
+out vec4 FragColor;
+
+uniform sampler2D uTexture0;
+
+void main()
+{
+	FragColor = texture(uTexture0, VertexTexCoord);
+}

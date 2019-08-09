@@ -20,13 +20,13 @@ namespace Nol
 	class Texture
 	{
 	private:
-		unsigned int id;
+		std::shared_ptr<unsigned int> id;
+		std::shared_ptr<const unsigned char> data;
 		int height;
 		int width;
 		int nrChannels;
 		TextureSetting setting;
-		std::shared_ptr<const unsigned char> data;
-
+		
 	public:
 		NOL_API Texture(const std::string& filePath, TextureSetting setting);
 		NOL_API Texture(const std::string& filePath); // use default texture setting
@@ -37,14 +37,7 @@ namespace Nol
 		NOL_API inline const int GetWidth() const { return width; }
 		NOL_API inline const int GetHeight() const { return height; }
 		NOL_API inline const int GetChannels() const { return nrChannels; }
-
-		NOL_API inline const unsigned int GetID() const 
-		{
-			if (id == 0)
-				WARN("Texture was not initialized or already deleted.");
-
-			return id;				  
-		}
+		NOL_API inline const unsigned int GetID() const { return *id; }
 
 	private:
 		bool LoadTexture(const std::string& filePath);
