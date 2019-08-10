@@ -37,6 +37,9 @@ namespace Nol
 		Input::activeWindow = this;
 
 		glfwMakeContextCurrent(NULL);
+
+		// For testing purpose
+		OnUpdate = nullptr;
 	}
 
 	void Window::Update()
@@ -53,6 +56,12 @@ namespace Nol
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// For testing purpose
+		if (OnUpdate != nullptr)
+			OnUpdate();
 
 		if (Input::activeWindow == this)
 			Input::ClearInputFlags(currentTime);

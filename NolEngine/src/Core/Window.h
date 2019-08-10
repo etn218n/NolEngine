@@ -4,6 +4,7 @@
 #include "NolAPI.h"
 
 #include "Event/Observable.h"
+
 #include "Input/Keycode.h"
 #include "Input/Input.h"
 
@@ -29,6 +30,9 @@ namespace Nol
 
 		Observable<Window*, Keycode> OnMousePressed;
 		Observable<Window*, Keycode> OnMouseReleased;
+
+		// For testing purpose
+		std::function<void()> OnUpdate;
 
 	private:
 		GLFWwindow* glfwWindow;

@@ -18,6 +18,8 @@ namespace Nol
 
 	class Mesh
 	{
+	friend class MeshRenderer;
+
 	private:
 		std::vector<Texture> textures;
 		unsigned int numberOfVertices;

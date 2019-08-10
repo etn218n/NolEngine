@@ -2,9 +2,9 @@
 
 using namespace Nol;
 
-void Foo(Keycode keycode)
+void Foo(Window* window)
 {
-	std::cout << (int)keycode << std::endl;
+	
 }
 
 void Bar(Nol::Window* window, Keycode keycode)
@@ -66,15 +66,19 @@ int main()
 
 	Log::Init();
 
-	Window* win1 = new Window("First", 200, 200);
+	Window* win1 = new Window("First", 800, 600);
 	//Window* win2 = new Window("Second", 200, 200);
 
 	win1->Update();
-	Texture wallTexture("./resource/textures/wall.jpg");
 
-	Mesh mesh(vertices, {});
+	Texture wallTexture("./resource/textures/wall.jpg");
+	Shader testShader("./resource/shaders/TestShader.gl");
+
+	Mesh mesh(vertices, { wallTexture });
 	
-	INFO("{0} {1} {2}", mesh.GetVAO(), mesh.GetVBO(), mesh.GetEBO());
+	MeshRenderer meshRenderer(mesh, testShader);
+
+	win1->OnUpdate = [&]() { meshRenderer.Render(); };
 
 	while (!win1->IsClosed())
 	{

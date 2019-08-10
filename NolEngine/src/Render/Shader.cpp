@@ -13,9 +13,8 @@ namespace Nol
 
 	Shader::Shader(const std::string& filePath)
 	{
-		ParseShaderSource(filePath);
-
-		CreateShaderProgram();
+		if (ParseShaderSource(filePath) == true)
+			CreateShaderProgram();
 	}
 
 	Shader::Shader(const Shader & other) : 
@@ -23,37 +22,58 @@ namespace Nol
 		vertexSource(other.vertexSource),
 		id(other.id) {}
 
-	void Shader::ParseShaderSource(const std::string& filePath)
+	bool Shader::ParseShaderSource(const std::string& filePath)
 	{
-		try
-		{
-			std::ifstream fileStream(filePath);
+		std::ifstream fileStream(filePath);
 
-			std::string line;
-			std::stringstream vertexStream;
-			std::stringstream fragmentStream;
-
-			std::stringstream* streamSelector = nullptr;
-
-			while (getline(fileStream, line))
-			{
-				if (line.find("#define vertex") != std::string::npos)
-					streamSelector = &vertexStream;
-				else if (line.find("#define fragment") != std::string::npos)
-					streamSelector = &fragmentStream;
-				else
-					*streamSelector << line << '\n';
-			}
-
-			vertexSource   = vertexStream.str();
-			fragmentSource = fragmentStream.str();
-
-			fileStream.close();
-		}
-		catch (std::ifstream::failure e)
+		if (!fileStream.is_open())
 		{
 			ERR("Failed to read shader file. (Path: \"{0}\")", filePath);
+			return false;
 		}
+
+		std::string line;
+		std::stringstream vertexStream;
+		std::stringstream fragmentStream;
+
+		std::stringstream* streamSelector = nullptr;
+
+		while (std::getline(fileStream, line))
+		{
+			if (line.find("#define vertex") != std::string::npos)
+				streamSelector = &vertexStream;
+			else if (line.find("#define fragment") != std::string::npos)
+				streamSelector = &fragmentStream;
+			else
+				*streamSelector << line << '\n';
+		}
+
+		vertexSource   = vertexStream.str();
+		fragmentSource = fragmentStream.str();
+
+		fileStream.close();
+
+		return true;
+	}
+
+	void Shader::SetUniform1i(const std::string& uniformName, int index)
+	{
+		glUniform1i(glGetUniformLocation(*id, uniformName.c_str()), index);
+	}
+
+	void Shader::SetUniform3f(const std::string& uniformName, glm::vec3 v)
+	{
+		glUniform3f(glGetUniformLocation(*id, uniformName.c_str()), v.x, v.y, v.z);
+	}
+
+	void Shader::SetUniform4f(const std::string& uniformName, glm::vec4 v)
+	{
+		glUniform4f(glGetUniformLocation(*id, uniformName.c_str()), v.x, v.y, v.z, v.w);
+	}
+
+	void Shader::SetUniform4fv(const std::string& uniformName, const float* f)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(*id, uniformName.c_str()), 1, GL_FALSE, f);
 	}
 
 	unsigned int Shader::CompileShader(ShaderType shaderType)
@@ -103,10 +123,10 @@ namespace Nol
 		glLinkProgram(programID);
 
 		if (programID == 0)
-			ERR("Failed to create shader program.");
+			ERR("Failed to generate shader program.");
 		else
 		{
-			INFO("Succesful to create shader program.");
+			INFO("Successful to generate shader program. (ID: {0})", programID);
 			
 			id = std::shared_ptr<unsigned int>(new unsigned int(programID), [](unsigned int* ID)
 			{

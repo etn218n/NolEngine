@@ -18,3 +18,4 @@
 #include "Render/Texture.h"
 #include "Render/Shader.h"
 #include "Render/Mesh.h"
+#include "Render/MeshRenderer.h"
