@@ -7,9 +7,12 @@
 #include "Render/Mesh.h"
 #include "Render/Shader.h"
 
+#include "Component/Component.h"
+#include "Component/GameObject.h"
+
 namespace Nol
 {
-	class MeshRenderer
+	class MeshRenderer : public Component
 	{
 	private:
 		Mesh mesh;

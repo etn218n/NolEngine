@@ -7,6 +7,9 @@
 #include <functional>
 #include <Windows.h>
 
+#include <typeinfo>
+#include <typeindex>
+
 #include <string>
 #include <sstream>
 #include <fstream>

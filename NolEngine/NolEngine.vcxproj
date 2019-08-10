@@ -11,7 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Render\MeshRenderer.h" />
+    <ClInclude Include="src\Component\Component.h" />
+    <ClInclude Include="src\Component\GameObject.h" />
+    <ClInclude Include="src\Component\Transform.h" />
+    <ClInclude Include="src\Component\MeshRenderer.h" />
     <ClInclude Include="src\Render\Mesh.h" />
     <ClInclude Include="src\Render\Shader.h" />
     <ClInclude Include="src\Input\Input.h" />
@@ -27,7 +30,10 @@
     <ClInclude Include="src\Render\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Render\MeshRenderer.cpp" />
+    <ClCompile Include="src\Component\Component.cpp" />
+    <ClCompile Include="src\Component\GameObject.cpp" />
+    <ClCompile Include="src\Component\Transform.cpp" />
+    <ClCompile Include="src\Component\MeshRenderer.cpp" />
     <ClCompile Include="src\Render\Mesh.cpp" />
     <ClCompile Include="src\Render\Shader.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />

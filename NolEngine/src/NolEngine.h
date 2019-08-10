@@ -18,4 +18,7 @@
 #include "Render/Texture.h"
 #include "Render/Shader.h"
 #include "Render/Mesh.h"
-#include "Render/MeshRenderer.h"
+
+#include "Component/MeshRenderer.h"
+#include "Component/GameObject.h"
+#include "Component/Transform.h"

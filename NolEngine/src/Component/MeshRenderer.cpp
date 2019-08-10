@@ -53,7 +53,7 @@ namespace Nol
 	{
 		shader.Use();
 
-		//shader.SetUniform4fv("uModel", parent->GetTransform()->GetDataPointer());
+		shader.SetUniform4fv("uModel", parent->GetTransform()->GetDataPointer());
 
 		for (unsigned int i = 0; i < mesh.NumberOfTextures(); i++)
 		{
