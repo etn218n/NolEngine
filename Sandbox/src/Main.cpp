@@ -15,34 +15,69 @@ void Bar(Nol::Window* window, Keycode keycode)
 
 int main()
 {
+	std::vector<float> vertices = {
+     /*   Position    */   /*    Normal    */    /*Texture*/
+	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  1.0f,
+	 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  1.0f,
+	-0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
+
+	 /*   Position    */   /*    Normal    */    /*Texture*/
+	-0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f,  1.0f,
+	-0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f,  0.0f,
+
+	 /*   Position    */   /*    Normal    */    /*Texture*/
+	-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   1.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
+	-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f,  0.0f,
+
+	 /*   Position    */   /*    Normal    */    /*Texture*/
+	 0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f,  1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f,  0.0f,
+
+	 /*   Position    */   /*    Normal    */    /*Texture*/
+	-0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  1.0f,
+	 0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f,  1.0f,
+	 0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  1.0f,
+
+	 /*   Position    */   /*    Normal    */    /*Texture*/
+	-0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f,
+	 0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f };
+
 	Log::Init();
 
 	Window* win1 = new Window("First", 200, 200);
 	//Window* win2 = new Window("Second", 200, 200);
 
+	win1->Update();
+	Texture wallTexture("./resource/textures/wall.jpg");
+
+	Mesh mesh(vertices, {});
+	
+	INFO("{0} {1} {2}", mesh.GetVAO(), mesh.GetVBO(), mesh.GetEBO());
+
 	while (!win1->IsClosed())
 	{
-		if (Input::IfKeyDown(Keycode::A))
-			INFO("A down.");
-
-		if (Input::IfKeyPressed(Keycode::B))
-			INFO("B pressed.");
-
-		if (Input::IfKeyHold(Keycode::C))
-			INFO("C hold.");
-
-		if (Input::IfKeyReleased(Keycode::D))
-			INFO("D released.");
-
-		if (Input::IfMousePressed(Keycode::LeftMouseButton))
-			INFO("Left Mouse Button pressed.");
-
-		if (Input::IfMouseDown(Keycode::RightMouseButton))
-			INFO("Right Mouse Button down.");
-
-		if (Input::IfMouseReleased(Keycode::MiddleMouseButton))
-			INFO("Middle Mouse Button released.");
-
 		win1->Update();
 	}
 
