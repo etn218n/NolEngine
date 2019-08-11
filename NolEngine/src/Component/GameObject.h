@@ -16,6 +16,10 @@ namespace Nol
 
 		Transform* transform;
 
+	private:
+		static unsigned int NextID;
+		unsigned int id;
+
 	public:
 		NOL_API GameObject(const std::string& name = "None");
 		NOL_API GameObject(const GameObject& other) = delete;
@@ -36,6 +40,8 @@ namespace Nol
 		{
 			return dynamic_cast<T*>(componentMap[std::type_index(typeid(T))]);
 		}
+
+		NOL_API inline const unsigned int GetID() const { return id; }
 
 		NOL_API Transform* GetTransform() const { return transform; }
 		NOL_API inline const int GetComponentCount() const { return componentMap.size(); }

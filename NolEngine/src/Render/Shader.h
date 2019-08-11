@@ -18,12 +18,11 @@ namespace Nol
 		out vec2 VertexTexCoord;
 
 		uniform mat4 uModel;
-		uniform mat4 uProjection;
-		uniform mat4 uView;
+		uniform mat4 uViewProjection;
 
 		void main()
 		{
-			gl_Position    = uProjection * uView * uModel * vec4(Position, 1.0);
+			gl_Position    = uViewProjection * uModel * vec4(Position, 1.0);
 			VertexNormal   = Normal;
 			VertexTexCoord = TexCoord;
 		})";

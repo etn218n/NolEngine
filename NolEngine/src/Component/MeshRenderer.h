@@ -17,14 +17,17 @@ namespace Nol
 	private:
 		Mesh mesh;
 		Shader shader;
-		std::function<void()> draw;
+		std::function<void()> renderSelector;
 
 	public:
 		NOL_API MeshRenderer(Mesh& mesh);
 		NOL_API MeshRenderer(Mesh& mesh, Shader& shader);
 		NOL_API virtual ~MeshRenderer() = default;
 
-		NOL_API void Render();
+		NOL_API inline Mesh& GetMesh()     { return mesh;   };
+		NOL_API inline Shader& GetShader() { return shader; };
+
+		NOL_API inline void Render() { renderSelector(); }
 	};
 }
 

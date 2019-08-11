@@ -3,7 +3,9 @@
 
 namespace Nol
 {
-	GameObject::GameObject(const std::string& name) : name(name)
+	unsigned int GameObject::NextID = 0;
+
+	GameObject::GameObject(const std::string& name) : name(name), id(++NextID)
 	{
 		transform = new Transform();
 		transform->parent = this;

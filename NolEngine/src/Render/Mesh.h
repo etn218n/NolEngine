@@ -18,8 +18,6 @@ namespace Nol
 
 	class Mesh
 	{
-	friend class MeshRenderer;
-
 	private:
 		std::vector<Texture> textures;
 		unsigned int numberOfVertices;
@@ -40,6 +38,8 @@ namespace Nol
 		NOL_API inline const unsigned int GetVAO() const { return *VAO; }
 		NOL_API inline const unsigned int GetVBO() const { return  VBO; }
 		NOL_API inline const unsigned int GetEBO() const { return  EBO; }
+
+		NOL_API inline const std::vector<Texture> GetTextureList() const { return textures; }
 
 		NOL_API inline const unsigned int NumberOfVertices() const { return numberOfVertices; }
 		NOL_API inline const unsigned int NumberOfIndices()  const { return numberOfIndices;  }

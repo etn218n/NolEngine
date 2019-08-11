@@ -2,11 +2,6 @@
 
 using namespace Nol;
 
-void Foo(Window* window)
-{
-	
-}
-
 void Bar(Nol::Window* window, Keycode keycode)
 {
 	if (keycode == Keycode::Escape)
@@ -76,14 +71,33 @@ int main()
 
 	Mesh mesh(vertices, { wallTexture });
 	
-	MeshRenderer meshRenderer(mesh, testShader);
+	MeshRenderer meshRenderer(mesh);
 
 	GameObject* cube = new GameObject();
 	cube->AddComponent<MeshRenderer>(meshRenderer);
+	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	Camera* camera = new Camera();
+	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 4.0f));
+
+	Scene scene("Example", camera);
+	scene.AddGameObject(cube);
 
 	win1->OnUpdate = [&]() 
 	{ 
-		cube->GetComponent<MeshRenderer>()->Render();
+		if (Input::IfKeyDown(Keycode::A))
+			camera->GetTransform()->Translate(glm::vec3(-0.001f, 0.0f, 0.0f));
+		else if (Input::IfKeyDown(Keycode::D))
+			camera->GetTransform()->Translate(glm::vec3(0.001f, 0.0f, 0.0f));
+
+		if (Input::IfKeyDown(Keycode::W))
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -0.001f));
+		else if (Input::IfKeyDown(Keycode::S))
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.001f));
+
+		cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		scene.Render();
 	};
 
 	while (!win1->IsClosed())

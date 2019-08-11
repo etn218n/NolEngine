@@ -27,20 +27,20 @@ namespace Nol
 		
 		void Add(Callback fn)
 		{
-			size_t fnAddress = GetAddress(fn);
+			/*size_t fnAddress = GetAddress(fn);
 
 			for (const auto& callback : callbackList)
 			{
 				if (fnAddress == GetAddress(callback))
 					return;
-			}
+			}*/
 
 			callbackList.push_back(fn);
 		}
 
 		void Remove(Callback fn)
 		{
-			if (!std::is_assignable(fn))
+			/*if (!std::is_assignable(fn))
 			{
 				return;
 			}
@@ -56,7 +56,7 @@ namespace Nol
 					callbackList.erase(it);
 					return;
 				}
-			}
+			}*/
 		}
 
 		void Publish(Args... args)

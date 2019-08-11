@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Render\Scene.h" />
+    <ClInclude Include="src\Component\Camera.h" />
     <ClInclude Include="src\Component\Component.h" />
     <ClInclude Include="src\Component\GameObject.h" />
     <ClInclude Include="src\Component\Transform.h" />
@@ -30,6 +32,8 @@
     <ClInclude Include="src\Render\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Render\Scene.cpp" />
+    <ClCompile Include="src\Component\Camera.cpp" />
     <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\Component\GameObject.cpp" />
     <ClCompile Include="src\Component\Transform.cpp" />

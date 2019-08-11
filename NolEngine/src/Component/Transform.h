@@ -3,12 +3,17 @@
 #include "PCH.h"
 #include "NolAPI.h"
 
+#include "Event/Observable.h"
+
 #include "Component/Component.h"
 
 namespace Nol
 {
 	class Transform : public Component
 	{
+	public:
+		Observable<const glm::mat4&> OnTransformed;
+
 	private:
 		glm::mat4 modelMatrix;
 
