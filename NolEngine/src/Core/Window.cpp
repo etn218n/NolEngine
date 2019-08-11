@@ -55,7 +55,6 @@ namespace Nol
 		glfwMakeContextCurrent(this->glfwWindow);
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -64,7 +63,7 @@ namespace Nol
 			OnUpdate();
 
 		if (Input::activeWindow == this)
-			Input::ClearInputFlags(currentTime);
+			Input::UpdateInputState(currentTime);
 
 		glfwSwapBuffers(glfwWindow);
 		glfwPollEvents();
@@ -111,7 +110,7 @@ namespace Nol
 			if (isFocused)
 			{
 				Input::activeWindow = currentWindow;
-				Input::ClearInputFlags(glfwGetTime());
+				Input::UpdateInputState(glfwGetTime());
 				currentWindow->OnFocused.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window gained focus.", currentWindow->GetTitle());
 			}
@@ -129,8 +128,12 @@ namespace Nol
 			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
 
 			currentWindow->OnMouseMoved.Publish(currentWindow, x, y);
+
+			Input::mousePosition.x = x;
+			Input::mousePosition.y = y;
 		});
 
+		// TODO: decoupled setting keystate by making Input listen to window input events
 		glfwSetMouseButtonCallback(this->glfwWindow, [](GLFWwindow* win, int button, int action, int mods)
 		{
 			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
@@ -140,7 +143,7 @@ namespace Nol
 				case GLFW_PRESS: {
 					currentWindow->OnMousePressed.Publish(currentWindow, (Keycode)button);
 					Input::stateArray[button] = KeyState::Pressed;
-					Input::indexOfClearKeys.push_back(button);
+					Input::indexOfUpdatedKeys.push_back(button);
 					Input::holdKeys[button].first  = KeyState::Pressed;
 					Input::holdKeys[button].second = glfwGetTime();
 					Input::OnMousePressed.Publish((Keycode)button);
@@ -149,7 +152,7 @@ namespace Nol
 				case GLFW_RELEASE: {
 					currentWindow->OnMouseReleased.Publish(currentWindow, (Keycode)button);
 					Input::stateArray[button] = KeyState::Released;
-					Input::indexOfClearKeys.push_back(button);
+					Input::indexOfUpdatedKeys.push_back(button);
 					Input::holdKeys[button].first = KeyState::Released;
 					Input::OnMouseReleased.Publish((Keycode)button);
 					break;
@@ -170,7 +173,7 @@ namespace Nol
 				case GLFW_PRESS: {
 					currentWindow->OnKeyPressed.Publish(currentWindow, (Keycode)key);
 					Input::stateArray[key] = KeyState::Pressed;
-					Input::indexOfClearKeys.push_back(key);
+					Input::indexOfUpdatedKeys.push_back(key);
 					Input::OnKeyPressed.Publish((Keycode)key);
 					break;
 				}
@@ -183,7 +186,7 @@ namespace Nol
 				case GLFW_RELEASE: {
 					currentWindow->OnKeyReleased.Publish(currentWindow, (Keycode)key);
 					Input::stateArray[key] = KeyState::Released;
-					Input::indexOfClearKeys.push_back(key);
+					Input::indexOfUpdatedKeys.push_back(key);
 					Input::OnKeyReleased.Publish((Keycode)key);
 					break;
 				}

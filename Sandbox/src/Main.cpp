@@ -80,7 +80,6 @@ int main()
 
 	GameObject* cube = new GameObject();
 	cube->AddComponent<MeshRenderer>(meshRenderer);
-	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	win1->OnUpdate = [&]() 
 	{ 

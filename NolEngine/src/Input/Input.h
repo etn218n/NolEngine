@@ -12,7 +12,7 @@
 
 namespace Nol
 {
-	enum KeyState { Unpressed, Pressed, Hold, Released };
+	enum KeyState { Up, Pressed, Down, Hold, Released };
 
 	class Input
 	{
@@ -32,8 +32,10 @@ namespace Nol
 		static Window* activeWindow;
 		static double  delayBeforeMouseHold;
 		static KeyState stateArray[400];
-		static std::vector<int> indexOfClearKeys;
+		static std::vector<int> indexOfUpdatedKeys;
 		static std::vector<std::pair<KeyState, double>> holdKeys;
+
+		static glm::vec2 mousePosition;
 
 	public:
 		NOL_API static bool IfKeyPressed(Keycode keycode);
@@ -48,10 +50,12 @@ namespace Nol
 		NOL_API static bool IfMouseDown(Keycode keycode);
 		NOL_API static bool IfMouseUp(Keycode keycode);
 
+		NOL_API static inline glm::vec2& GetMousePostion() { return mousePosition; }
+
 	private:
 		Input();
 
-		static void ClearInputFlags(double timeStamp);
+		static void UpdateInputState(double timeStamp);
 	};
 }
 

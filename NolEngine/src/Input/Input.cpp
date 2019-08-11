@@ -16,8 +16,10 @@ namespace Nol
 	Observable<Keycode> Input::OnMouseReleased;
 
 	KeyState Input::stateArray[400];
-	std::vector<int> Input::indexOfClearKeys;
+	std::vector<int> Input::indexOfUpdatedKeys;
 	std::vector<std::pair<KeyState, double>> Input::holdKeys;
+
+	glm::vec2 Input::mousePosition;
 
 	// TODO: unreliable code since it depends on initialization order of compiler
 	// Need a system to init this Input::instance
@@ -25,14 +27,14 @@ namespace Nol
 
 	Input::Input()
 	{
-		indexOfClearKeys.reserve(10);
+		indexOfUpdatedKeys.reserve(10);
 		holdKeys.reserve(10);
 
-		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Unpressed, 0)); // Left Mouse button
-		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Unpressed, 0)); // Right Mouse button
-		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Unpressed, 0)); // Middle Mouse button
-		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Unpressed, 0)); // Reserved Mouse button
-		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Unpressed, 0)); // Reserved Mouse button
+		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Left Mouse button
+		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Right Mouse button
+		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Middle Mouse button
+		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Reserved Mouse button
+		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Reserved Mouse button
 	}
 
 	bool Input::IfKeyPressed(Keycode keycode)
@@ -64,7 +66,9 @@ namespace Nol
 		if (activeWindow == nullptr)
 			return false;
 
-		return stateArray[(int)keycode] == KeyState::Pressed || stateArray[(int)keycode] == KeyState::Hold;
+		return stateArray[(int)keycode] == KeyState::Hold || 
+			   stateArray[(int)keycode] == KeyState::Down || 
+			   stateArray[(int)keycode] == KeyState::Pressed;
 	}
 
 	bool Input::IfKeyUp(Keycode keycode)
@@ -72,7 +76,7 @@ namespace Nol
 		if (activeWindow == nullptr)
 			return false;
 
-		return stateArray[(int)keycode] == KeyState::Unpressed || stateArray[(int)keycode] == KeyState::Released;
+		return stateArray[(int)keycode] == KeyState::Up || stateArray[(int)keycode] == KeyState::Released;
 	}
 
 	bool Input::IfMousePressed(Keycode keycode)
@@ -104,7 +108,9 @@ namespace Nol
 		if (activeWindow == nullptr)
 			return false;
 
-		return stateArray[(int)keycode] == KeyState::Pressed || stateArray[(int)keycode] == KeyState::Hold;
+		return stateArray[(int)keycode] == KeyState::Hold ||
+			   stateArray[(int)keycode] == KeyState::Down ||
+			   stateArray[(int)keycode] == KeyState::Pressed;
 	}
 
 	bool Input::IfMouseUp(Keycode keycode)
@@ -112,10 +118,10 @@ namespace Nol
 		if (activeWindow == nullptr)
 			return false;
 
-		return stateArray[(int)keycode] == KeyState::Unpressed || stateArray[(int)keycode] == KeyState::Released;
+		return stateArray[(int)keycode] == KeyState::Up|| stateArray[(int)keycode] == KeyState::Released;
 	}
 
-	void Input::ClearInputFlags(double timeStamp)
+	void Input::UpdateInputState(double timeStamp)
 	{
 		for (int i = 0; i < holdKeys.size(); i++)
 		{
@@ -129,13 +135,16 @@ namespace Nol
 			}
 		}
 
-		for (int i = indexOfClearKeys.size() - 1; i >= 0; i--)
+		for (int i = indexOfUpdatedKeys.size() - 1; i >= 0; i--)
 		{
-			int keyIndex = indexOfClearKeys[i];
+			int keyIndex = indexOfUpdatedKeys[i];
 
-			stateArray[keyIndex] = KeyState::Unpressed;
+			if (stateArray[keyIndex] == KeyState::Pressed)
+				stateArray[keyIndex] = KeyState::Down;
+			else
+				stateArray[keyIndex] = KeyState::Up;
 
-			indexOfClearKeys.pop_back();
+			indexOfUpdatedKeys.pop_back();
 		}
 	}
 }
