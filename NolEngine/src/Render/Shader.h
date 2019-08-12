@@ -62,16 +62,16 @@ namespace Nol
 		NOL_API Shader(const Shader& other);
 		NOL_API virtual ~Shader() = default;
 		
-		NOL_API inline void Use() { glUseProgram(*id); }
+		NOL_API inline void Use() const { glUseProgram(*id); }
 
 		NOL_API inline const unsigned int GetID() const { return *id; }
 		NOL_API inline const std::string& GetVertexSource()   const { return vertexSource;   }
 		NOL_API inline const std::string& GetFragmentSource() const { return fragmentSource; }
 
-		NOL_API void SetUniform1i(const std::string& uniformName, int index);
-		NOL_API void SetUniform3f(const std::string& uniformName, glm::vec3 v);
-		NOL_API void SetUniform4f(const std::string& uniformName, glm::vec4 v);
-		NOL_API void SetUniform4fv(const std::string& uniformName, const float* f);
+		NOL_API void SetUniform1i(const std::string& uniformName, int index)   const;
+		NOL_API void SetUniform3f(const std::string& uniformName, glm::vec3 v) const;
+		NOL_API void SetUniform4f(const std::string& uniformName, glm::vec4 v) const;
+		NOL_API void SetUniform4fv(const std::string& uniformName, const float* f) const;
 
 	private:
 		bool ParseShaderSource(const std::string& filePath);

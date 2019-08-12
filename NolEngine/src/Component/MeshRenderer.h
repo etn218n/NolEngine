@@ -24,8 +24,8 @@ namespace Nol
 		NOL_API MeshRenderer(Mesh& mesh, Shader& shader);
 		NOL_API virtual ~MeshRenderer() = default;
 
-		NOL_API inline Mesh& GetMesh()     { return mesh;   };
-		NOL_API inline Shader& GetShader() { return shader; };
+		NOL_API inline const Mesh& GetMesh()	 const { return mesh;   };
+		NOL_API inline const Shader& GetShader() const { return shader; };
 
 		NOL_API inline void Render() { renderSelector(); }
 	};

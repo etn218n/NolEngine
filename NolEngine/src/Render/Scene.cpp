@@ -41,8 +41,8 @@ namespace Nol
 		{
 			MeshRenderer* meshRenderer = entry.second;
 
-			Shader shader = meshRenderer->GetShader();
-			Mesh mesh = meshRenderer->GetMesh();
+			const Shader& shader = meshRenderer->GetShader();
+			const Mesh& mesh = meshRenderer->GetMesh();
 
 			shader.Use();
 
