@@ -83,6 +83,8 @@ int main()
 	Scene scene("Example", camera);
 	scene.AddGameObject(cube);
 
+	auto sub = Input::OnMousePressed.Subcribe([](Keycode keycode) { INFO("Mouse pressed."); });
+
 	win1->OnUpdate = [&]() 
 	{ 
 		if (Input::IfKeyDown(Keycode::A))

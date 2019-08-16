@@ -16,12 +16,12 @@ namespace Nol
 
 	void Test::SetupLogEventFor(Window* window)
 	{
-		window->OnKeyPressed.Add(LogKeyPress);
-		window->OnKeyHold.Add(LogKeyHold);
-		window->OnKeyReleased.Add(LogKeyRelease);
+		window->OnKeyPressed.Subcribe(LogKeyPress);
+		window->OnKeyHold.Subcribe(LogKeyHold);
+		window->OnKeyReleased.Subcribe(LogKeyRelease);
 
-		window->OnMousePressed.Add(LogMousePress);
-		window->OnMouseReleased.Add(LogMouseRelease);
+		window->OnMousePressed.Subcribe(LogMousePress);
+		window->OnMouseReleased.Subcribe(LogMouseRelease);
 	}
 
 	void Test::InfiniteLoop()

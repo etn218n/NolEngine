@@ -14,7 +14,7 @@ namespace Nol
 
 		projectionViewMatrix = projectionMatrix * viewMatrix;
 
-		transform->OnTransformed.Add(std::bind(&Camera::CalculateMatrices, this, std::placeholders::_1));
+		transform->OnTransformed.Subcribe(std::bind(&Camera::CalculateMatrices, this, std::placeholders::_1));
 	}
 
 	void Camera::SetPerspectiveView(float fov, float aspectRatio, float nearPlane, float farPlane)

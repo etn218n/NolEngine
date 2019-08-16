@@ -3,69 +3,60 @@
 #include "PCH.h"
 #include "NolAPI.h"
 
+#include "Observer.h"
+
 namespace Nol
 {
 	template<typename ...Args>
 	class Observable
 	{
-	using Callback = std::function<void(Args... args)>;
-
 	private:
-		std::list<Callback> callbackList;
-
-	private:
-		template<typename T, typename... U>
-		size_t GetAddress(std::function<T(U...)> fn)
-		{
-			typedef T(fnType)(U...);
-			fnType ** fnPointer = fn.template target<fnType*>();
-			return (size_t)*fnPointer;
-		}
+		std::vector<Observer<Args...>> observerList;
 
 	public:
-		Observable() {}
-		
-		void Add(Callback fn)
-		{
-			/*size_t fnAddress = GetAddress(fn);
+		Observable() { observerList.reserve(5); }
+		~Observable() = default;
 
-			for (const auto& callback : callbackList)
+		void Subcribe(Observer<Args...> newObserver)
+		{
+			for (auto& observer : observerList)
 			{
-				if (fnAddress == GetAddress(callback))
+				if (newObserver.id == observer.id)
 					return;
-			}*/
-
-			callbackList.push_back(fn);
-		}
-
-		void Remove(Callback fn)
-		{
-			/*if (!std::is_assignable(fn))
-			{
-				return;
 			}
 
-			size_t fnAddress = GetAddress(fn);
+			observerList.push_back(newObserver);
+		}
 
-			typename std::list<Callback>::iterator it;
+		Observer<Args...>& Subcribe(std::function<void(Args... args)> onNextFn)
+		{
+			Observer<Args...> observer;
 
-			for (it = callbackList.begin(); it != callbackList.end(); it++)
+			observer.onNextFn = onNextFn;
+
+			observerList.push_back(observer);
+
+			return observerList.back();
+		}
+
+		void Unsubcribe(Observer<Args...>& obs)
+		{
+			typename std::vector<Observer<Args...>>::iterator it = observerList.begin();
+
+			for (; it != observerList.end(); it++)
 			{
-				if (fnAddress == GetAddress(*it))
+				if (it->id == obs.id)
 				{
-					callbackList.erase(it);
+					observerList.erase(it);
 					return;
 				}
-			}*/
+			}
 		}
 
 		void Publish(Args... args)
 		{
-			if (callbackList.size() == 0)
-				return;
-
-			for (const auto& callback : callbackList)
-				callback(args...);
+			for (auto& observer : observerList)
+				observer.OnNext(args...);
 		}	
 	};
 }

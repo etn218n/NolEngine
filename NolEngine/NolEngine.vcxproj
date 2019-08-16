@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Event\Observer.h" />
     <ClInclude Include="src\Render\Scene.h" />
     <ClInclude Include="src\Component\Camera.h" />
     <ClInclude Include="src\Component\Component.h" />
