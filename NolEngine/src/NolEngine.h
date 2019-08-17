@@ -15,6 +15,7 @@
 #include "Input/Input.h"
 #include "Input/Keycode.h"
 
+#include "Render/Renderer.h"
 #include "Render/Texture.h"
 #include "Render/Shader.h"
 #include "Render/Scene.h"

@@ -5,35 +5,60 @@ namespace Nol
 {
 	MeshRenderer::MeshRenderer(Mesh& mesh) : mesh(mesh)
 	{
-		if (mesh.NumberOfIndices() == 0)
-		{
-			renderSelector = [&](void)
-			{
-				glDrawArrays(GL_TRIANGLES, 0, mesh.NumberOfVertices());
-			};
-		}
-		else
-		{
-			renderSelector = [&](void)
-			{
-				glDrawElements(GL_TRIANGLES, mesh.NumberOfIndices(), GL_UNSIGNED_INT, 0);
-			};
-		}
+		SetupSelectors();
 	}
 
-	MeshRenderer::MeshRenderer(Mesh& mesh, Shader& shader) : mesh(mesh), shader(shader)
+	MeshRenderer::MeshRenderer(Mesh& mesh, Shader& shader) : MeshRenderer(mesh)
 	{
+		this->shader = shader;
+	}
+
+	MeshRenderer::MeshRenderer(const MeshRenderer& other) : 
+		mesh(other.mesh), 
+		shader(other.shader)
+	{
+		SetupSelectors();
+	}
+
+	void MeshRenderer::SetupSelectors()
+	{
+		uploadUniformFn = [](const Shader&) {};
+
 		if (mesh.NumberOfIndices() == 0)
 		{
-			renderSelector = [&](void) 
+			drawFn = [&]()
 			{
+				uploadUniformFn(shader);
+
+				for (unsigned int i = 0; i < mesh.NumberOfTextures(); i++)
+				{
+					shader.SetUniform1i("uTexture" + std::to_string(i), i);
+
+					glActiveTexture(GL_TEXTURE0 + i);
+					glBindTexture(GL_TEXTURE_2D, mesh.GetTextureList()[i].GetID());
+				}
+
+				glBindVertexArray(mesh.GetVAO());
+
 				glDrawArrays(GL_TRIANGLES, 0, mesh.NumberOfVertices());
 			};
 		}
 		else
 		{
-			renderSelector = [&](void)
+			drawFn = [&]()
 			{
+				uploadUniformFn(shader);
+
+				for (unsigned int i = 0; i < mesh.NumberOfTextures(); i++)
+				{
+					shader.SetUniform1i("uTexture" + std::to_string(i), i);
+
+					glActiveTexture(GL_TEXTURE0 + i);
+					glBindTexture(GL_TEXTURE_2D, mesh.GetTextureList()[i].GetID());
+				}
+
+				glBindVertexArray(mesh.GetVAO());
+
 				glDrawElements(GL_TRIANGLES, mesh.NumberOfIndices(), GL_UNSIGNED_INT, 0);
 			};
 		}

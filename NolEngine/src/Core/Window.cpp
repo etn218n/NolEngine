@@ -34,12 +34,12 @@ namespace Nol
 
 		SetVsync(isVsyncEnabled);
 
+		// Black is default background color
+		SetBackgroundColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
 		Input::activeWindow = this;
 
 		glfwMakeContextCurrent(NULL);
-
-		// For testing purpose
-		OnUpdate = nullptr;
 	}
 
 	void Window::Update()
@@ -54,13 +54,12 @@ namespace Nol
 
 		glfwMakeContextCurrent(this->glfwWindow);
 
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// For testing purpose
-		if (OnUpdate != nullptr)
-			OnUpdate();
+		OnUpdate.Publish(this);
 
 		if (Input::activeWindow == this)
 			Input::UpdateInputState(currentTime);

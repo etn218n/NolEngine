@@ -62,30 +62,49 @@ int main()
 	Log::Init();
 
 	Window* win1 = new Window("First", 800, 600);
-	//Window* win2 = new Window("Second", 200, 200);
+	win1->SetBackgroundColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 	win1->Update();
 
 	Texture wallTexture("./resource/textures/wall.jpg");
 	Shader testShader("./resource/shaders/TestShader.gl");
+	Shader lightSourceShader("./resource/shaders/LightSource.gl");
 
 	Mesh mesh(vertices, { wallTexture });
 	
-	MeshRenderer meshRenderer(mesh);
+	MeshRenderer meshRenderer(mesh, testShader);
+	MeshRenderer lightMeshRenderer(mesh, lightSourceShader);
 
-	GameObject* cube = new GameObject();
+	std::shared_ptr<Light> pointLight = std::make_shared<Light>();
+	pointLight->AddComponent<MeshRenderer>(lightMeshRenderer);
+	pointLight->GetTransform()->Translate(glm::vec3(1.0f, 1.0f, 0.0f));
+	pointLight->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
+	pointLight->GetComponent<MeshRenderer>()->SetUniformsFn([&pointLight](const Shader& shader)
+	{
+		shader.SetUniform4f("uColor", pointLight->Color());
+	});
+
+	std::shared_ptr<GameObject> cube = std::make_shared<GameObject>("Cube");
 	cube->AddComponent<MeshRenderer>(meshRenderer);
 	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-	Camera* camera = new Camera();
+	std::shared_ptr<GameObject> cube2 = std::make_shared<GameObject>("Cube2");
+	cube2->AddComponent<MeshRenderer>(meshRenderer);
+	cube2->GetTransform()->Translate(glm::vec3(0.0f, 1.0f, -5.0f));
+
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 4.0f));
 
-	Scene scene("Example", camera);
-	scene.AddGameObject(cube);
+	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
+	scene->SetLight(pointLight);
+	scene->SetCamera(camera);
+	scene->AddGameObject(cube);
+	scene->AddGameObject(cube2);
+	scene->AddGameObject(pointLight);
+	
+	Renderer renderer(scene);
 
-	auto sub = Input::OnMousePressed.Subcribe([](Keycode keycode) { INFO("Mouse pressed."); });
-
-	win1->OnUpdate = [&]() 
+	win1->OnUpdate.Subcribe([&](Window* window) 
 	{ 
 		if (Input::IfKeyDown(Keycode::A))
 			camera->GetTransform()->Translate(glm::vec3(-0.001f, 0.0f, 0.0f));
@@ -97,10 +116,13 @@ int main()
 		else if (Input::IfKeyDown(Keycode::S))
 			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.001f));
 
+		if (Input::IfKeyPressed(Keycode::P))
+			pointLight->SetColor(glm::vec4(0.9f, 0.3f, 0.3f, 1.0f));
+
 		cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		scene.Render();
-	};
+		renderer.Update();
+	});
 
 	while (!win1->IsClosed())
 	{

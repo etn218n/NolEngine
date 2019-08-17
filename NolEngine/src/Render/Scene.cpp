@@ -3,15 +3,21 @@
 
 namespace Nol
 {
-	Scene::Scene(const std::string& name, Camera* camera) : name(name), camera(camera)
+	Scene::Scene(const std::string& name) : name(name)
 	{
-		if (camera == nullptr)
-			WARN("Camera is NULL.");
+		gameobjectList.reserve(100);
 
-		renderList.reserve(100);
+		std::shared_ptr<Camera> defaultCamera = std::make_shared<Camera>();
+		defaultCamera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 4.0f));
+
+		std::shared_ptr<Light> defaultLight = std::make_shared<Light>();
+		defaultLight->GetTransform()->Translate(glm::vec3(1.0f, 1.0f, 0.0f));
+
+		SetCamera(defaultCamera);
+		SetLight(defaultLight);
 	}
 
-	void Scene::SetCamera(Camera* camera)
+	void Scene::SetCamera(std::shared_ptr<Camera> camera)
 	{
 		if (camera == nullptr)
 		{
@@ -22,8 +28,28 @@ namespace Nol
 		this->camera = camera;
 	}
 
-	void Scene::AddGameObject(GameObject* gameObject)
+	void Scene::SetLight(std::shared_ptr<Light>light)
 	{
+		if (light == nullptr)
+		{
+			WARN("Light is NULL.");
+			return;
+		}
+
+		this->light = light;
+	}
+
+	void Scene::AddGameObject(std::shared_ptr<GameObject> gameObject)
+	{
+		for (const auto& gameObj : gameobjectList)
+		{
+			if (gameObj->GetID() == gameObject->GetID())
+			{
+				WARN("GameObject is already contained in scene.");
+				return;
+			}
+		}
+
 		MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
 
 		if (meshRenderer == nullptr)
@@ -32,65 +58,18 @@ namespace Nol
 			return;
 		}
 
-		renderList.push_back({ gameObject, meshRenderer });
+		gameobjectList.push_back(gameObject);
 	}
 
-	void Scene::Render() 
+	void Scene::RemoveGameObject(std::shared_ptr<GameObject> gameObject)
 	{
-		for (const auto& entry : renderList)
-		{
-			MeshRenderer* meshRenderer = entry.second;
-
-			const Shader& shader = meshRenderer->GetShader();
-			const Mesh& mesh = meshRenderer->GetMesh();
-
-			shader.Use();
-
-			shader.SetUniform4fv("uModel", entry.first->GetTransform()->GetDataPointer());
-			shader.SetUniform4fv("uViewProjection", glm::value_ptr(camera->GetProjectionViewMatrix()));
-
-			for (unsigned int i = 0; i < mesh.NumberOfTextures(); i++)
-			{
-				shader.SetUniform1i("uTexture" + std::to_string(i), i);
-
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_2D, mesh.GetTextureList()[i].GetID());
-			}
-
-			glBindVertexArray(mesh.GetVAO());
-
-			meshRenderer->Render();
-		}
+		// Revisit this later
+		gameobjectList.erase(
+			std::remove_if(gameobjectList.begin(), gameobjectList.end(),
+				[gameObject](const std::shared_ptr<GameObject> gameObj)
+				{ 
+					return (gameObj->GetID() == gameObject->GetID()); 
+				}),
+			gameobjectList.end());
 	}
-
-	/*void Scene::AddGameObject(GameObject* gameObject)
-	{
-		MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
-
-		if (meshRenderer == nullptr)
-		{
-			INFO("GameObject does not have MeshRenderer component.");
-			return;
-		}
-
-		unsigned int vaoID = meshRenderer->GetMesh().GetVAO();
-
-		renderMap.insert({ vaoID, gameObject });
-	}
-
-	void Scene::Render()
-	{
-		typedef std::multimap<unsigned int, GameObject*>::iterator MapIterator;
-
-		for (auto& entry : renderMap)
-		{
-			 Get iterator corresponds to each vaoID
-			std::pair<MapIterator, MapIterator> listOfGameObject = renderMap.equal_range(entry.first);
-
-			for (MapIterator it = listOfGameObject.first; it != listOfGameObject.second; it++)
-			{
-
-			}
-		}
-	}*/
 }
