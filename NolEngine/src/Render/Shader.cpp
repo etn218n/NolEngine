@@ -14,7 +14,9 @@ namespace Nol
 	Shader::Shader(const std::string& filePath)
 	{
 		if (ParseShaderSource(filePath) == true)
+		{
 			CreateShaderProgram();
+		}
 	}
 
 	Shader::Shader(const Shader & other) : 
@@ -114,6 +116,18 @@ namespace Nol
 	{
 		unsigned int vertexID   = CompileShader(ShaderType::Vertex);
 		unsigned int fragmentID = CompileShader(ShaderType::Fragment);
+
+		if (vertexID == 0)
+		{
+			ERR("Failed to generate vertex shader program.");
+			return;
+		}
+
+		if (fragmentID == 0)
+		{
+			ERR("Failed to generate fragment shader program.");
+			return;
+		}
 
 		int programID = glCreateProgram();
 

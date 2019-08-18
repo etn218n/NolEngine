@@ -34,6 +34,7 @@ namespace Nol
 
 			shader.SetUniform4f("uLightColor", scene->light->Color());
 			shader.SetUniform3f("uLightPosition", scene->light->GetTransform()->GetPosition());
+			shader.SetUniform3f("uCameraPosition", scene->camera->GetTransform()->GetPosition());
 
 			meshRenderer->Render();
 		}

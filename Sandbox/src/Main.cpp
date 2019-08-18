@@ -85,6 +85,7 @@ int main()
 
 	std::shared_ptr<GameObject> cube = std::make_shared<GameObject>("Cube");
 	cube->AddComponent<MeshRenderer>(meshRenderer);
+	cube->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.0f));
 	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	std::shared_ptr<GameObject> cube2 = std::make_shared<GameObject>("Cube2");
@@ -120,10 +121,10 @@ int main()
 
 		//cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		float lightPosX = glm::cos(Time::Now()) * 1.0f;
-		//float lightPosZ = glm::sin(Time::Now()) * 2.0f;
+		float lightPosX = glm::cos(Time::Now()) * 2.0f;
+		float lightPosZ = glm::sin(Time::Now()) * 2.0f;
 
-		pointLight->GetTransform()->SetPosition(glm::vec3(lightPosX, 0.0f, 1.0f));
+		pointLight->GetTransform()->SetPosition(glm::vec3(lightPosX, 0.0f, lightPosZ));
 
 		renderer.Update();
 	});

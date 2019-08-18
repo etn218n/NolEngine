@@ -32,14 +32,21 @@ out vec4 FragColor;
 
 uniform vec4 uLightColor;
 uniform vec3 uLightPosition;
+uniform vec3 uCameraPosition;
 uniform sampler2D uTexture0;
 
 void main()
 {
-	vec3 normal = normalize(VertexNormal);
+	vec3 normalVector = normalize(VertexNormal);
+
 	vec3 lightDirection = normalize(uLightPosition - FragmentPosition);  
+	float diffuseIntensity = max(dot(normalVector, lightDirection), 0) + 0.1f;
 
-	float diffuseStrength = max(dot(normal, lightDirection), 0) + 0.1f;
+	vec3 reflectDirection = reflect(-lightDirection, normalVector);
+	float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), 32);
 
-	FragColor =  diffuseStrength * texture(uTexture0, VertexTexCoord) * uLightColor;
+	vec4 specular = specularIntensity * uLightColor;  
+	vec4 diffuse  = diffuseIntensity  * uLightColor;
+
+	FragColor = (specular + diffuse) * texture(uTexture0, VertexTexCoord);
 }
