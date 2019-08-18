@@ -33,6 +33,7 @@ namespace Nol
 			shader.SetUniform4fv("uModel", gameObject->GetTransform()->GetDataPointer());
 
 			shader.SetUniform4f("uLightColor", scene->light->Color());
+			shader.SetUniform3f("uLightPosition", scene->light->GetTransform()->GetPosition());
 
 			meshRenderer->Render();
 		}

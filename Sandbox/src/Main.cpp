@@ -77,7 +77,6 @@ int main()
 
 	std::shared_ptr<Light> pointLight = std::make_shared<Light>();
 	pointLight->AddComponent<MeshRenderer>(lightMeshRenderer);
-	pointLight->GetTransform()->Translate(glm::vec3(1.0f, 1.0f, 0.0f));
 	pointLight->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
 	pointLight->GetComponent<MeshRenderer>()->SetUniformsFn([&pointLight](const Shader& shader)
 	{
@@ -119,7 +118,12 @@ int main()
 		if (Input::IfKeyPressed(Keycode::P))
 			pointLight->SetColor(glm::vec4(0.9f, 0.3f, 0.3f, 1.0f));
 
-		cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+		//cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		float lightPosX = glm::cos(Time::Now()) * 1.0f;
+		//float lightPosZ = glm::sin(Time::Now()) * 2.0f;
+
+		pointLight->GetTransform()->SetPosition(glm::vec3(lightPosX, 0.0f, 1.0f));
 
 		renderer.Update();
 	});

@@ -8,9 +8,9 @@ namespace Nol
 		SetupSelectors();
 	}
 
-	MeshRenderer::MeshRenderer(Mesh& mesh, Shader& shader) : MeshRenderer(mesh)
+	MeshRenderer::MeshRenderer(Mesh& mesh, Shader& shader) : mesh(mesh), shader(shader)
 	{
-		this->shader = shader;
+		SetupSelectors();
 	}
 
 	MeshRenderer::MeshRenderer(const MeshRenderer& other) : 
