@@ -24,29 +24,45 @@ void main()
 #define fragment
 #version 330 core
 
+struct Material 
+{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+}; 
+  
+struct Light {
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
 in vec3 VertexNormal;
 in vec2 VertexTexCoord;
 in vec3 FragmentPosition;
 
 out vec4 FragColor;
 
-uniform vec4 uLightColor;
-uniform vec3 uLightPosition;
-uniform vec3 uCameraPosition;
+uniform Light uLight;
+uniform Material uMaterial;
 uniform sampler2D uTexture0;
+uniform vec3 uCameraPosition;
 
 void main()
 {
 	vec3 normalVector = normalize(VertexNormal);
 
-	vec3 lightDirection = normalize(uLightPosition - FragmentPosition);  
+	vec3 lightDirection = normalize(uLight.position - FragmentPosition);  
 	float diffuseIntensity = max(dot(normalVector, lightDirection), 0) + 0.1f;
 
 	vec3 reflectDirection = reflect(-lightDirection, normalVector);
-	float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), 32);
+	float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), uMaterial.shininess);
 
-	vec4 specular = specularIntensity * uLightColor;  
-	vec4 diffuse  = diffuseIntensity  * uLightColor;
-
-	FragColor = (specular + diffuse) * texture(uTexture0, VertexTexCoord);
+	vec3 ambient  = uLight.ambient  * uMaterial.ambient;
+	vec3 diffuse  = uLight.diffuse  * uMaterial.diffuse  * diffuseIntensity;
+	vec3 specular = uLight.specular * uMaterial.specular * specularIntensity;
+	
+	FragColor = vec4((ambient + specular + diffuse), 1.0f) * texture(uTexture0, VertexTexCoord);
 }

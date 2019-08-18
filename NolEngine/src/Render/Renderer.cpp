@@ -32,8 +32,16 @@ namespace Nol
 
 			shader.SetUniform4fv("uModel", gameObject->GetTransform()->GetDataPointer());
 
-			shader.SetUniform4f("uLightColor", scene->light->Color());
-			shader.SetUniform3f("uLightPosition", scene->light->GetTransform()->GetPosition());
+			shader.SetUniform3f("uLight.ambient", scene->light->Ambient());
+			shader.SetUniform3f("uLight.diffuse", scene->light->Diffuse());
+			shader.SetUniform3f("uLight.specular", scene->light->Specular());
+			shader.SetUniform3f("uLight.position", scene->light->GetTransform()->GetPosition());
+
+			shader.SetUniform3f("uMaterial.ambient", glm::vec3(1.0f));
+			shader.SetUniform3f("uMaterial.diffuse", glm::vec3(1.0f));
+			shader.SetUniform3f("uMaterial.specular", glm::vec3(1.0f));
+			shader.SetUniform1f("uMaterial.shininess", 32.0f);
+
 			shader.SetUniform3f("uCameraPosition", scene->camera->GetTransform()->GetPosition());
 
 			meshRenderer->Render();

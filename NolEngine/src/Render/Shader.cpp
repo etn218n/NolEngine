@@ -63,6 +63,11 @@ namespace Nol
 		glUniform1i(glGetUniformLocation(*id, uniformName.c_str()), index);
 	}
 
+	NOL_API void Shader::SetUniform1f(const std::string & uniformName, float f) const
+	{
+		glUniform1f(glGetUniformLocation(*id, uniformName.c_str()), f);
+	}
+
 	void Shader::SetUniform3f(const std::string& uniformName, glm::vec3 v) const
 	{
 		glUniform3f(glGetUniformLocation(*id, uniformName.c_str()), v.x, v.y, v.z);

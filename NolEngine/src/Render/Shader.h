@@ -69,6 +69,7 @@ namespace Nol
 		NOL_API inline const std::string& GetFragmentSource() const { return fragmentSource; }
 
 		NOL_API void SetUniform1i(const std::string& uniformName, int index)   const;
+		NOL_API void SetUniform1f(const std::string& uniformName, float f)     const;
 		NOL_API void SetUniform3f(const std::string& uniformName, glm::vec3 v) const;
 		NOL_API void SetUniform4f(const std::string& uniformName, glm::vec4 v) const;
 		NOL_API void SetUniform4fv(const std::string& uniformName, const float* f) const;
