@@ -3,7 +3,7 @@
 
 namespace Nol
 {
-	Renderer::Renderer(std::shared_ptr<Scene>  scene) : scene(scene)
+	Renderer::Renderer(std::shared_ptr<Scene> scene) : scene(scene)
 	{
 	}
 
@@ -37,10 +37,10 @@ namespace Nol
 			shader.SetUniform3f("uLight.specular", scene->light->Specular());
 			shader.SetUniform3f("uLight.position", scene->light->GetTransform()->GetPosition());
 
-			shader.SetUniform3f("uMaterial.ambient", glm::vec3(1.0f));
-			shader.SetUniform3f("uMaterial.diffuse", glm::vec3(1.0f));
-			shader.SetUniform3f("uMaterial.specular", glm::vec3(1.0f));
-			shader.SetUniform1f("uMaterial.shininess", 32.0f);
+			shader.SetUniform3f("uMaterial.ambient", meshRenderer->GetMaterial().Ambient());
+			shader.SetUniform3f("uMaterial.diffuse", meshRenderer->GetMaterial().Diffuse());
+			shader.SetUniform3f("uMaterial.specular", meshRenderer->GetMaterial().Specular());
+			shader.SetUniform1f("uMaterial.shininess", meshRenderer->GetMaterial().Shininess());
 
 			shader.SetUniform3f("uCameraPosition", scene->camera->GetTransform()->GetPosition());
 

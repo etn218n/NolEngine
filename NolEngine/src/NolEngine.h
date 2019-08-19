@@ -26,3 +26,4 @@
 #include "Component/GameObject.h"
 #include "Component/Transform.h"
 #include "Component/Camera.h"
+#include "Component/Material.h"

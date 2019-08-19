@@ -13,6 +13,11 @@ namespace Nol
 		SetupSelectors();
 	}
 
+	MeshRenderer::MeshRenderer(Mesh& mesh, Shader& shader, Material& material) : mesh(mesh), shader(shader), material(material)
+	{
+		SetupSelectors();
+	}
+
 	MeshRenderer::MeshRenderer(const MeshRenderer& other) : 
 		mesh(other.mesh), 
 		shader(other.shader)

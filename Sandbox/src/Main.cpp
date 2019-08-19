@@ -10,7 +10,7 @@ void Bar(Nol::Window* window, Keycode keycode)
 
 int main()
 {
-	std::vector<float> vertices = {
+	std::vector<float> cubeVertices = {
      /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
 	 0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  0.0f,
@@ -59,6 +59,24 @@ int main()
     -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  0.0f,
     -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f };
 
+	Vertex topLeft;
+	topLeft.Position = glm::vec3(-1.0f, 1.0f, 0.0f);
+	topLeft.Normal   = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	Vertex bottomLeft;
+	bottomLeft.Position = glm::vec3(-1.0f, -1.0f, 0.0f);
+	bottomLeft.Normal   = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	Vertex topRight;
+	topRight.Position = glm::vec3(1.0f, 1.0f, 0.0f);
+	topRight.Normal   = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	Vertex bottomRight;
+	bottomRight.Position = glm::vec3(1.0f, -1.0f, 0.0f);
+	bottomRight.Normal   = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	std::vector<Vertex> planeVertices = { topLeft, topRight, bottomLeft, bottomRight };
+
 	Log::Init();
 
 	Window* win1 = new Window("First", 800, 600);
@@ -70,37 +88,43 @@ int main()
 	Shader testShader("./resource/shaders/TestShader.gl");
 	Shader lightSourceShader("./resource/shaders/LightSource.gl");
 
-	Mesh mesh(vertices, { wallTexture });
+	Mesh cubeMesh(cubeVertices, { wallTexture });
+	Mesh planeMesh(planeVertices, { 0, 1, 2, 1, 2, 3 }, { });
 	
-	MeshRenderer meshRenderer(mesh, testShader);
-	MeshRenderer lightMeshRenderer(mesh, lightSourceShader);
+	MeshRenderer cubeMeshRenderer(cubeMesh, testShader);
+	MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
+	MeshRenderer planeMeshRenderer(planeMesh, testShader);
 
-	std::shared_ptr<Light> pointLight = std::make_shared<Light>();
-	pointLight->AddComponent<MeshRenderer>(lightMeshRenderer);
-	pointLight->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
-	pointLight->GetComponent<MeshRenderer>()->SetUniformsFn([&pointLight](const Shader& shader)
+	std::shared_ptr<GameObject> plane = std::make_shared<GameObject>();
+	plane->AddComponent<MeshRenderer>(planeMeshRenderer);
+	plane->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -2.0f));
+	plane->GetTransform()->Scale(glm::vec3(5.0f, 5.0f, 5.0f));
+	plane->GetComponent<MeshRenderer>()->SetUniformsFn([](const Shader& shader)
 	{
-		shader.SetUniform4f("uColor", pointLight->Color());
+		shader.SetUniform4f("uColor", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	});
+
+	std::shared_ptr<Light> light = std::make_shared<Light>();
+	light->AddComponent<MeshRenderer>(lightMeshRenderer);
+	light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
+	light->GetComponent<MeshRenderer>()->SetUniformsFn([&light](const Shader& shader)
+	{
+		shader.SetUniform4f("uColor", light->Color());
 	});
 
 	std::shared_ptr<GameObject> cube = std::make_shared<GameObject>("Cube");
-	cube->AddComponent<MeshRenderer>(meshRenderer);
-	cube->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.0f));
+	cube->AddComponent<MeshRenderer>(cubeMeshRenderer);
 	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
-	std::shared_ptr<GameObject> cube2 = std::make_shared<GameObject>("Cube2");
-	cube2->AddComponent<MeshRenderer>(meshRenderer);
-	cube2->GetTransform()->Translate(glm::vec3(0.0f, 1.0f, -5.0f));
 
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 4.0f));
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
-	scene->SetLight(pointLight);
+	scene->SetLight(light);
 	scene->SetCamera(camera);
-	scene->AddGameObject(cube);
-	scene->AddGameObject(cube2);
-	scene->AddGameObject(pointLight);
+	//scene->AddGameObject(cube);
+	scene->AddGameObject(light);
+	scene->AddGameObject(plane);
 	
 	Renderer renderer(scene);
 
@@ -117,14 +141,14 @@ int main()
 			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.001f));
 
 		if (Input::IfKeyPressed(Keycode::P))
-			pointLight->SetColor(glm::vec4(0.9f, 0.3f, 0.3f, 1.0f));
+			light->SetColor(glm::vec4(0.9f, 0.3f, 0.3f, 1.0f));
 
 		//cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		float lightPosX = glm::cos(Time::Now()) * 2.0f;
 		float lightPosZ = glm::sin(Time::Now()) * 2.0f;
 
-		pointLight->GetTransform()->SetPosition(glm::vec3(lightPosX, 0.0f, lightPosZ));
+		light->GetTransform()->SetPosition(glm::vec3(lightPosX, 0.0f, lightPosZ));
 
 		renderer.Update();
 	});
