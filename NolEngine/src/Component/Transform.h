@@ -24,7 +24,9 @@ namespace Nol
 		NOL_API void Translate(const glm::vec3& v);
 		NOL_API void Scale(const glm::vec3& v);
 		NOL_API void Rotate(const float angle, const glm::vec3& axis);
+
 		NOL_API const glm::vec3 GetPosition() const;
+		NOL_API const glm::vec3 GetFront() const;
 
 		NOL_API void SetPosition(glm::vec3 position);
 

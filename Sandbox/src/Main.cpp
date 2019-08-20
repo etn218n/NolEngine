@@ -95,21 +95,25 @@ int main()
 	MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
 	MeshRenderer planeMeshRenderer(planeMesh, testShader);
 
+	Material planeMaterial;
+	/*planeMaterial.SetAmbient(glm::vec3(0.0f));
+	planeMaterial.SetDiffuse(glm::vec3(0.1f));
+	planeMaterial.SetSpecular(glm::vec3(0.1f));*/
+
 	std::shared_ptr<GameObject> plane = std::make_shared<GameObject>();
 	plane->AddComponent<MeshRenderer>(planeMeshRenderer);
-	plane->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -2.0f));
+	plane->AddComponent<Material>(planeMaterial);
+	plane->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -6.0f));
 	plane->GetTransform()->Scale(glm::vec3(5.0f, 5.0f, 5.0f));
-	plane->GetComponent<MeshRenderer>()->SetUniformsFn([](const Shader& shader)
-	{
-		shader.SetUniform4f("uColor", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-	});
 
-	std::shared_ptr<Light> light = std::make_shared<Light>();
+	std::shared_ptr<Light> light = std::make_shared<Light>(LightType::DirectionalLight);
 	light->AddComponent<MeshRenderer>(lightMeshRenderer);
+	light->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	light->GetTransform()->Rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
 	light->GetComponent<MeshRenderer>()->SetUniformsFn([&light](const Shader& shader)
 	{
-		shader.SetUniform4f("uColor", light->Color());
+		shader.SetUniformVec4("uColor", light->Color());
 	});
 
 	std::shared_ptr<GameObject> cube = std::make_shared<GameObject>("Cube");
@@ -117,7 +121,7 @@ int main()
 	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 4.0f));
+	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetLight(light);
@@ -131,17 +135,21 @@ int main()
 	win1->OnUpdate.Subcribe([&](Window* window) 
 	{ 
 		if (Input::IfKeyDown(Keycode::A))
-			camera->GetTransform()->Translate(glm::vec3(-0.001f, 0.0f, 0.0f));
+			light->GetTransform()->Translate(glm::vec3(-0.001f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::D))
-			camera->GetTransform()->Translate(glm::vec3(0.001f, 0.0f, 0.0f));
+			light->GetTransform()->Translate(glm::vec3(0.001f, 0.0f, 0.0f));
 
 		if (Input::IfKeyDown(Keycode::W))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -0.001f));
+			camera->GetTransform()->Rotate(0.1f, glm::vec3(1.0f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::S))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.001f));
-
-		if (Input::IfKeyPressed(Keycode::P))
-			light->SetColor(glm::vec4(0.9f, 0.3f, 0.3f, 1.0f));
+			camera->GetTransform()->Rotate(-0.1f, glm::vec3(1.0f, 0.0f, 0.0f));
+			
+		if (Input::IfKeyDown(Keycode::Alpha1))
+			light->SetType(LightType::PointLight);
+		else if (Input::IfKeyDown(Keycode::Alpha2))
+			light->SetType(LightType::SpotLight);
+		else if (Input::IfKeyDown(Keycode::Alpha3))
+			light->SetType(LightType::DirectionalLight);
 
 		//cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 

@@ -32,11 +32,18 @@ struct Material
     float shininess;
 }; 
   
-struct Light {
+struct Light 
+{
+	int type;
     vec3 position;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+	vec3 direction;
+    vec3 color;
+
+	float cutoff;
+	float outercutoff;
+	float constant;
+    float linear;
+    float quadratic;
 };
 
 in vec3 VertexNormal;
@@ -54,15 +61,58 @@ void main()
 {
 	vec3 normalVector = normalize(VertexNormal);
 
-	vec3 lightDirection = normalize(uLight.position - FragmentPosition);  
-	float diffuseIntensity = max(dot(normalVector, lightDirection), 0) + 0.1f;
+	if (uLight.type == 0) // Directional Light
+	{
+		vec3 lightDirection = normalize(-uLight.direction);  
+		float diffuseIntensity = max(dot(normalVector, lightDirection), 0) + 0.1f;
 
-	vec3 reflectDirection = reflect(-lightDirection, normalVector);
-	float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), uMaterial.shininess);
+		vec3 reflectDirection = reflect(-lightDirection, normalVector);
+		float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), uMaterial.shininess);
 
-	vec3 ambient  = uLight.ambient  * uMaterial.ambient;
-	vec3 diffuse  = uLight.diffuse  * uMaterial.diffuse  * diffuseIntensity;
-	vec3 specular = uLight.specular * uMaterial.specular * specularIntensity;
+		vec3 ambient  = uLight.color * uMaterial.ambient;
+		vec3 diffuse  = uLight.color * uMaterial.diffuse  * diffuseIntensity;
+		vec3 specular = uLight.color * uMaterial.specular * specularIntensity;
 	
-	FragColor = vec4((ambient + specular + diffuse), 1.0f) * texture(uTexture0, VertexTexCoord);
+		FragColor = vec4((ambient + specular + diffuse), 1.0f) * texture(uTexture0, VertexTexCoord);
+	}
+	else if (uLight.type == 1) // Point Light
+	{
+		vec3 lightDirection = normalize(uLight.position - FragmentPosition);  
+		float diffuseIntensity = max(dot(normalVector, lightDirection), 0) + 0.1f;
+
+		vec3 reflectDirection = reflect(-lightDirection, normalVector);
+		float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), uMaterial.shininess);
+
+		float distance    = length(uLight.position - FragmentPosition);
+		float attenuation = 1.0 / (uLight.constant + uLight.linear * distance + uLight.quadratic * (distance * distance));    
+
+		vec3 ambient  = uLight.color * uMaterial.ambient;
+		vec3 diffuse  = uLight.color * uMaterial.diffuse  * diffuseIntensity;
+		vec3 specular = uLight.color * uMaterial.specular * specularIntensity;
+	
+		FragColor = vec4((ambient + specular + diffuse) * attenuation, 1.0f) * texture(uTexture0, VertexTexCoord);
+	}
+	else if (uLight.type == 2) // Spot Light
+	{
+		vec3 lightDirection = normalize(uLight.position - FragmentPosition);  
+		float diffuseIntensity = max(dot(normalVector, lightDirection), 0) + 0.1f;
+
+		vec3 reflectDirection = reflect(-lightDirection, normalVector);
+		float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - FragmentPosition)), 0), uMaterial.shininess);
+
+		float distance    = length(uLight.position - FragmentPosition);
+		float attenuation = 1.0 / (uLight.constant + uLight.linear * distance + uLight.quadratic * (distance * distance));    
+
+		vec3 ambient  = uLight.color * uMaterial.ambient;
+		vec3 diffuse  = uLight.color * uMaterial.diffuse  * diffuseIntensity;
+		vec3 specular = uLight.color * uMaterial.specular * specularIntensity;
+		
+		float theta = dot(lightDirection, normalize(-uLight.direction)); 
+		float epsilon = (uLight.cutoff - uLight.outercutoff);
+		float intensity = clamp((theta - uLight.outercutoff) / epsilon, 0.0, 1.0);
+		diffuse  *= intensity;
+		specular *= intensity;
+
+		FragColor = vec4((ambient + specular + diffuse) * attenuation, 1.0f) * texture(uTexture0, VertexTexCoord);
+	}	
 }

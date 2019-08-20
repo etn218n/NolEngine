@@ -7,26 +7,30 @@
 
 namespace Nol
 {
+	enum class LightType
+	{
+		DirectionalLight = 0,
+		PointLight		 = 1,
+		SpotLight		 = 2
+	};
+
 	class Light : public GameObject
 	{
 	private:
 		glm::vec4 color;
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		LightType type;
 
 	public:
-		NOL_API Light(const std::string& name = "None");
+		NOL_API Light(const std::string& name = "None", LightType type = LightType::PointLight);
+		NOL_API Light(LightType type);
 		NOL_API virtual ~Light() = default;
 
-		NOL_API inline void SetColor(const glm::vec4& color)	   { this->color = color;       }
-		NOL_API inline void SetAmbient(const glm::vec3& ambient)   { this->ambient = ambient;   }
-		NOL_API inline void SetDiffuse(const glm::vec3& diffuse)   { this->diffuse = diffuse;   }
-		NOL_API inline void SetSpecular(const glm::vec3& specular) { this->specular = specular; }
+		NOL_API void SetType(LightType type);
 
-		NOL_API inline glm::vec4& Color()    { return color;    }
-		NOL_API inline glm::vec3& Ambient()  { return ambient;  }
-		NOL_API inline glm::vec3& Diffuse()  { return diffuse;  }
-		NOL_API inline glm::vec3& Specular() { return specular; }
+		NOL_API inline void SetColor(const glm::vec4& color) { this->color = color; }
+		NOL_API inline void SetColor(const glm::vec3& color) { this->color = glm::vec4(color.r, color.b, color.g, 1.0f); }
+
+		NOL_API inline const glm::vec4& Color() const { return color; }
+		NOL_API inline const LightType Type()   const { return type;  }
 	};
 }

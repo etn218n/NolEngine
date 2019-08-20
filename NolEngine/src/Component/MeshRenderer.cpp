@@ -37,7 +37,7 @@ namespace Nol
 
 				for (unsigned int i = 0; i < mesh.NumberOfTextures(); i++)
 				{
-					shader.SetUniform1i("uTexture" + std::to_string(i), i);
+					shader.SetUniformInt("uTexture" + std::to_string(i), (int)i);
 
 					glActiveTexture(GL_TEXTURE0 + i);
 					glBindTexture(GL_TEXTURE_2D, mesh.GetTextureList()[i].GetID());
@@ -56,7 +56,7 @@ namespace Nol
 
 				for (unsigned int i = 0; i < mesh.NumberOfTextures(); i++)
 				{
-					shader.SetUniform1i("uTexture" + std::to_string(i), i);
+					shader.SetUniformInt("uTexture" + std::to_string(i), (int)i);
 
 					glActiveTexture(GL_TEXTURE0 + i);
 					glBindTexture(GL_TEXTURE_2D, mesh.GetTextureList()[i].GetID());

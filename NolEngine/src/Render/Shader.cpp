@@ -58,29 +58,29 @@ namespace Nol
 		return true;
 	}
 
-	void Shader::SetUniform1i(const std::string& uniformName, int index) const
+	void Shader::SetUniformInt(const std::string& uniformName, int i) const
 	{
-		glUniform1i(glGetUniformLocation(*id, uniformName.c_str()), index);
+		glUniform1i(glGetUniformLocation(*id, uniformName.c_str()), i);
 	}
 
-	NOL_API void Shader::SetUniform1f(const std::string & uniformName, float f) const
+	void Shader::SetUniformFloat(const std::string & uniformName, float f) const
 	{
 		glUniform1f(glGetUniformLocation(*id, uniformName.c_str()), f);
 	}
 
-	void Shader::SetUniform3f(const std::string& uniformName, glm::vec3 v) const
+	void Shader::SetUniformVec3(const std::string& uniformName, glm::vec3 v3) const
 	{
-		glUniform3f(glGetUniformLocation(*id, uniformName.c_str()), v.x, v.y, v.z);
+		glUniform3f(glGetUniformLocation(*id, uniformName.c_str()), v3.x, v3.y, v3.z);
 	}
 
-	void Shader::SetUniform4f(const std::string& uniformName, glm::vec4 v) const
+	void Shader::SetUniformVec4(const std::string& uniformName, glm::vec4 v4) const
 	{
-		glUniform4f(glGetUniformLocation(*id, uniformName.c_str()), v.x, v.y, v.z, v.w);
+		glUniform4f(glGetUniformLocation(*id, uniformName.c_str()), v4.x, v4.y, v4.z, v4.w);
 	}
 
-	void Shader::SetUniform4fv(const std::string& uniformName, const float* f) const
+	void Shader::SetUniformVec4Ptr(const std::string& uniformName, const float* ptr) const
 	{
-		glUniformMatrix4fv(glGetUniformLocation(*id, uniformName.c_str()), 1, GL_FALSE, f);
+		glUniformMatrix4fv(glGetUniformLocation(*id, uniformName.c_str()), 1, GL_FALSE, ptr);
 	}
 
 	unsigned int Shader::CompileShader(ShaderType shaderType)

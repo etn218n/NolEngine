@@ -68,11 +68,11 @@ namespace Nol
 		NOL_API inline const std::string& GetVertexSource()   const { return vertexSource;   }
 		NOL_API inline const std::string& GetFragmentSource() const { return fragmentSource; }
 
-		NOL_API void SetUniform1i(const std::string& uniformName, int index)   const;
-		NOL_API void SetUniform1f(const std::string& uniformName, float f)     const;
-		NOL_API void SetUniform3f(const std::string& uniformName, glm::vec3 v) const;
-		NOL_API void SetUniform4f(const std::string& uniformName, glm::vec4 v) const;
-		NOL_API void SetUniform4fv(const std::string& uniformName, const float* f) const;
+		NOL_API void SetUniformInt(const std::string& uniformName, int i) const;
+		NOL_API void SetUniformFloat(const std::string& uniformName, float f) const;
+		NOL_API void SetUniformVec3(const std::string& uniformName, glm::vec3 v3) const;
+		NOL_API void SetUniformVec4(const std::string& uniformName, glm::vec4 v4) const;
+		NOL_API void SetUniformVec4Ptr(const std::string& uniformName, const float* ptr) const;
 
 	private:
 		bool ParseShaderSource(const std::string& filePath);

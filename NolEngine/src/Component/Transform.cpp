@@ -33,6 +33,11 @@ namespace Nol
 		return glm::vec3(modelMatrix[3].x, modelMatrix[3].y, modelMatrix[3].z);
 	}
 
+	const glm::vec3 Transform::GetFront() const
+	{
+		return glm::normalize(glm::vec3(modelMatrix[2].x, modelMatrix[2].y, modelMatrix[2].z));
+	}
+
 	void Transform::SetPosition(glm::vec3 position)
 	{
 		modelMatrix[3].x = position.x;
