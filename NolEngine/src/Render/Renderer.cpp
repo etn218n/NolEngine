@@ -72,7 +72,6 @@ namespace Nol
 				break;
 			}
 
-
 			meshRenderer->Render();
 		}
 	}

@@ -10,6 +10,8 @@ void Bar(Nol::Window* window, Keycode keycode)
 
 int main()
 {
+	
+
 	std::vector<float> cubeVertices = {
      /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
