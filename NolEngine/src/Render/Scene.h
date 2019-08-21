@@ -15,21 +15,19 @@ namespace Nol
 	friend class Renderer;
 
 	private:
-		std::vector<std::shared_ptr<GameObject>> gameobjectList;
+		std::vector<GameObject*> gameobjectList;
 		std::string name;
-
-		std::shared_ptr<Camera> camera;
-		std::shared_ptr<Light>  light;
+		std::vector<Light*> lightList;
+		Camera* mainCamera;
 
 	public:
 		NOL_API Scene(const std::string& name);
 		NOL_API Scene(const Scene& other) = delete;
 		NOL_API virtual ~Scene() = default;
 
-		NOL_API void SetCamera(std::shared_ptr<Camera> camera);
-		NOL_API void SetLight(std::shared_ptr<Light> light);
-		NOL_API void AddGameObject(std::shared_ptr<GameObject> gameObject);
-		NOL_API void RemoveGameObject(std::shared_ptr<GameObject> gameObject);
+		NOL_API void SetMainCamera(Camera* camera);
+		NOL_API void AddGameObject(GameObject* gameObject);
+		NOL_API void RemoveGameObject(GameObject* gameObject);
 
 		NOL_API inline const int NumberOfGameObject() const { return gameobjectList.size(); }
 	};

@@ -31,7 +31,7 @@ namespace Nol
 		NOL_API void SetPosition(glm::vec3 position);
 
 		NOL_API inline const glm::mat4& GetModelMatrix() const { return modelMatrix; }
-		NOL_API inline const float* GetDataPointer() { return glm::value_ptr(modelMatrix); };
+		NOL_API inline const float* GetDataPointer() const { return glm::value_ptr(modelMatrix); };
 	};
 }
 

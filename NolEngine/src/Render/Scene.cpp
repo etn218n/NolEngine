@@ -7,17 +7,17 @@ namespace Nol
 	{
 		gameobjectList.reserve(100);
 
-		std::shared_ptr<Camera> defaultCamera = std::make_shared<Camera>();
+		/*Camera* defaultCamera = new Camera();
 		defaultCamera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 4.0f));
 
-		std::shared_ptr<Light> defaultLight = std::make_shared<Light>();
+		Light* defaultLight = new Light();
 		defaultLight->GetTransform()->Translate(glm::vec3(1.0f, 1.0f, 0.0f));
 
-		SetCamera(defaultCamera);
-		SetLight(defaultLight);
+		SetMainCamera(defaultCamera);
+		AddGameObject(defaultLight);*/
 	}
 
-	void Scene::SetCamera(std::shared_ptr<Camera> camera)
+	void Scene::SetMainCamera(Camera* camera)
 	{
 		if (camera == nullptr)
 		{
@@ -25,21 +25,10 @@ namespace Nol
 			return;
 		}
 
-		this->camera = camera;
+		mainCamera = camera;
 	}
 
-	void Scene::SetLight(std::shared_ptr<Light>light)
-	{
-		if (light == nullptr)
-		{
-			WARN("Light is NULL.");
-			return;
-		}
-
-		this->light = light;
-	}
-
-	void Scene::AddGameObject(std::shared_ptr<GameObject> gameObject)
+	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		for (const auto& gameObj : gameobjectList)
 		{
@@ -50,23 +39,44 @@ namespace Nol
 			}
 		}
 
-		MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
+		Light* light = dynamic_cast<Light*>(gameObject);
+
+		if (light != nullptr)
+		{
+			lightList.push_back(static_cast<Light*>(gameObject));
+			INFO("Light added.");
+		}
+
+		/*MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
 
 		if (meshRenderer == nullptr)
 		{
 			INFO("GameObject does not have MeshRenderer component.");
 			return;
-		}
+		}*/
 
 		gameobjectList.push_back(gameObject);
 	}
 
-	void Scene::RemoveGameObject(std::shared_ptr<GameObject> gameObject)
+	void Scene::RemoveGameObject(GameObject* gameObject)
 	{
+		Light* light = dynamic_cast<Light*>(gameObject);
+
+		if (light != nullptr)
+		{
+			lightList.erase(
+				std::remove_if(lightList.begin(), lightList.end(),
+					[gameObject](const Light* light)
+					{
+						return (light->GetID() == gameObject->GetID());
+					}),
+					lightList.end());
+		}
+
 		// Revisit this later
 		gameobjectList.erase(
 			std::remove_if(gameobjectList.begin(), gameobjectList.end(),
-				[gameObject](const std::shared_ptr<GameObject> gameObj)
+				[gameObject](const GameObject* gameObj)
 				{ 
 					return (gameObj->GetID() == gameObject->GetID()); 
 				}),

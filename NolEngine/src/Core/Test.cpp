@@ -41,4 +41,18 @@ namespace Nol
 	{
 		_getch();
 	}
+
+	void Test::LoadModel(const std::string& filePath)
+	{
+		Assimp::Importer import;
+		const aiScene *scene = import.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			ERR("ERROR::ASSIMP::{0}", import.GetErrorString());
+			return;
+		}
+
+		INFO("{0}", scene->mNumMeshes);
+	}
 }

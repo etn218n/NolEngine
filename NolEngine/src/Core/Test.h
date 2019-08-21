@@ -21,6 +21,7 @@ namespace Nol
 		NOL_API static void SetupLogEventFor(Window* window);
 		NOL_API static void InfiniteLoop();
 		NOL_API static void PressAnykey();
+		NOL_API static void LoadModel(const std::string& filePath);
 
 	private:
 		static void LogKeyPress(Window* window, Keycode keycode);

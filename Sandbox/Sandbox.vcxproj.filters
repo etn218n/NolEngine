@@ -20,9 +20,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="resource\shaders\LightSource.gl" />
     <None Include="resource\shaders\TestShader.gl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="resource\shaders\LightSource.gl" />
   </ItemGroup>
 </Project>

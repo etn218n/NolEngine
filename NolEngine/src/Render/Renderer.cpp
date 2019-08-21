@@ -24,11 +24,14 @@ namespace Nol
 		{
 			MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
 
+			if (meshRenderer == nullptr)
+				continue;
+
 			const Shader& shader = meshRenderer->GetShader();
 
 			shader.Use();
 
-			shader.SetUniformVec4Ptr("uViewProjection", glm::value_ptr(scene->camera->GetProjectionViewMatrix()));
+			shader.SetUniformVec4Ptr("uViewProjection", glm::value_ptr(scene->mainCamera->GetProjectionViewMatrix()));
 			shader.SetUniformVec4Ptr("uModel", gameObject->GetTransform()->GetDataPointer());
 
 			shader.SetUniformVec3("uMaterial.ambient", meshRenderer->GetMaterial().Ambient());
@@ -36,40 +39,47 @@ namespace Nol
 			shader.SetUniformVec3("uMaterial.specular", meshRenderer->GetMaterial().Specular());
 			shader.SetUniformFloat("uMaterial.shininess", meshRenderer->GetMaterial().Shininess());
 
-			shader.SetUniformVec3("uCameraPosition", scene->camera->GetTransform()->GetPosition());
+			shader.SetUniformVec3("uCameraPosition", scene->mainCamera->GetTransform()->GetPosition());
 
-			switch (scene->light->Type())
+			shader.SetUniformInt("uNumberofLights", scene->lightList.size());
+
+			for (int i = 0; i < scene->lightList.size(); i++)
 			{
-			case LightType::PointLight:
-				shader.SetUniformInt("uLight.type", (int)LightType::PointLight);
+				std::string index = std::to_string(i);
 
-				shader.SetUniformVec3("uLight.color", scene->light->Color());
-				shader.SetUniformVec3("uLight.position", scene->light->GetTransform()->GetPosition());
+				switch (scene->lightList[i]->Type())
+				{
+				case LightType::PointLight:
+					shader.SetUniformInt("uLight["+index+"].type", (int)LightType::PointLight);
 
-				shader.SetUniformFloat("uLight.constant", 1.0f);
-				shader.SetUniformFloat("uLight.linear", 0.09f);
-				shader.SetUniformFloat("uLight.quadratic", 0.032f);
-				break;
+					shader.SetUniformVec3("uLight["+index+"].color", scene->lightList[i]->Color());
+					shader.SetUniformVec3("uLight["+index+"].position", scene->lightList[i]->GetTransform()->GetPosition());
 
-			case LightType::DirectionalLight:
-				shader.SetUniformInt("uLight.type", (int)LightType::DirectionalLight);
+					shader.SetUniformFloat("uLight["+index+"].constant", 1.0f);
+					shader.SetUniformFloat("uLight["+index+"].linear", 0.09f);
+					shader.SetUniformFloat("uLight["+index+"].quadratic", 0.032f);
+					break;
 
-				shader.SetUniformVec3("uLight.color", scene->light->Color());
-				shader.SetUniformVec3("uLight.direction", scene->light->GetTransform()->GetFront());
-				break;
+				case LightType::DirectionalLight:
+					shader.SetUniformInt("uLight["+index+"].type", (int)LightType::DirectionalLight);
 
-			case LightType::SpotLight:
-				shader.SetUniformInt("uLight.type", (int)LightType::SpotLight);
+					shader.SetUniformVec3("uLight["+index+"].color", scene->lightList[i]->Color());
+					shader.SetUniformVec3("uLight["+index+"].direction", scene->lightList[i]->GetTransform()->GetFront());
+					break;
 
-				shader.SetUniformVec3("uLight.color", scene->light->Color());
-				shader.SetUniformVec3("uLight.direction", scene->light->GetTransform()->GetFront());
-				shader.SetUniformFloat("uLight.cutoff", glm::cos(glm::radians(12.5f)));
-				shader.SetUniformFloat("uLight.outercutoff", glm::cos(glm::radians(20.0f)));
+				case LightType::SpotLight:
+					shader.SetUniformInt("uLight["+index+"].type", (int)LightType::SpotLight);
 
-				shader.SetUniformFloat("uLight.constant", 1.0f);
-				shader.SetUniformFloat("uLight.linear", 0.09f);
-				shader.SetUniformFloat("uLight.quadratic", 0.032f);
-				break;
+					shader.SetUniformVec3("uLight["+index+"].color", scene->lightList[i]->Color());
+					shader.SetUniformVec3("uLight["+index+"].direction", scene->lightList[i]->GetTransform()->GetFront());
+					shader.SetUniformFloat("uLight["+index+"].cutoff", glm::cos(glm::radians(12.5f)));
+					shader.SetUniformFloat("uLight["+index+"].outercutoff", glm::cos(glm::radians(20.0f)));
+
+					shader.SetUniformFloat("uLight["+index+"].constant", 1.0f);
+					shader.SetUniformFloat("uLight["+index+"].linear", 0.09f);
+					shader.SetUniformFloat("uLight["+index+"].quadratic", 0.032f);
+					break;
+				}
 			}
 
 			meshRenderer->Render();

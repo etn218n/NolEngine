@@ -11,10 +11,11 @@ namespace Nol
 	class GameObject
 	{
 	protected:
-		std::unordered_map<std::type_index, Component*> componentMap;
+		std::unordered_map<std::type_index, std::shared_ptr<Component>> componentMap;
+		std::shared_ptr<Transform> transform;
+		std::shared_ptr<GameObject> parent;
+		std::list<std::shared_ptr<GameObject>> children;
 		std::string name;
-
-		Transform* transform;
 
 	private:
 		static unsigned int NextID;
@@ -28,23 +29,26 @@ namespace Nol
 		template<class T>
 		void AddComponent(T& component)
 		{
-			T* comp = new T(component);
+			std::shared_ptr<T> newComponent = std::make_shared<T>(component);
 
-			componentMap.insert(std::pair<std::type_index, Component*>(std::type_index(typeid(T)), comp));
+			componentMap.insert({ std::type_index(typeid(T)), newComponent });
 
-			comp->parent = this;
+			newComponent->parent = this;
 		}
 
 		template<typename T>
 		T* GetComponent()
 		{
-			return dynamic_cast<T*>(componentMap[std::type_index(typeid(T))]);
+			return std::dynamic_pointer_cast<T>(componentMap[std::type_index(typeid(T))]).get();
 		}
+
+		NOL_API void SetParent(std::shared_ptr<GameObject> parent);
+		NOL_API void AddChild(std::shared_ptr<GameObject> child);
 
 		NOL_API inline const unsigned int GetID() const { return id; }
 
-		NOL_API Transform* GetTransform() const { return transform; }
-		NOL_API inline const int GetComponentCount() const { return componentMap.size(); }
+		NOL_API inline Transform* GetTransform() const { return transform.get(); }
+		NOL_API inline const int NumberofComponents() const { return componentMap.size(); }
 		NOL_API inline const std::string& GetName() const { return name; }
 	};
 }
