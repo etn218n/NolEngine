@@ -42,10 +42,7 @@ namespace Nol
 		Light* light = dynamic_cast<Light*>(gameObject);
 
 		if (light != nullptr)
-		{
 			lightList.push_back(static_cast<Light*>(gameObject));
-			INFO("Light added.");
-		}
 
 		/*MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
 

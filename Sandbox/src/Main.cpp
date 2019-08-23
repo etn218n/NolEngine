@@ -1,5 +1,8 @@
 #include <NolEngine.h>
 
+#include <stdlib.h> 
+#include<time.h> 
+
 using namespace Nol;
 
 void Bar(Nol::Window* window, Keycode keycode)
@@ -8,10 +11,17 @@ void Bar(Nol::Window* window, Keycode keycode)
 		window->Close();
 }
 
+const int NumberofLights = 10;
+
+struct FireFly
+{
+	glm::vec3 speed = glm::vec3(0.0f);
+	glm::vec3 range = glm::vec3(0.0f);
+	glm::vec3 angle = glm::vec3(0.0f);
+};
+
 int main()
 {
-	
-
 	std::vector<float> cubeVertices = {
      /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
@@ -83,6 +93,7 @@ int main()
 
 	Window* win1 = new Window("First", 800, 600);
 	win1->SetBackgroundColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	win1->SetVsync(true);
 
 	win1->Update();
 
@@ -97,10 +108,41 @@ int main()
 	MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
 	MeshRenderer planeMeshRenderer(planeMesh, testShader);
 
+	std::vector<Light*> lights;
+	lights.reserve(20);
+
+	std::vector<FireFly> fireFlies;
+	fireFlies.reserve(20);
+
+	srand(time(NULL));
+
+	for (int i = 0; i < NumberofLights; i++)
+	{ 
+		float r = (float)rand() / RAND_MAX;
+		float g = (float)rand() / RAND_MAX;
+		float b = (float)rand() / RAND_MAX;
+
+		Light* light = new Light(LightType::PointLight);
+		light->AddComponent<MeshRenderer>(lightMeshRenderer);
+		light->SetColor(glm::vec3(r, g, b));
+		light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
+		light->GetComponent<MeshRenderer>()->SetUniformsFn([light](const Shader& shader)
+		{
+			shader.SetUniformVec4("uColor", light->Color());
+		});
+
+		FireFly fireFly;
+		fireFly.range = glm::vec3((float)rand() / RAND_MAX + 4.5f, (float)rand() / RAND_MAX + 4.5f, (float)rand() / RAND_MAX + 4);
+		fireFly.speed = glm::vec3((float)rand() / RAND_MAX / 50, (float)rand() / RAND_MAX / 50, (float)rand() / RAND_MAX / 50);
+
+		lights.push_back(light);
+		fireFlies.push_back(fireFly);
+	}
+
 	GameObject* plane = new GameObject();
 	plane->AddComponent<MeshRenderer>(planeMeshRenderer);
 	plane->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -3.0f));
-	plane->GetTransform()->Scale(glm::vec3(5.0f, 5.0f, 5.0f));
+	plane->GetTransform()->Scale(glm::vec3(10.0f, 10.0f, 1.0f));
 
 	Light* light = new Light(LightType::PointLight);
 	light->AddComponent<MeshRenderer>(lightMeshRenderer);
@@ -112,61 +154,54 @@ int main()
 		shader.SetUniformVec4("uColor", light->Color());
 	});
 
-	Light* light2 = new Light(LightType::PointLight);
-	light2->AddComponent<MeshRenderer>(lightMeshRenderer);
-	light2->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-	light2->GetTransform()->Rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	light2->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
-	light2->GetComponent<MeshRenderer>()->SetUniformsFn([&light2](const Shader& shader)
-	{
-		shader.SetUniformVec4("uColor", light2->Color());
-	});
-
 	GameObject* cube = new GameObject("Cube");
 	cube->AddComponent<MeshRenderer>(cubeMeshRenderer);
 	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	Camera* camera = new Camera();
-	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 5.0f));
+	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 13.0f));
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetMainCamera(camera);
 	//scene->AddGameObject(cube);
-	scene->AddGameObject(light2);
-	scene->AddGameObject(light);
+	//scene->AddGameObject(light);
+
+	for (int i = 0; i < NumberofLights; i++)
+	{
+		scene->AddGameObject(lights[i]);
+	}
 	
 	scene->AddGameObject(plane);
 	
 	Renderer renderer(scene);
 
-	Test::LoadModel("./resource/models/scene.fbx");
+	//Test::LoadModel("./resource/models/scene.fbx");
 
 	win1->OnUpdate.Subcribe([&](Window* window) 
 	{ 
 		if (Input::IfKeyDown(Keycode::A))
-			light->GetTransform()->Translate(glm::vec3(-0.001f, 0.0f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::D))
-			light->GetTransform()->Translate(glm::vec3(0.001f, 0.0f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
 
 		if (Input::IfKeyDown(Keycode::W))
-			camera->GetTransform()->Rotate(0.1f, glm::vec3(1.0f, 0.0f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -0.01f));
 		else if (Input::IfKeyDown(Keycode::S))
-			camera->GetTransform()->Rotate(-0.1f, glm::vec3(1.0f, 0.0f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.01f));
 			
-		if (Input::IfKeyPressed(Keycode::Alpha1))
-			scene->RemoveGameObject(light);
-		else if (Input::IfKeyDown(Keycode::Alpha2))
-			light->SetType(LightType::SpotLight);
-		else if (Input::IfKeyDown(Keycode::Alpha3))
-			light->SetType(LightType::DirectionalLight);
+		if (Input::IfKeyPressed(Keycode::F1))
+			win1->SetVsync(!win1->IsVsyncEnabled());
 
-		cube->GetTransform()->Rotate(0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+		for (int i = 0; i < NumberofLights; i++)
+		{
+			float x = glm::cos(fireFlies[i].angle.x) * fireFlies[i].range.x;
+			float y = glm::sin(fireFlies[i].angle.y) * fireFlies[i].range.y;
+			float z = glm::sin(fireFlies[i].angle.z) * fireFlies[i].range.z;
 
-		float lightPosX = glm::cos(Time::Now()) * 2.0f;
-		float lightPosZ = glm::sin(Time::Now()) * 2.0f;
+			fireFlies[i].angle += fireFlies[i].speed;
 
-		light->GetTransform()->SetPosition(glm::vec3(lightPosX, 0.0f, lightPosZ));
-		light2->GetTransform()->SetPosition(glm::vec3(-lightPosX, 0.0f, -lightPosZ));
+			lights[i]->GetTransform()->SetPosition(glm::vec3(x, y, z));
+		}
 
 		renderer.Update();
 	});

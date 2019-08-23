@@ -85,12 +85,16 @@ namespace Nol
 
 	void Window::SetVsync(bool val)
 	{
+		glfwMakeContextCurrent(this->glfwWindow);
+
 		if (val == true)
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
 
 		isVsyncEnabled = val;
+
+		glfwMakeContextCurrent(NULL);
 	}
 
 	void Window::SetupWindowEvent()

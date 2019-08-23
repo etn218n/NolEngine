@@ -34,6 +34,13 @@ namespace Nol
 			shader.SetUniformVec4Ptr("uViewProjection", glm::value_ptr(scene->mainCamera->GetProjectionViewMatrix()));
 			shader.SetUniformVec4Ptr("uModel", gameObject->GetTransform()->GetDataPointer());
 
+			// temprorary optimization
+			if (dynamic_cast<Light*>(gameObject) != nullptr)
+			{
+				meshRenderer->Render();
+				continue;
+			}
+
 			shader.SetUniformVec3("uMaterial.ambient", meshRenderer->GetMaterial().Ambient());
 			shader.SetUniformVec3("uMaterial.diffuse", meshRenderer->GetMaterial().Diffuse());
 			shader.SetUniformVec3("uMaterial.specular", meshRenderer->GetMaterial().Specular());

@@ -52,7 +52,7 @@ in vec3 FragmentPosition;
 
 out vec4 FragColor;
 
-uniform Light[10] uLight;
+uniform Light[100] uLight;
 uniform int uNumberofLights;
 uniform Material uMaterial;
 uniform sampler2D uTexture0;
