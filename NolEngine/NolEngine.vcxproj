@@ -76,6 +76,7 @@
     <ClInclude Include="src\Core\Test.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Render\Texture.h" />
+    <ClInclude Include="src\Render\Uniform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component\Material.cpp" />

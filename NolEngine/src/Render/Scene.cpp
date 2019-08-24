@@ -32,7 +32,7 @@ namespace Nol
 	{
 		for (const auto& gameObj : gameobjectList)
 		{
-			if (gameObj->GetID() == gameObject->GetID())
+			if (gameObj->ID() == gameObject->ID())
 			{
 				WARN("GameObject is already contained in scene.");
 				return;
@@ -65,7 +65,7 @@ namespace Nol
 				std::remove_if(lightList.begin(), lightList.end(),
 					[gameObject](const Light* light)
 					{
-						return (light->GetID() == gameObject->GetID());
+						return (light->ID() == gameObject->ID());
 					}),
 					lightList.end());
 		}
@@ -75,7 +75,7 @@ namespace Nol
 			std::remove_if(gameobjectList.begin(), gameobjectList.end(),
 				[gameObject](const GameObject* gameObj)
 				{ 
-					return (gameObj->GetID() == gameObject->GetID()); 
+					return (gameObj->ID() == gameObject->ID()); 
 				}),
 			gameobjectList.end());
 	}

@@ -154,21 +154,36 @@ int main()
 		shader.SetUniformVec4("uColor", light->Color());
 	});
 
-	GameObject* cube = new GameObject("Cube");
-	cube->AddComponent<MeshRenderer>(cubeMeshRenderer);
-	cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	std::vector<GameObject*> cubes;
+	cubes.reserve(20);
+
+	for (int i = 0; i < 10; i++)
+	{
+		GameObject* cube = new GameObject("Cube" + std::to_string(i));
+		cube->AddComponent<MeshRenderer>(cubeMeshRenderer);
+		//cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		cubes.push_back(cube);
+	}
 
 	Camera* camera = new Camera();
 	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 13.0f));
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetMainCamera(camera);
-	//scene->AddGameObject(cube);
-	//scene->AddGameObject(light);
+	scene->AddGameObject(cubes[0]);
+	scene->AddGameObject(cubes[1]);
+	scene->AddGameObject(cubes[2]);
+
+	cubes[0]->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 0.0f));
+	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));
+	cubes[1]->SetParent(cubes[0]);
+	cubes[2]->SetParent(cubes[1]);
 
 	for (int i = 0; i < NumberofLights; i++)
 	{
 		scene->AddGameObject(lights[i]);
+		//scene->AddGameObject(cubes[i]);
 	}
 	
 	scene->AddGameObject(plane);
@@ -191,6 +206,34 @@ int main()
 			
 		if (Input::IfKeyPressed(Keycode::F1))
 			win1->SetVsync(!win1->IsVsyncEnabled());
+
+		if (Input::IfKeyDown(Keycode::LeftArrow))
+			cubes[0]->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
+		else if (Input::IfKeyDown(Keycode::RightArrow))
+			cubes[0]->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
+		else if (Input::IfKeyDown(Keycode::UpArrow))
+		{
+			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, 0.01f, 0.0f));
+			glm::vec3 pos = cubes[1]->GetTransform()->LocalPosition();
+			INFO("{0} {1} {2}", pos.x, pos.y, pos.z);
+		}
+		else if (Input::IfKeyDown(Keycode::DownArrow))
+		{
+			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, -0.01f, 0.0f));
+			glm::vec3 pos = cubes[1]->GetTransform()->LocalPosition();
+			INFO("{0} {1} {2}", pos.x, pos.y, pos.z);
+		}
+		else if (Input::IfKeyPressed(Keycode::G))
+		{
+			cubes[1]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+			glm::vec3 pos = cubes[1]->GetTransform()->LocalPosition();
+			INFO("{0} {1} {2}", pos.x, pos.y, pos.z);
+		}
+
+		if (Input::IfKeyPressed(Keycode::P))
+			cubes[1]->SetParent(cubes[0]);
+		else if (Input::IfKeyPressed(Keycode::O))
+			cubes[1]->SetParent(nullptr);
 
 		for (int i = 0; i < NumberofLights; i++)
 		{

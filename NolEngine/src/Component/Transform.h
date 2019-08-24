@@ -11,11 +11,17 @@ namespace Nol
 {
 	class Transform : public Component
 	{
+	friend class GameObject;
+
 	public:
 		Observable<const glm::mat4&> OnTransformed;
 
 	private:
-		glm::mat4 modelMatrix;
+		Observer<const glm::mat4&> parentTransformedSubcriber;
+		std::vector<Transform*> childList;
+		Transform* parent;
+		glm::mat4 globalMatrix;
+		glm::mat4 localMatrix;
 
 	public:
 		NOL_API Transform();
@@ -23,15 +29,23 @@ namespace Nol
 
 		NOL_API void Translate(const glm::vec3& v);
 		NOL_API void Scale(const glm::vec3& v);
-		NOL_API void Rotate(const float angle, const glm::vec3& axis);
+		NOL_API void Rotate(float degree, const glm::vec3& axis);
 
-		NOL_API const glm::vec3 GetPosition() const;
-		NOL_API const glm::vec3 GetFront() const;
+		NOL_API const glm::vec3 Position() const;
+		NOL_API const glm::vec3 LocalPosition() const;
+		NOL_API const glm::vec3 Front() const;
 
-		NOL_API void SetPosition(glm::vec3 position);
+		NOL_API void SetPosition(const glm::vec3& position);
+		NOL_API void SetLocalPosition(const glm::vec3& position);
 
-		NOL_API inline const glm::mat4& GetModelMatrix() const { return modelMatrix; }
-		NOL_API inline const float* GetDataPointer() const { return glm::value_ptr(modelMatrix); };
+		NOL_API inline const glm::mat4& GlobalModelMatrix() const { return globalMatrix; }
+		NOL_API inline const glm::mat4& LocalModelMatrix()  const { return localMatrix;  }
+		NOL_API inline const float* DataPointer() const { return glm::value_ptr(globalMatrix); };
+		
+	private:
+		void Update();
+		void AddChild(Transform* newChild);
+		void RemoveChild(Transform* removedChild);
 	};
 }
 

@@ -11,14 +11,14 @@ namespace Nol
 	friend class GameObject;
 
 	protected:
-		GameObject* parent;
+		GameObject* owner;
 
 	public:
 		NOL_API Component();
 		NOL_API Component(const Component& other);
 		NOL_API virtual ~Component() = default;
 
-		NOL_API inline GameObject* GetParent() { return parent; }
+		NOL_API inline GameObject* GetParent() { return owner; }
 	};
 }
 

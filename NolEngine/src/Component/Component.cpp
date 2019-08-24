@@ -3,11 +3,11 @@
 
 namespace Nol
 {
-	Component::Component() : parent(nullptr)
+	Component::Component() : owner(nullptr)
 	{
 	}
 
-	Component::Component(const Component& other) : parent(nullptr)
+	Component::Component(const Component& other) : owner(nullptr)
 	{
 	}
 }
