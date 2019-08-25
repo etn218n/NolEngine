@@ -3,7 +3,7 @@
 
 namespace Nol
 {
-	Texture::Texture(const std::string& filePath, TextureSetting setting) : setting(setting)
+	Texture::Texture(const std::string& filePath, TextureSetting setting) : setting(setting), filePath(filePath)
 	{
 		id = std::shared_ptr<unsigned int>(new unsigned int(0), [](unsigned int* id)
 		{
@@ -21,7 +21,7 @@ namespace Nol
 		}
 	}
 
-	Texture::Texture(const std::string& filePath)
+	Texture::Texture(const std::string& filePath) : filePath(filePath)
 	{
 		id = std::shared_ptr<unsigned int>(new unsigned int(0), [](unsigned int* id)
 		{
@@ -41,6 +41,7 @@ namespace Nol
 
 	Texture::Texture(const Texture& other) :
 		nrChannels(other.nrChannels),
+		filePath(other.filePath),
 		setting(other.setting),
 		height(other.height),
 		width(other.width),
