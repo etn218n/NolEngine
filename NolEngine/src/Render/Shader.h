@@ -5,6 +5,8 @@
 
 #include <glad/glad.h>
 
+#include "Uniform.h"
+
 namespace Nol
 {
 	const std::string DefaultVertexShaderSource = R"(
@@ -51,6 +53,9 @@ namespace Nol
 
 	class Shader
 	{
+	public:
+		Uniform uniform;
+
 	private:
 		std::shared_ptr<unsigned int> id;
 		std::string vertexSource;
@@ -68,16 +73,23 @@ namespace Nol
 		NOL_API inline const std::string& VertexSource()   const { return vertexSource;   }
 		NOL_API inline const std::string& FragmentSource() const { return fragmentSource; }
 
-		NOL_API void SetUniformInt(const std::string& uniformName, int i) const;
-		NOL_API void SetUniformFloat(const std::string& uniformName, float f) const;
-		NOL_API void SetUniformVec3(const std::string& uniformName, glm::vec3 v3) const;
-		NOL_API void SetUniformVec4(const std::string& uniformName, glm::vec4 v4) const;
-		NOL_API void SetUniformVec4Ptr(const std::string& uniformName, const float* ptr) const;
+		NOL_API inline void SetUniformInt(const std::string& uniformName, int i) const { glUniform1i(glGetUniformLocation(*id, uniformName.c_str()), i); }
+		NOL_API inline void SetUniformFloat(const std::string& uniformName, float f) const { glUniform1f(glGetUniformLocation(*id, uniformName.c_str()), f); }
+		NOL_API inline void SetUniformVec3(const std::string& uniformName, glm::vec3 v3) const { glUniform3f(glGetUniformLocation(*id, uniformName.c_str()), v3.x, v3.y, v3.z); }
+		NOL_API inline void SetUniformVec4(const std::string& uniformName, glm::vec4 v4) const { glUniform4f(glGetUniformLocation(*id, uniformName.c_str()), v4.x, v4.y, v4.z, v4.w); }
+		NOL_API inline void SetUniformVec4Ptr(const std::string& uniformName, const float* ptr) const { glUniformMatrix4fv(glGetUniformLocation(*id, uniformName.c_str()), 1, GL_FALSE, ptr); }
+
+		NOL_API inline void SetUniformInt(int uniformLocation, int i) const { glUniform1i(uniformLocation, i); }
+		NOL_API inline void SetUniformFloat(int uniformLocation, float f) const { glUniform1f(uniformLocation, f); }
+		NOL_API inline void SetUniformVec3(int uniformLocation, glm::vec3 v3) const { glUniform3f(uniformLocation, v3.x, v3.y, v3.z); }
+		NOL_API inline void SetUniformVec4(int uniformLocation, glm::vec4 v4) const { glUniform4f(uniformLocation, v4.x, v4.y, v4.z, v4.w); }
+		NOL_API inline void SetUniformVec4Ptr(int uniformLocation, const float* ptr) const { glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, ptr); }
 
 	private:
 		bool ParseShaderSource(const std::string& filePath);
 		unsigned int CompileShader(ShaderType shaderType);
 		void CreateShaderProgram();
+		void SetupUniform();
 	};
 }
 

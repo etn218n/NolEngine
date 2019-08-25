@@ -22,6 +22,7 @@ namespace Nol
 	private:
 		std::shared_ptr<unsigned int> id;
 		std::shared_ptr<const unsigned char> data;
+		std::string filePath;
 		int height;
 		int width;
 		int nrChannels;
@@ -33,6 +34,7 @@ namespace Nol
 		NOL_API Texture(const Texture& other);
 		NOL_API virtual ~Texture() = default;
 
+		NOL_API inline const std::string& FilePath() const { return filePath; }
 		NOL_API inline const int Type() const { return setting.TextureType; }
 		NOL_API inline const int Width() const { return width; }
 		NOL_API inline const int Height() const { return height; }

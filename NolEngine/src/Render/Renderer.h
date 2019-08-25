@@ -4,6 +4,7 @@
 #include "NolAPI.h"
 
 #include "Scene.h"
+#include "Uniform.h"
 
 namespace Nol
 {

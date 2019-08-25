@@ -9,6 +9,8 @@ namespace Nol
 		fragmentSource = DefaultFragmentShaderSource;
 
 		CreateShaderProgram();
+
+		SetupUniform();
 	}
 
 	Shader::Shader(const std::string& filePath)
@@ -17,11 +19,14 @@ namespace Nol
 		{
 			CreateShaderProgram();
 		}
+
+		SetupUniform();
 	}
 
 	Shader::Shader(const Shader & other) : 
 		fragmentSource(other.fragmentSource),
 		vertexSource(other.vertexSource),
+		uniform(other.uniform),
 		id(other.id) {}
 
 	bool Shader::ParseShaderSource(const std::string& filePath)
@@ -56,31 +61,6 @@ namespace Nol
 		fileStream.close();
 
 		return true;
-	}
-
-	void Shader::SetUniformInt(const std::string& uniformName, int i) const
-	{
-		glUniform1i(glGetUniformLocation(*id, uniformName.c_str()), i);
-	}
-
-	void Shader::SetUniformFloat(const std::string & uniformName, float f) const
-	{
-		glUniform1f(glGetUniformLocation(*id, uniformName.c_str()), f);
-	}
-
-	void Shader::SetUniformVec3(const std::string& uniformName, glm::vec3 v3) const
-	{
-		glUniform3f(glGetUniformLocation(*id, uniformName.c_str()), v3.x, v3.y, v3.z);
-	}
-
-	void Shader::SetUniformVec4(const std::string& uniformName, glm::vec4 v4) const
-	{
-		glUniform4f(glGetUniformLocation(*id, uniformName.c_str()), v4.x, v4.y, v4.z, v4.w);
-	}
-
-	void Shader::SetUniformVec4Ptr(const std::string& uniformName, const float* ptr) const
-	{
-		glUniformMatrix4fv(glGetUniformLocation(*id, uniformName.c_str()), 1, GL_FALSE, ptr);
 	}
 
 	unsigned int Shader::CompileShader(ShaderType shaderType)
@@ -155,5 +135,35 @@ namespace Nol
 
 		glDeleteShader(vertexID);
 		glDeleteShader(fragmentID);
+	}
+
+	void Shader::SetupUniform()
+	{
+		uniform.Model = glGetUniformLocation(*id, "uModel");
+		uniform.ViewProjection = glGetUniformLocation(*id, "uViewProjection");
+
+		uniform.Material.Ambient   = glGetUniformLocation(*id, "uMaterial.Ambient");
+		uniform.Material.Diffuse   = glGetUniformLocation(*id, "uMaterial.Diffuse");
+		uniform.Material.Specular  = glGetUniformLocation(*id, "uMaterial.Specular");
+		uniform.Material.Shininess = glGetUniformLocation(*id, "uMaterial.Shininess");
+
+		uniform.CameraPosition = glGetUniformLocation(*id, "uCameraPosition");
+		uniform.NumberofLights = glGetUniformLocation(*id, "uNumberofLights");
+
+		for (int i = 0; i < MaxLights; i++)
+		{
+			std::string index = std::to_string(i);
+			uniform.Lights[i].Type      = glGetUniformLocation(*id, std::string("uLight["+index+"].Type").c_str());
+			uniform.Lights[i].Color	    = glGetUniformLocation(*id, std::string("uLight["+index+"].Color").c_str());
+			uniform.Lights[i].Position  = glGetUniformLocation(*id, std::string("uLight["+index+"].Position").c_str());
+			uniform.Lights[i].Direction = glGetUniformLocation(*id, std::string("uLight["+index+"].Direction").c_str());
+
+			uniform.Lights[i].Constant  = glGetUniformLocation(*id, std::string("uLight["+index+"].Constant").c_str());
+			uniform.Lights[i].Linear    = glGetUniformLocation(*id, std::string("uLight["+index+"].Linear").c_str());
+			uniform.Lights[i].Quadratic = glGetUniformLocation(*id, std::string("uLight["+index+"].Quadratic").c_str());
+
+			uniform.Lights[i].Cutoff      = glGetUniformLocation(*id, std::string("uLight["+index+"].Cutoff").c_str());
+			uniform.Lights[i].OuterCutoff = glGetUniformLocation(*id, std::string("uLight["+index+"].OuterCutoff").c_str());
+		}
 	}
 }
