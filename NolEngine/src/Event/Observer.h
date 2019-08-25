@@ -25,7 +25,7 @@ namespace Nol
 		Observer(std::function<void(Args... args)> onNextFn) : id(NextID++), onNextFn(onNextFn) { };
 		~Observer() = default;
 
-		inline const unsigned int GetID() const { return id; }
+		inline unsigned int ID() const { return id; }
 
 	private:
 		inline void OnNext(Args... args) const { onNextFn(args...); }

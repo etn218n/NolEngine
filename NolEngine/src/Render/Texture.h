@@ -33,11 +33,11 @@ namespace Nol
 		NOL_API Texture(const Texture& other);
 		NOL_API virtual ~Texture() = default;
 
-		NOL_API inline const int GetType() const { return setting.TextureType; }
-		NOL_API inline const int GetWidth() const { return width; }
-		NOL_API inline const int GetHeight() const { return height; }
-		NOL_API inline const int GetChannels() const { return nrChannels; }
-		NOL_API inline const unsigned int GetID() const { return *id; }
+		NOL_API inline const int Type() const { return setting.TextureType; }
+		NOL_API inline const int Width() const { return width; }
+		NOL_API inline const int Height() const { return height; }
+		NOL_API inline const int NRChannels() const { return nrChannels; }
+		NOL_API inline const unsigned int ID() const { return *id; }
 
 	private:
 		bool LoadTexture(const std::string& filePath);

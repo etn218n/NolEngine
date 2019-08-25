@@ -20,12 +20,11 @@ namespace Nol
 	{
 	private:
 		std::vector<Texture> textures;
-		unsigned int numberOfVertices;
-		unsigned int numberOfIndices;
-
-		std::shared_ptr<unsigned int> VAO;
-		unsigned int VBO;
-		unsigned int EBO;
+		unsigned int numberofVertices;
+		unsigned int numberofIndices;
+		std::shared_ptr<unsigned int> vao;
+		unsigned int vbo;
+		unsigned int ebo;
 
 	public:
 		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures);
@@ -35,15 +34,15 @@ namespace Nol
 		NOL_API Mesh(const Mesh& other);
 		NOL_API virtual ~Mesh() = default;
 
-		NOL_API inline const unsigned int GetVAO() const { return *VAO; }
-		NOL_API inline const unsigned int GetVBO() const { return  VBO; }
-		NOL_API inline const unsigned int GetEBO() const { return  EBO; }
+		NOL_API inline unsigned int VAO() const { return *vao; }
+		NOL_API inline unsigned int VBO() const { return  vbo; }
+		NOL_API inline unsigned int EBO() const { return  ebo; }
 
-		NOL_API inline const std::vector<Texture>& GetTextureList() const { return textures; }
+		NOL_API inline const std::vector<Texture>& TextureList() const { return textures; }
 
-		NOL_API inline const unsigned int NumberOfVertices() const { return numberOfVertices; }
-		NOL_API inline const unsigned int NumberOfIndices()  const { return numberOfIndices;  }
-		NOL_API inline const unsigned int NumberOfTextures() const { return textures.size();  }
+		NOL_API inline unsigned int NumberofVertices() const { return numberofVertices; }
+		NOL_API inline unsigned int NumberofIndices()  const { return numberofIndices;  }
+		NOL_API inline unsigned int NumberofTextures() const { return textures.size();  }
 
 	private:
 		void GenerateMesh(const float* vertices, const unsigned int* indices);

@@ -115,14 +115,14 @@ namespace Nol
 				Input::activeWindow = currentWindow;
 				Input::UpdateInputState(glfwGetTime());
 				currentWindow->OnFocused.Publish(currentWindow);
-				INFO("(Window \"{0}\") Window gained focus.", currentWindow->GetTitle());
+				INFO("(Window \"{0}\") Window gained focus.", currentWindow->Title());
 			}
 			else
 			{
 				Input::activeWindow = nullptr;
 				WARN("Input::activeWindow is NULL.");
 				currentWindow->OnLostFocus.Publish(currentWindow);
-				INFO("(Window \"{0}\") Window lost focus.", currentWindow->GetTitle());
+				INFO("(Window \"{0}\") Window lost focus.", currentWindow->Title());
 			}
 		});
 
@@ -161,7 +161,7 @@ namespace Nol
 					break;
 				}
 				default: {
-					WARN("(Window \"{0}\") Unkown mouse button action.", currentWindow->GetTitle());
+					WARN("(Window \"{0}\") Unkown mouse button action.", currentWindow->Title());
 					break;
 				}
 			}
@@ -194,7 +194,7 @@ namespace Nol
 					break;
 				}
 				default: {
-					WARN("(Window \"{0}\") Unkown key action.", currentWindow->GetTitle());
+					WARN("(Window \"{0}\") Unkown key action.", currentWindow->Title());
 					break;
 				}
 			}

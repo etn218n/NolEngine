@@ -31,7 +31,7 @@ namespace Nol
 
 			shader.Use();
 
-			shader.SetUniformVec4Ptr("uViewProjection", glm::value_ptr(scene->mainCamera->GetProjectionViewMatrix()));
+			shader.SetUniformVec4Ptr("uViewProjection", glm::value_ptr(scene->mainCamera->ProjectionViewMatrix()));
 			shader.SetUniformVec4Ptr("uModel", gameObject->GetTransform()->DataPointer());
 
 			// temprorary optimization

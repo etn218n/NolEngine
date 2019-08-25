@@ -54,12 +54,12 @@ namespace Nol
 
 		NOL_API inline void SetBackgroundColor(const glm::vec4& color) { backgroundColor = color; }
 
-		NOL_API inline GLFWwindow* GetGLFWWindow()    const { return glfwWindow;	 }
-		NOL_API inline const std::string& GetTitle()  const { return title;			 }
-		NOL_API inline const unsigned int GetWidth()  const { return width;			 }
-		NOL_API inline const unsigned int GetHeight() const { return height;		 }
-		NOL_API inline const bool IsVsyncEnabled()	  const { return isVsyncEnabled; }
-		NOL_API inline const bool IsClosed()		  const { return isClosed;		 }
+		NOL_API inline GLFWwindow* GetGLFWWindow() const { return glfwWindow;	  }
+		NOL_API inline const std::string& Title()  const { return title;		  }
+		NOL_API inline const unsigned int Width()  const { return width;		  }
+		NOL_API inline const unsigned int Height() const { return height;		  }
+		NOL_API inline const bool IsVsyncEnabled() const { return isVsyncEnabled; }
+		NOL_API inline const bool IsClosed()	   const { return isClosed;		  }
 
 	private:
 		void SetupWindowEvent();

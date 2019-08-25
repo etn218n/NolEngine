@@ -16,8 +16,8 @@ namespace Nol
 
 	private:
 		std::vector<GameObject*> gameobjectList;
-		std::string name;
 		std::vector<Light*> lightList;
+		std::string name;
 		Camera* mainCamera;
 
 	public:
@@ -29,7 +29,7 @@ namespace Nol
 		NOL_API void AddGameObject(GameObject* gameObject);
 		NOL_API void RemoveGameObject(GameObject* gameObject);
 
-		NOL_API inline const int NumberOfGameObject() const { return gameobjectList.size(); }
+		NOL_API inline const int NumberofGameObjects() const { return gameobjectList.size(); }
 	};
 }
 

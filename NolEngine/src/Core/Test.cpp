@@ -11,12 +11,12 @@ namespace Nol
 {
 	Observable<> Test::OnEnterLoop;
 
-	void Test::LogKeyPress(Window* window, Keycode keycode)	  { INFO("(Window \"{0}\") Key {1} pressed.", window->GetTitle(), (int)keycode);  }
-	void Test::LogKeyHold(Window* window, Keycode keycode)	  { INFO("(Window \"{0}\") Key {1} held.", window->GetTitle(), (int)keycode);	  }
-	void Test::LogKeyRelease(Window* window, Keycode keycode) { INFO("(Window \"{0}\") Key {1} released.", window->GetTitle(), (int)keycode); }
+	void Test::LogKeyPress(Window* window, Keycode keycode)	  { INFO("(Window \"{0}\") Key {1} pressed.", window->Title(), (int)keycode);  }
+	void Test::LogKeyHold(Window* window, Keycode keycode)	  { INFO("(Window \"{0}\") Key {1} held.", window->Title(), (int)keycode);	  }
+	void Test::LogKeyRelease(Window* window, Keycode keycode) { INFO("(Window \"{0}\") Key {1} released.", window->Title(), (int)keycode); }
 
-	void Test::LogMousePress(Window * window, Keycode keycode)   { INFO("(Window \"{0}\") Mouse button {1} pressed.",  window->GetTitle(), (int)keycode); }
-	void Test::LogMouseRelease(Window * window, Keycode keycode) { INFO("(Window \"{0}\") Mouse button {1} released.", window->GetTitle(), (int)keycode); }
+	void Test::LogMousePress(Window * window, Keycode keycode)   { INFO("(Window \"{0}\") Mouse button {1} pressed.",  window->Title(), (int)keycode); }
+	void Test::LogMouseRelease(Window * window, Keycode keycode) { INFO("(Window \"{0}\") Mouse button {1} released.", window->Title(), (int)keycode); }
 
 	void Test::SetupLogEventFor(Window* window)
 	{

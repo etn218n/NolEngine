@@ -25,7 +25,7 @@ namespace Nol
 		NOL_API Light(LightType type);
 		NOL_API virtual ~Light() = default;
 
-		NOL_API void SetType(LightType type);
+		NOL_API inline void SetType(LightType type) { this->type = type; }
 
 		NOL_API inline void SetColor(const glm::vec4& color) { this->color = color; }
 		NOL_API inline void SetColor(const glm::vec3& color) { this->color = glm::vec4(color.r, color.b, color.g, 1.0f); }

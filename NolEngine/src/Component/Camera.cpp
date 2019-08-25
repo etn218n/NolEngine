@@ -14,7 +14,13 @@ namespace Nol
 
 		projectionViewMatrix = projectionMatrix * viewMatrix;
 
-		transform->OnTransformed.Subcribe(std::bind(&Camera::CalculateMatrices, this, std::placeholders::_1));
+		// update ViewMatrix everytimes its transform changed
+		transform->OnTransformed.Subcribe([this](const glm::mat4& transform)
+		{
+			viewMatrix = glm::inverse(transform);
+
+			projectionViewMatrix = projectionMatrix * viewMatrix;
+		});
 	}
 
 	void Camera::SetPerspectiveView(float fov, float aspectRatio, float nearPlane, float farPlane)
@@ -25,12 +31,5 @@ namespace Nol
 	void Camera::SetOrthogonalView(float left, float right, float top, float bottom, float nearPlane, float farPlane)
 	{
 		projectionMatrix = glm::ortho<float>(left, right, top, bottom, nearPlane, farPlane);
-	}
-
-	void Camera::CalculateMatrices(const glm::mat4& transform)
-	{
-		viewMatrix = glm::inverse(transform);
-
-		projectionViewMatrix = projectionMatrix * viewMatrix;
 	}
 }

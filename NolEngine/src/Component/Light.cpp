@@ -12,9 +12,4 @@ namespace Nol
 		GameObject(name),
 		color(glm::vec4(1.0f)),
 		type(type){ }
-
-	void Light::SetType(LightType type)
-	{
-		this->type = type;
-	}
 }

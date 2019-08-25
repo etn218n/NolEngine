@@ -64,9 +64,9 @@ namespace Nol
 		
 		NOL_API inline void Use() const { glUseProgram(*id); }
 
-		NOL_API inline const unsigned int GetID() const { return *id; }
-		NOL_API inline const std::string& GetVertexSource()   const { return vertexSource;   }
-		NOL_API inline const std::string& GetFragmentSource() const { return fragmentSource; }
+		NOL_API inline const unsigned int ID() const { return *id; }
+		NOL_API inline const std::string& VertexSource()   const { return vertexSource;   }
+		NOL_API inline const std::string& FragmentSource() const { return fragmentSource; }
 
 		NOL_API void SetUniformInt(const std::string& uniformName, int i) const;
 		NOL_API void SetUniformFloat(const std::string& uniformName, float f) const;

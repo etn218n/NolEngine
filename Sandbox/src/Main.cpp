@@ -212,23 +212,12 @@ int main()
 		else if (Input::IfKeyDown(Keycode::RightArrow))
 			cubes[0]->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::UpArrow))
-		{
 			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, 0.01f, 0.0f));
-			glm::vec3 pos = cubes[1]->GetTransform()->LocalPosition();
-			INFO("{0} {1} {2}", pos.x, pos.y, pos.z);
-		}
 		else if (Input::IfKeyDown(Keycode::DownArrow))
-		{
 			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, -0.01f, 0.0f));
-			glm::vec3 pos = cubes[1]->GetTransform()->LocalPosition();
-			INFO("{0} {1} {2}", pos.x, pos.y, pos.z);
-		}
-		else if (Input::IfKeyPressed(Keycode::G))
-		{
+
+		if (Input::IfKeyPressed(Keycode::G))
 			cubes[1]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-			glm::vec3 pos = cubes[1]->GetTransform()->LocalPosition();
-			INFO("{0} {1} {2}", pos.x, pos.y, pos.z);
-		}
 
 		if (Input::IfKeyPressed(Keycode::P))
 			cubes[1]->SetParent(cubes[0]);
