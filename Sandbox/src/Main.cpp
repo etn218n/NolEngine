@@ -1,7 +1,7 @@
 #include <NolEngine.h>
 
 #include <stdlib.h> 
-#include<time.h> 
+#include <time.h> 
 
 using namespace Nol;
 
@@ -181,10 +181,10 @@ int main()
 	cubes[2]->SetParent(cubes[1]);
 
 	for (int i = 0; i < NumberofLights; i++)
-	{
 		scene->AddGameObject(lights[i]);
-		//scene->AddGameObject(cubes[i]);
-	}
+
+	/*for (int i = 0; i < 3; i++)
+		scene->AddGameObject(cubes[i]);*/
 	
 	scene->AddGameObject(plane);
 	
