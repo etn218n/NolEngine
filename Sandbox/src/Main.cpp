@@ -12,6 +12,7 @@ void Bar(Nol::Window* window, Keycode keycode)
 }
 
 const int NumberofLights = 10;
+const int NumberofCubes  = 100;
 
 struct FireFly
 {
@@ -25,11 +26,11 @@ int main()
 	std::vector<float> cubeVertices = {
      /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  1.0f,
 	 0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  0.0f,
 	 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  1.0f,
-	 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  1.0f,
-	-0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  1.0f,
 	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  1.0f,
 
 	 /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f,  0.0f,
@@ -49,11 +50,11 @@ int main()
 
 	 /*   Position    */   /*    Normal    */    /*Texture*/
 	 0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
 	 0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f,  1.0f,
 	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  1.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  0.0f,
 	 0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f,  0.0f,
 
 	 /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  1.0f,
@@ -65,11 +66,11 @@ int main()
 
 	 /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
 	 0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  1.0f,
 	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f };
+    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  0.0f };
 
 	Vertex topLeft;
 	topLeft.Position = glm::vec3(-1.0f, 1.0f, 0.0f);
@@ -87,11 +88,12 @@ int main()
 	bottomRight.Position = glm::vec3(1.0f, -1.0f, 0.0f);
 	bottomRight.Normal   = glm::vec3(0.0f, 0.0f, 1.0f);
 
-	std::vector<Vertex> planeVertices = { topLeft, topRight, bottomLeft, bottomRight };
+	std::vector<Vertex> planeVertices = { topLeft, bottomLeft, topRight, bottomRight };
 
 	Log::Init();
 
 	Window* win1 = new Window("First", 800, 600);
+	win1->OnKeyPressed.Subcribe(Bar);
 	win1->SetBackgroundColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	win1->SetVsync(true);
 
@@ -102,7 +104,7 @@ int main()
 	Shader lightSourceShader("./resource/shaders/LightSource.gl");
 
 	Mesh cubeMesh(cubeVertices, { wallTexture });
-	Mesh planeMesh(planeVertices, { 0, 1, 2, 1, 2, 3 }, { });
+	Mesh planeMesh(planeVertices, { 0, 1, 2, 1, 3, 2 }, { });
 	
 	MeshRenderer cubeMeshRenderer(cubeMesh, testShader);
 	MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
@@ -157,11 +159,20 @@ int main()
 	std::vector<GameObject*> cubes;
 	cubes.reserve(20);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0, x = -8, y = 5; i < NumberofCubes; i++)
 	{
 		GameObject* cube = new GameObject("Cube" + std::to_string(i));
 		cube->AddComponent<MeshRenderer>(cubeMeshRenderer);
-		//cube->GetTransform()->Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		if (i % 7 == 0 && i != 0)
+		{ 
+			x = -8;
+			y = y - 2;
+		}
+
+		x = x + 2;
+
+		cube->GetTransform()->Translate(glm::vec3(x, y, 0.0f));
 
 		cubes.push_back(cube);
 	}
@@ -171,20 +182,17 @@ int main()
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetMainCamera(camera);
-	scene->AddGameObject(cubes[0]);
-	scene->AddGameObject(cubes[1]);
-	scene->AddGameObject(cubes[2]);
 
-	cubes[0]->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 0.0f));
-	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));
+	/*cubes[0]->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 0.0f));
+	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));*/
 	cubes[1]->SetParent(cubes[0]);
 	cubes[2]->SetParent(cubes[1]);
 
 	for (int i = 0; i < NumberofLights; i++)
 		scene->AddGameObject(lights[i]);
 
-	/*for (int i = 0; i < 3; i++)
-		scene->AddGameObject(cubes[i]);*/
+	for (int i = 0; i < NumberofCubes; i++)
+		scene->AddGameObject(cubes[i]);
 	
 	scene->AddGameObject(plane);
 	
