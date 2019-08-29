@@ -12,7 +12,7 @@ void Bar(Nol::Window* window, Keycode keycode)
 }
 
 const int NumberofLights = 10;
-const int NumberofCubes  = 0;
+const int NumberofCubes  = 3;
 
 struct FireFly
 {
@@ -24,7 +24,7 @@ struct FireFly
 int main()
 {
 	std::vector<float> cubeVertices = {
-     /*   Position    */   /*    Normal    */    /*Texture*/
+	 /*   Position    */   /*    Normal    */    /*Texture*/
 	-0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
 	 0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  1.0f,
 	 0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f,  0.0f,
@@ -61,11 +61,11 @@ int main()
 	 0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f,  1.0f,
 	 0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f,  0.0f,
 	 0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f,  1.0f,
 
 	 /*   Position    */   /*    Normal    */    /*Texture*/
-	-0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f,  1.0f,
 	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
 	 0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  1.0f,
 	 0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f,  0.0f,
@@ -99,13 +99,14 @@ int main()
 
 	win1->Update();
 
-	Texture wallTexture("./resource/textures/wall.jpg");
+	Texture wallTexture(TextureType::Texture2D, "./resource/textures/wall.jpg");
+
 	Shader testShader("./resource/shaders/TestShader.gl");
 	Shader lightSourceShader("./resource/shaders/LightSource.gl");
 
 	Mesh cubeMesh(cubeVertices, { wallTexture });
 	Mesh planeMesh(planeVertices, { 0, 1, 2, 1, 3, 2 });
-	
+
 	MeshRenderer cubeMeshRenderer(cubeMesh, testShader);
 	MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
 	MeshRenderer planeMeshRenderer(planeMesh, testShader);
@@ -119,7 +120,7 @@ int main()
 	srand(time(NULL));
 
 	for (int i = 0; i < NumberofLights; i++)
-	{ 
+	{
 		float r = (float)rand() / RAND_MAX;
 		float g = (float)rand() / RAND_MAX;
 		float b = (float)rand() / RAND_MAX;
@@ -127,7 +128,7 @@ int main()
 		Light* light = new Light(LightType::PointLight);
 		light->AddComponent<MeshRenderer>(lightMeshRenderer);
 		light->SetColor(glm::vec3(r, g, b));
-		light->GetTransform()->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
+		light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
 		light->GetComponent<MeshRenderer>()->SetUniformsFn([light](const Shader& shader)
 		{
 			shader.SetUniformVec4(shader.uniform.Color, light->Color());
@@ -155,7 +156,7 @@ int main()
 		cube->AddComponent<MeshRenderer>(cubeMeshRenderer);
 
 		if (i % 7 == 0 && i != 0)
-		{ 
+		{
 			x = -8;
 			y = y - 2;
 		}
@@ -170,14 +171,19 @@ int main()
 	Camera* camera = new Camera();
 	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 13.0f));
 
+	Camera* camera2 = new Camera();
+	camera2->GetTransform()->Translate(glm::vec3(5.0f, 0.0f, 13.0f));
+	camera2->GetTransform()->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetMainCamera(camera);
 	scene->AddGameObject(plane);
+	scene->AddGameObject(cubes[0]);
 
-	/*cubes[0]->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 0.0f));
+	cubes[0]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));
 	cubes[1]->SetParent(cubes[0]);
-	cubes[2]->SetParent(cubes[1]);*/
+	cubes[2]->SetParent(cubes[1]);
 
 	/*for (int i = 0; i < NumberofCubes; i++)
 		scene->AddGameObject(cubes[i]);*/
@@ -186,6 +192,7 @@ int main()
 
 	for (int i = 0; i < NumberofLights; i++)
 		scene->AddGameObject(lights[i]);
+
 
 	Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
 	{
@@ -229,6 +236,9 @@ int main()
 			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, 0.01f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::DownArrow))
 			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, -0.01f, 0.0f));
+
+		if (Input::IfKeyPressed(Keycode::J))
+			camera->SetClearType(ClearType::Skybox);
 
 		for (int i = 0; i < NumberofLights; i++)
 		{

@@ -3,7 +3,7 @@
 
 namespace Nol
 {
-	Texture::Texture(const std::string& filePath, TextureSetting setting) : setting(setting), filePath(filePath)
+	Texture::Texture(TextureType type, const std::string& filePath) : filePath(filePath), type(type)
 	{
 		id = std::shared_ptr<unsigned int>(new unsigned int(0), [](unsigned int* id)
 		{
@@ -11,17 +11,10 @@ namespace Nol
 			glDeleteTextures(1, &(*id));
 		});
 
-		if (LoadTexture(filePath) == false)
-			ERR("Failed to load texture. (Path: \"{0}\")", filePath);
-		else
-		{
-			INFO("Successful to load texture. (Path: \"{0}\")", filePath);
-
-			GenerateTexture();
-		}
+		GenerateTexture();
 	}
 
-	Texture::Texture(const std::string& filePath) : filePath(filePath)
+	Texture::Texture(TextureType type, const std::string& filePath, TextureSetting setting) : setting(setting), filePath(filePath), type(type)
 	{
 		id = std::shared_ptr<unsigned int>(new unsigned int(0), [](unsigned int* id)
 		{
@@ -29,36 +22,33 @@ namespace Nol
 			glDeleteTextures(1, &(*id));
 		});
 
-		if (LoadTexture(filePath) == false)
-			ERR("Failed to load texture. (Path: \"{0}\")", filePath);
-		else
-		{
-			INFO("Successful to load texture. (Path: \"{0}\")", filePath);
-
-			GenerateTexture();
-		}
+		GenerateTexture();
 	}
 
-	Texture::Texture(const Texture& other) :
-		nrChannels(other.nrChannels),
-		filePath(other.filePath),
-		setting(other.setting),
-		height(other.height),
-		width(other.width),
-		data(other.data),
-		id(other.id) {}
-
-	bool Texture::LoadTexture(const std::string& filePath)
+	unsigned char* Texture::LoadTexture(const std::string& filePath)
 	{
 		stbi_set_flip_vertically_on_load(true);
 
-		data = std::shared_ptr<const unsigned char>(stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0));
+		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
 
-		return (data != nullptr);
+		return data;
 	}
 
 	void Texture::GenerateTexture()
 	{
+		width  = 0;
+		height = 0;
+		depth  = 0;
+
+		unsigned char* data = LoadTexture(filePath);
+
+		if (data == nullptr)
+		{
+			ERR("Failed to load texture. (Path: \"{0}\")", filePath);
+			return;
+		}
+		INFO("Successful to load texture. (Path: \"{0}\")", filePath);
+
 		glGenTextures(1, &(*id));
 
 		if (*id == 0)
@@ -67,20 +57,34 @@ namespace Nol
 			return;
 		}
 
-		glBindTexture(setting.TextureType, *id);
+		glBindTexture(type, *id);
 
-		glTexParameteri(setting.TextureType, GL_TEXTURE_WRAP_S, setting.HorizontalWrapping);
-		glTexParameteri(setting.TextureType, GL_TEXTURE_WRAP_T, setting.VerticalWrapping);
-		glTexParameteri(setting.TextureType, GL_TEXTURE_MIN_FILTER, setting.MinFilter);
-		glTexParameteri(setting.TextureType, GL_TEXTURE_MAG_FILTER, setting.MagFilter);
+		glTexParameteri(type, GL_TEXTURE_WRAP_S, setting.SWrapping);
+		glTexParameteri(type, GL_TEXTURE_WRAP_T, setting.TWrapping);
+		glTexParameteri(type, GL_TEXTURE_MIN_FILTER, setting.MinFilter);
+		glTexParameteri(type, GL_TEXTURE_MAG_FILTER, setting.MagFilter);
 
 		// TODO: implementation for other channels
-		int channel = nrChannels == 3 ? GL_RGB : GL_RGBA;
+		int channel;
 
-		glTexImage2D(setting.TextureType, 0, channel, width, height, 0, channel, GL_UNSIGNED_BYTE, data.get());
-		glGenerateMipmap(setting.TextureType);
+		switch (nrChannels)
+		{
+			case 1: channel = GL_RED;  break;
+			case 3: channel = GL_RGB;  break;
+			case 4: channel = GL_RGBA; break;
+		}
 
-		glBindTexture(setting.TextureType, 0);
+		switch (type)
+		{
+			case TextureType::Texture1D: glTexImage1D(type, 0, channel, width, 0, channel, GL_UNSIGNED_BYTE, data); break; break;
+			case TextureType::Texture2D: glTexImage2D(type, 0, channel, width, height, 0, channel, GL_UNSIGNED_BYTE, data); break;
+			case TextureType::Texture3D: glTexImage3D(type, 0, channel, width, height, depth, 0, channel, GL_UNSIGNED_BYTE, data); break; break;
+		}
+
+		glGenerateMipmap(type);
+
+		glBindTexture(type, 0);
+		stbi_image_free(data);
 
 		if (*id == 0)
 			ERR("Failed to generate texture.");

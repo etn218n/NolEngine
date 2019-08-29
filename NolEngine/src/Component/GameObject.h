@@ -22,6 +22,7 @@ namespace Nol
 		unsigned int id;
 
 	public:
+		//NOL_API GameObject();
 		NOL_API GameObject(const std::string& name = "None");
 		NOL_API GameObject(const GameObject& other) = delete;
 		NOL_API virtual ~GameObject() = default;

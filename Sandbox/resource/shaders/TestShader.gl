@@ -13,11 +13,11 @@ out vertex
 } Vertex;
 
 uniform mat4 uModel;
-uniform mat4 uViewProjection;
+uniform mat4 uProjectionView;
 
 void main()
 {
-	gl_Position     = uViewProjection * uModel * vec4(Position, 1.0);
+	gl_Position     = uProjectionView * uModel * vec4(Position, 1.0);
 	Vertex.TexCoord = TexCoord;
 	Vertex.Normal   = normalize(mat3(transpose(inverse(uModel))) * Normal);  
 

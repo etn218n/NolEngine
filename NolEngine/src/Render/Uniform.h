@@ -6,7 +6,9 @@ const unsigned int MaxTexures = 10;
 typedef struct uniform
 {
 	int Model;
-	int ViewProjection;
+	int View;
+	int Projection;
+	int ProjectionView;
 
 	int Color;
 

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Render\CubeMap.h" />
     <ClInclude Include="include\assimp\ai_assert.h" />
     <ClInclude Include="include\assimp\anim.h" />
     <ClInclude Include="include\assimp\camera.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="include\assimp\vector2.h" />
     <ClInclude Include="include\assimp\vector3.h" />
     <ClInclude Include="include\assimp\version.h" />
+    <ClInclude Include="src\Component\Skybox.h" />
     <ClInclude Include="src\Component\Material.h" />
     <ClInclude Include="src\Core\Time.h" />
     <ClInclude Include="src\Render\Renderer.h" />
@@ -79,6 +81,8 @@
     <ClInclude Include="src\Render\Uniform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Render\CubeMap.cpp" />
+    <ClCompile Include="src\Component\Skybox.cpp" />
     <ClCompile Include="src\Component\Material.cpp" />
     <ClCompile Include="src\Core\Time.cpp" />
     <ClCompile Include="src\Render\Renderer.cpp" />

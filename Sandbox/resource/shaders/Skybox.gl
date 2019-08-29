@@ -1,0 +1,29 @@
+#define vertex
+#version 330 core
+
+layout (location = 0) in vec3 Position;
+
+out vec3 TexCoord;
+
+uniform mat4 uProjectionView;
+
+void main()
+{
+    TexCoord = Position;
+    gl_Position = uProjectionView * vec4(Position, 1.0);
+}  
+
+/*------------------------------------------------------------------------------*/
+#define fragment
+#version 330 core
+
+out vec4 FragColor;
+
+in vec3 TexCoord;
+
+uniform samplerCube uSkybox;
+
+void main()
+{    
+    FragColor = texture(uSkybox, TexCoord);
+}

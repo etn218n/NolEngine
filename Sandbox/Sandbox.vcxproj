@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shaders\LightSource.gl" />
+    <None Include="resource\shaders\Skybox.gl" />
     <None Include="resource\shaders\TestShader.gl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

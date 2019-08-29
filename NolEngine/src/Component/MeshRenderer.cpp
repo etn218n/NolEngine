@@ -18,9 +18,7 @@ namespace Nol
 		SetupSelectors();
 	}
 
-	MeshRenderer::MeshRenderer(const MeshRenderer& other) : 
-		mesh(other.mesh), 
-		shader(other.shader)
+	MeshRenderer::MeshRenderer(const MeshRenderer& other) : mesh(other.mesh), shader(other.shader), material(other.material)
 	{
 		SetupSelectors();
 	}
@@ -37,10 +35,10 @@ namespace Nol
 
 				for (unsigned int i = 0; i < mesh.NumberofTextures(); i++)
 				{
-					shader.SetUniformInt("uTexture" + std::to_string(i), (int)i);
+					shader.SetUniformInt(shader.uniform.Textures[i], (int)i);
 
 					glActiveTexture(GL_TEXTURE0 + i);
-					glBindTexture(GL_TEXTURE_2D, mesh.TextureList()[i].ID());
+					glBindTexture(mesh.TextureList()[i].Type(), mesh.TextureList()[i].ID());
 				}
 
 				glBindVertexArray(mesh.VAO());
@@ -56,10 +54,10 @@ namespace Nol
 
 				for (unsigned int i = 0; i < mesh.NumberofTextures(); i++)
 				{
-					shader.SetUniformInt("uTexture" + std::to_string(i), (int)i);
+					shader.SetUniformInt(shader.uniform.Textures[i], (int)i);
 
 					glActiveTexture(GL_TEXTURE0 + i);
-					glBindTexture(GL_TEXTURE_2D, mesh.TextureList()[i].ID());
+					glBindTexture(mesh.TextureList()[i].Type(), mesh.TextureList()[i].ID());
 				}
 
 				glBindVertexArray(mesh.VAO());

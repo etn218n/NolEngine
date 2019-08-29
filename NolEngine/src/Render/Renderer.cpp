@@ -20,6 +20,8 @@ namespace Nol
 
 	void Renderer::Update()
 	{
+		scene->mainCamera->Clear();
+
 		for (const auto& gameObject : scene->gameobjectList)
 		{
 			MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
@@ -31,7 +33,7 @@ namespace Nol
 
 			shader.Use();
 
-			shader.SetUniformVec4Ptr(shader.uniform.ViewProjection, glm::value_ptr(scene->mainCamera->ProjectionViewMatrix()));
+			shader.SetUniformVec4Ptr(shader.uniform.ProjectionView, glm::value_ptr(scene->mainCamera->ProjectionViewMatrix()));
 			shader.SetUniformVec4Ptr(shader.uniform.Model, gameObject->GetTransform()->DataPointer());
 
 			// temprorary optimization

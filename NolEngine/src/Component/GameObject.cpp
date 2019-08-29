@@ -4,6 +4,14 @@
 namespace Nol
 {
 	unsigned int GameObject::NextID = 1;
+	
+	/*GameObject::GameObject() : name("None"), id(NextID++), transform(std::make_unique<Transform>())
+	{
+		transform->owner = this;
+
+		componentMap.insert({ std::type_index(typeid(Transform)), this->transform });
+	}*/
+
 
 	GameObject::GameObject(const std::string& name) : name(name), id(NextID++), transform(std::make_unique<Transform>())
 	{

@@ -8,7 +8,6 @@
 #include "Render/Shader.h"
 
 #include "Component/Component.h"
-#include "Component/Camera.h"
 #include "Component/GameObject.h"
 #include "Component/Material.h"
 
@@ -36,7 +35,7 @@ namespace Nol
 		NOL_API inline const Shader& GetShader() const { return shader; };
 		NOL_API inline const Material& GetMaterial() const { return material; };
 
-		NOL_API inline void Render() { drawFn(); }
+		NOL_API inline void Render() const { drawFn(); }
 
 	private:
 		void SetupSelectors();

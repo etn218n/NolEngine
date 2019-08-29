@@ -20,11 +20,11 @@ namespace Nol
 		out vec2 VertexTexCoord;
 
 		uniform mat4 uModel;
-		uniform mat4 uViewProjection;
+		uniform mat4 uProjectionView;
 
 		void main()
 		{
-			gl_Position    = uViewProjection * uModel * vec4(Position, 1.0);
+			gl_Position    = uProjectionView * uModel * vec4(Position, 1.0);
 			VertexNormal   = Normal;
 			VertexTexCoord = TexCoord;
 		})";
@@ -64,12 +64,13 @@ namespace Nol
 	public:
 		NOL_API Shader();
 		NOL_API Shader(const std::string& filePath);
+		NOL_API Shader(const std::string& vertexSource, const std::string& fragmentSource);
 		NOL_API Shader(const Shader& other);
 		NOL_API virtual ~Shader() = default;
 		
 		NOL_API inline void Use() const { glUseProgram(*id); }
 
-		NOL_API inline const unsigned int ID() const { return *id; }
+		NOL_API inline unsigned int ID() const { return *id; }
 		NOL_API inline const std::string& VertexSource()   const { return vertexSource;   }
 		NOL_API inline const std::string& FragmentSource() const { return fragmentSource; }
 

@@ -18,6 +18,7 @@
 
 #include "Render/Renderer.h"
 #include "Render/Texture.h"
+#include "Render/CubeMap.h"
 #include "Render/Shader.h"
 #include "Render/Scene.h"
 #include "Render/Mesh.h"

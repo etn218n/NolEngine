@@ -23,6 +23,13 @@ namespace Nol
 		SetupUniform();
 	}
 
+	Shader::Shader(const std::string& vertexSource, const std::string& fragmentSource) : vertexSource(vertexSource), fragmentSource(fragmentSource)
+	{
+		CreateShaderProgram();
+
+		SetupUniform();
+	}
+
 	Shader::Shader(const Shader & other) : 
 		fragmentSource(other.fragmentSource),
 		vertexSource(other.vertexSource),
@@ -140,7 +147,7 @@ namespace Nol
 	void Shader::SetupUniform()
 	{
 		uniform.Model = glGetUniformLocation(*id, "uModel");
-		uniform.ViewProjection = glGetUniformLocation(*id, "uViewProjection");
+		uniform.ProjectionView = glGetUniformLocation(*id, "uProjectionView");
 
 		uniform.Material.Ambient   = glGetUniformLocation(*id, "uMaterial.Ambient");
 		uniform.Material.Diffuse   = glGetUniformLocation(*id, "uMaterial.Diffuse");
@@ -150,9 +157,12 @@ namespace Nol
 		uniform.CameraPosition = glGetUniformLocation(*id, "uCameraPosition");
 		uniform.NumberofLights = glGetUniformLocation(*id, "uNumberofLights");
 
+		uniform.Color = glGetUniformLocation(*id, "uColor");
+
 		for (int i = 0; i < MaxLights; i++)
 		{
 			std::string index = std::to_string(i);
+
 			uniform.Lights[i].Type      = glGetUniformLocation(*id, std::string("uLight["+index+"].Type").c_str());
 			uniform.Lights[i].Color	    = glGetUniformLocation(*id, std::string("uLight["+index+"].Color").c_str());
 			uniform.Lights[i].Position  = glGetUniformLocation(*id, std::string("uLight["+index+"].Position").c_str());
@@ -164,6 +174,13 @@ namespace Nol
 
 			uniform.Lights[i].Cutoff      = glGetUniformLocation(*id, std::string("uLight["+index+"].Cutoff").c_str());
 			uniform.Lights[i].OuterCutoff = glGetUniformLocation(*id, std::string("uLight["+index+"].OuterCutoff").c_str());
+		}
+
+		for (int i = 0; i < MaxTexures; i++)
+		{
+			std::string index = std::to_string(i);
+
+			uniform.Textures[i] = glGetUniformLocation(*id, std::string("uTexture" + index).c_str());
 		}
 	}
 }

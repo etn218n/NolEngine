@@ -27,12 +27,12 @@ namespace Nol
 		unsigned int ebo;
 
 	public:
-		NOL_API Mesh(const std::vector<Vertex>& vertices);
-		NOL_API Mesh(const std::vector<float>& vertices);
-		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures);
-		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<Texture> textures);
+		NOL_API Mesh(const std::vector<Vertex>& vertices, bool isPositionOnly = false);
+		NOL_API Mesh(const std::vector<float>& vertices,  bool isPositionOnly = false);
+		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures, bool isPositionOnly = false);
+		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<Texture> textures, bool isPositionOnly = false);
 		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
-		NOL_API Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
+		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<unsigned int>& indices);
 		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture> textures);
 		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<unsigned int>& indices, const std::vector<Texture> textures);
 		NOL_API Mesh(const Mesh& other);
@@ -49,7 +49,7 @@ namespace Nol
 		NOL_API inline unsigned int NumberofTextures() const { return textures.size();  }
 
 	private:
-		void GenerateMesh(const float* vertices, const unsigned int* indices);
+		void GenerateMesh(const float* vertices, const unsigned int* indices, bool isPositionOnly);
 	};
 }
 

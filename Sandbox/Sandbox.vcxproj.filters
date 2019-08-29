@@ -24,5 +24,6 @@
     <None Include="resource\shaders\TestShader.gl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="resource\shaders\Skybox.gl" />
   </ItemGroup>
 </Project>

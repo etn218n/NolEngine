@@ -3,36 +3,52 @@
 
 namespace Nol
 {
-	Mesh::Mesh(const std::vector<Vertex>& vertices)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, bool isPositionOnly)
 	{
 		numberofVertices = vertices.size();
 		numberofIndices = 0;
 
-		GenerateMesh((const float*)vertices.data(), nullptr);
+		GenerateMesh((const float*)vertices.data(), nullptr, isPositionOnly);
 	}
 
-	Mesh::Mesh(const std::vector<float>& vertices)
+	Mesh::Mesh(const std::vector<float>& vertices, bool isPositionOnly)
 	{
-		numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
-		numberofIndices = 0;
+		if (isPositionOnly)
+		{
+			numberofVertices = vertices.size() / 3;
+			numberofIndices = 0;
+		}
+		else
+		{
+			numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
+			numberofIndices = 0;
+		}
 
-		GenerateMesh(vertices.data(), nullptr);
+		GenerateMesh(vertices.data(), nullptr, isPositionOnly);
 	}
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures) : textures(textures)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures, bool isPositionOnly) : textures(textures)
 	{
 		numberofVertices = vertices.size();
 		numberofIndices  = 0;
 
-		GenerateMesh((const float*)vertices.data(), nullptr);
+		GenerateMesh((const float*)vertices.data(), nullptr, isPositionOnly);
 	}
 
-	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<Texture> textures) : textures(textures)
+	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<Texture> textures, bool isPositionOnly) : textures(textures)
 	{
-		numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
-		numberofIndices  = 0;
+		if (isPositionOnly)
+		{
+			numberofVertices = vertices.size() / 3;
+			numberofIndices = 0;
+		}
+		else
+		{
+			numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
+			numberofIndices = 0;
+		}
 
-		GenerateMesh(vertices.data(), nullptr);
+		GenerateMesh(vertices.data(), nullptr, isPositionOnly);
 	}
 
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
@@ -40,7 +56,7 @@ namespace Nol
 		numberofVertices = vertices.size();
 		numberofIndices = indices.size();
 
-		GenerateMesh((const float*)vertices.data(), indices.data());
+		GenerateMesh((const float*)vertices.data(), indices.data(), false);
 	}
 
 	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
@@ -48,7 +64,7 @@ namespace Nol
 		numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
 		numberofIndices = indices.size();
 
-		GenerateMesh(vertices.data(), indices.data());
+		GenerateMesh(vertices.data(), indices.data(), false);
 	}
 
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture> textures) : textures(textures)
@@ -56,7 +72,7 @@ namespace Nol
 		numberofVertices = vertices.size();
 		numberofIndices  = indices.size();
 
-		GenerateMesh((const float*)vertices.data(), indices.data());
+		GenerateMesh((const float*)vertices.data(), indices.data(), false);
 	}
 
 	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture> textures) : textures(textures)
@@ -64,7 +80,7 @@ namespace Nol
 		numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
 		numberofIndices  = indices.size();
 
-		GenerateMesh(vertices.data(), indices.data());
+		GenerateMesh(vertices.data(), indices.data(), false);
 	}
 
 	Mesh::Mesh(const Mesh& other) :
@@ -75,7 +91,7 @@ namespace Nol
 		vbo(other.vbo),
 		ebo(other.ebo) {}
 
-	void Mesh::GenerateMesh(const float* vertices, const unsigned int* indices)
+	void Mesh::GenerateMesh(const float* vertices, const unsigned int* indices, bool isPositionOnly)
 	{
 		unsigned int newVAO;
 
@@ -96,18 +112,30 @@ namespace Nol
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberofIndices * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 		}
 
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, numberofVertices * sizeof(Vertex), vertices, GL_STATIC_DRAW);
+		if (isPositionOnly)
+		{
+			glGenBuffers(1, &vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, numberofVertices * sizeof(float) * 3, vertices, GL_STATIC_DRAW);
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Position)));
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)(offsetof(Vertex, Position)));
+		}
+		else
+		{
+			glGenBuffers(1, &vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, numberofVertices * sizeof(Vertex), vertices, GL_STATIC_DRAW);
 
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Normal)));
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Position)));
 
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, TexCoord)));
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, Normal)));
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, TexCoord)));
+		}
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
