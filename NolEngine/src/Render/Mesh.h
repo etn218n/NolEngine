@@ -27,8 +27,12 @@ namespace Nol
 		unsigned int ebo;
 
 	public:
+		NOL_API Mesh(const std::vector<Vertex>& vertices);
+		NOL_API Mesh(const std::vector<float>& vertices);
 		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures);
 		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<Texture> textures);
+		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+		NOL_API Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
 		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture> textures);
 		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<unsigned int>& indices, const std::vector<Texture> textures);
 		NOL_API Mesh(const Mesh& other);

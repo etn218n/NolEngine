@@ -12,7 +12,7 @@ void Bar(Nol::Window* window, Keycode keycode)
 }
 
 const int NumberofLights = 10;
-const int NumberofCubes  = 100;
+const int NumberofCubes  = 0;
 
 struct FireFly
 {
@@ -104,7 +104,7 @@ int main()
 	Shader lightSourceShader("./resource/shaders/LightSource.gl");
 
 	Mesh cubeMesh(cubeVertices, { wallTexture });
-	Mesh planeMesh(planeVertices, { 0, 1, 2, 1, 3, 2 }, { });
+	Mesh planeMesh(planeVertices, { 0, 1, 2, 1, 3, 2 });
 	
 	MeshRenderer cubeMeshRenderer(cubeMesh, testShader);
 	MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
@@ -127,10 +127,10 @@ int main()
 		Light* light = new Light(LightType::PointLight);
 		light->AddComponent<MeshRenderer>(lightMeshRenderer);
 		light->SetColor(glm::vec3(r, g, b));
-		light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
+		light->GetTransform()->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
 		light->GetComponent<MeshRenderer>()->SetUniformsFn([light](const Shader& shader)
 		{
-			shader.SetUniformVec4("uColor", light->Color());
+			shader.SetUniformVec4(shader.uniform.Color, light->Color());
 		});
 
 		FireFly fireFly;
@@ -145,16 +145,6 @@ int main()
 	plane->AddComponent<MeshRenderer>(planeMeshRenderer);
 	plane->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -3.0f));
 	plane->GetTransform()->Scale(glm::vec3(10.0f, 10.0f, 1.0f));
-
-	Light* light = new Light(LightType::PointLight);
-	light->AddComponent<MeshRenderer>(lightMeshRenderer);
-	light->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-	light->GetTransform()->Rotate(180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
-	light->GetComponent<MeshRenderer>()->SetUniformsFn([&light](const Shader& shader)
-	{
-		shader.SetUniformVec4("uColor", light->Color());
-	});
 
 	std::vector<GameObject*> cubes;
 	cubes.reserve(20);
@@ -182,23 +172,39 @@ int main()
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetMainCamera(camera);
+	scene->AddGameObject(plane);
 
 	/*cubes[0]->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 0.0f));
-	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));*/
+	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));
 	cubes[1]->SetParent(cubes[0]);
-	cubes[2]->SetParent(cubes[1]);
+	cubes[2]->SetParent(cubes[1]);*/
+
+	/*for (int i = 0; i < NumberofCubes; i++)
+		scene->AddGameObject(cubes[i]);*/
+
+	//Test::LoadModel("./resource/models/scene.fbx");
 
 	for (int i = 0; i < NumberofLights; i++)
 		scene->AddGameObject(lights[i]);
 
-	for (int i = 0; i < NumberofCubes; i++)
-		scene->AddGameObject(cubes[i]);
-	
-	scene->AddGameObject(plane);
-	
-	Renderer renderer(scene);
+	Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
+	{
+		switch (keycode)
+		{
+		case Keycode::Alpha0: scene->Contain(lights[0]) ? scene->RemoveGameObject(lights[0]) : scene->AddGameObject(lights[0]); break;
+		case Keycode::Alpha1: scene->Contain(lights[1]) ? scene->RemoveGameObject(lights[1]) : scene->AddGameObject(lights[1]); break;
+		case Keycode::Alpha2: scene->Contain(lights[2]) ? scene->RemoveGameObject(lights[2]) : scene->AddGameObject(lights[2]); break;
+		case Keycode::Alpha3: scene->Contain(lights[3]) ? scene->RemoveGameObject(lights[3]) : scene->AddGameObject(lights[3]); break;
+		case Keycode::Alpha4: scene->Contain(lights[4]) ? scene->RemoveGameObject(lights[4]) : scene->AddGameObject(lights[4]); break;
+		case Keycode::Alpha5: scene->Contain(lights[5]) ? scene->RemoveGameObject(lights[5]) : scene->AddGameObject(lights[5]); break;
+		case Keycode::Alpha6: scene->Contain(lights[6]) ? scene->RemoveGameObject(lights[6]) : scene->AddGameObject(lights[6]); break;
+		case Keycode::Alpha7: scene->Contain(lights[7]) ? scene->RemoveGameObject(lights[7]) : scene->AddGameObject(lights[7]); break;
+		case Keycode::Alpha8: scene->Contain(lights[8]) ? scene->RemoveGameObject(lights[8]) : scene->AddGameObject(lights[8]); break;
+		case Keycode::Alpha9: scene->Contain(lights[9]) ? scene->RemoveGameObject(lights[9]) : scene->AddGameObject(lights[9]); break;
+		}
+	});
 
-	//Test::LoadModel("./resource/models/scene.fbx");
+	Renderer renderer(scene);
 
 	win1->OnUpdate.Subcribe([&](Window* window) 
 	{ 
@@ -223,14 +229,6 @@ int main()
 			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, 0.01f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::DownArrow))
 			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, -0.01f, 0.0f));
-
-		if (Input::IfKeyPressed(Keycode::G))
-			cubes[1]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-
-		if (Input::IfKeyPressed(Keycode::P))
-			cubes[1]->SetParent(cubes[0]);
-		else if (Input::IfKeyPressed(Keycode::O))
-			cubes[1]->SetParent(nullptr);
 
 		for (int i = 0; i < NumberofLights; i++)
 		{

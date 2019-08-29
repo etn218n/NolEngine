@@ -28,44 +28,36 @@ namespace Nol
 		mainCamera = camera;
 	}
 
-	void Scene::AddGameObject(GameObject* gameObject)
+	void Scene::AddGameObject(GameObject* addedGameObject)
 	{
-		for (const auto& gameObj : gameobjectList)
+		for (const auto& gameobject : gameobjectList)
 		{
-			if (gameObj->ID() == gameObject->ID())
+			if (gameobject->ID() == addedGameObject->ID())
 			{
-				WARN("GameObject is already contained in scene.");
+				WARN("GameObject is already contained in this scene.");
 				return;
 			}
 		}
 
-		Light* light = dynamic_cast<Light*>(gameObject);
+		Light* addedLight = dynamic_cast<Light*>(addedGameObject);
 
-		if (light != nullptr)
-			lightList.push_back(static_cast<Light*>(gameObject));
+		if (addedLight != nullptr)
+			lightList.push_back(static_cast<Light*>(addedGameObject));
 
-		/*MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
-
-		if (meshRenderer == nullptr)
-		{
-			INFO("GameObject does not have MeshRenderer component.");
-			return;
-		}*/
-
-		gameobjectList.push_back(gameObject);
+		gameobjectList.push_back(addedGameObject);
 	}
 
-	void Scene::RemoveGameObject(GameObject* gameObject)
+	void Scene::RemoveGameObject(GameObject* removedGameObject)
 	{
-		Light* light = dynamic_cast<Light*>(gameObject);
+		Light* removedLight = dynamic_cast<Light*>(removedGameObject);
 
-		if (light != nullptr)
+		if (removedLight != nullptr)
 		{
 			lightList.erase(
 				std::remove_if(lightList.begin(), lightList.end(),
-					[gameObject](const Light* light)
+					[removedGameObject](const Light* light)
 					{
-						return (light->ID() == gameObject->ID());
+						return (light->ID() == removedGameObject->ID());
 					}),
 					lightList.end());
 		}
@@ -73,10 +65,32 @@ namespace Nol
 		// Revisit this later
 		gameobjectList.erase(
 			std::remove_if(gameobjectList.begin(), gameobjectList.end(),
-				[gameObject](const GameObject* gameObj)
+				[removedGameObject](const GameObject* gameobject)
 				{ 
-					return (gameObj->ID() == gameObject->ID()); 
+					return (gameobject->ID() == removedGameObject->ID());
 				}),
 			gameobjectList.end());
+	}
+
+	bool Scene::Contain(GameObject* searchedGameObject)
+	{
+		for (const auto& gameobject : gameobjectList)
+		{
+			if (gameobject->ID() == searchedGameObject->ID())
+				return true;
+		}
+
+		Light* searchedLight = dynamic_cast<Light*>(searchedGameObject);
+
+		if (searchedLight != nullptr)
+		{
+			for (const auto& light : lightList)
+			{
+				if (searchedLight->ID() == light->ID())
+					return true;
+			}
+		}
+
+		return false;
 	}
 }

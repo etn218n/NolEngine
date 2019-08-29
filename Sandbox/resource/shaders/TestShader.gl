@@ -89,7 +89,7 @@ void main()
 vec3 DirectionalLighting(Light light)
 {
 	vec3 lightDirection = normalize(-light.Direction);  
-	float diffuseIntensity = max(dot(Vertex.Normal, lightDirection), 0);
+	float diffuseIntensity = max(dot(Vertex.Normal, lightDirection), 0) + 0.1f;
 
 	vec3 reflectDirection = reflect(-lightDirection, Vertex.Normal);
 	float specularIntensity = pow(max(dot(reflectDirection, normalize(uCameraPosition - Vertex.FragmentPosition)), 0), uMaterial.Shininess);

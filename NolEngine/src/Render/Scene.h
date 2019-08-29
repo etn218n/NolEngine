@@ -26,8 +26,9 @@ namespace Nol
 		NOL_API virtual ~Scene() = default;
 
 		NOL_API void SetMainCamera(Camera* camera);
-		NOL_API void AddGameObject(GameObject* gameObject);
-		NOL_API void RemoveGameObject(GameObject* gameObject);
+		NOL_API void AddGameObject(GameObject* addedGameObject);
+		NOL_API void RemoveGameObject(GameObject* removedGameObject);
+		NOL_API bool Contain(GameObject* searchedGameObject);
 
 		NOL_API inline const int NumberofGameObjects() const { return gameobjectList.size(); }
 	};

@@ -3,6 +3,22 @@
 
 namespace Nol
 {
+	Mesh::Mesh(const std::vector<Vertex>& vertices)
+	{
+		numberofVertices = vertices.size();
+		numberofIndices = 0;
+
+		GenerateMesh((const float*)vertices.data(), nullptr);
+	}
+
+	Mesh::Mesh(const std::vector<float>& vertices)
+	{
+		numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
+		numberofIndices = 0;
+
+		GenerateMesh(vertices.data(), nullptr);
+	}
+
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures) : textures(textures)
 	{
 		numberofVertices = vertices.size();
@@ -17,6 +33,22 @@ namespace Nol
 		numberofIndices  = 0;
 
 		GenerateMesh(vertices.data(), nullptr);
+	}
+
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+	{
+		numberofVertices = vertices.size();
+		numberofIndices = indices.size();
+
+		GenerateMesh((const float*)vertices.data(), indices.data());
+	}
+
+	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
+	{
+		numberofVertices = vertices.size() / (sizeof(Vertex) / sizeof(float));
+		numberofIndices = indices.size();
+
+		GenerateMesh(vertices.data(), indices.data());
 	}
 
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture> textures) : textures(textures)

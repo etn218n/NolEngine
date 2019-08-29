@@ -8,6 +8,8 @@ typedef struct uniform
 	int Model;
 	int ViewProjection;
 
+	int Color;
+
 	struct _Material
 	{
 		int Ambient;
