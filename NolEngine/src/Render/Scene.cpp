@@ -45,6 +45,9 @@ namespace Nol
 			lightList.push_back(static_cast<Light*>(addedGameObject));
 
 		gameobjectList.push_back(addedGameObject);
+
+		for (auto const& child : addedGameObject->ChildList())
+			AddGameObject(child);
 	}
 
 	void Scene::RemoveGameObject(GameObject* removedGameObject)
@@ -70,6 +73,9 @@ namespace Nol
 					return (gameobject->ID() == removedGameObject->ID());
 				}),
 			gameobjectList.end());
+
+		for (auto const& child : removedGameObject->ChildList())
+			RemoveGameObject(child);
 	}
 
 	bool Scene::Contain(GameObject* searchedGameObject)

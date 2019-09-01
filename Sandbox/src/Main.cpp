@@ -12,7 +12,7 @@ void Bar(Nol::Window* window, Keycode keycode)
 }
 
 const int NumberofLights = 10;
-const int NumberofCubes  = 3;
+const int NumberofCubes  = 0;
 
 struct FireFly
 {
@@ -94,7 +94,6 @@ int main()
 
 	Window* win1 = new Window("First", 800, 600);
 	win1->OnKeyPressed.Subcribe(Bar);
-	win1->SetBackgroundColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	win1->SetVsync(true);
 
 	win1->Update();
@@ -170,29 +169,43 @@ int main()
 
 	Camera* camera = new Camera();
 	camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 13.0f));
+	camera->ClearColor = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
 
-	Camera* camera2 = new Camera();
-	camera2->GetTransform()->Translate(glm::vec3(5.0f, 0.0f, 13.0f));
-	camera2->GetTransform()->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	//Camera* camera2 = new Camera();
+	//camera2->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 13.0f));
+	//camera2->GetTransform()->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
 	scene->SetMainCamera(camera);
-	scene->AddGameObject(plane);
-	scene->AddGameObject(cubes[0]);
+	//scene->AddGameObject(plane);
 
-	cubes[0]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	/*cubes[0]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));
 	cubes[1]->SetParent(cubes[0]);
-	cubes[2]->SetParent(cubes[1]);
+	cubes[2]->SetParent(cubes[1]);*/
+
+	//scene->AddGameObject(cubes[0]);
 
 	/*for (int i = 0; i < NumberofCubes; i++)
 		scene->AddGameObject(cubes[i]);*/
 
-	//Test::LoadModel("./resource/models/scene.fbx");
+	GameObject* crysis = Model::GenerateModel("./resource/models/scene.fbx", testShader);
+
+	scene->AddGameObject(crysis);
+
+	/*for (auto& gameobj : Model::GameObjectList)
+	{
+		scene->AddGameObject(gameobj);
+		MeshRenderer* rn = gameobj->GetComponent<MeshRenderer>();
+
+		INFO("VAO: {0} | ShaderID: {1}", rn->GetMesh().VAO(), rn->GetShader().ID());
+	}*/
+
+
+	INFO("{0}", scene->NumberofGameObjects());
 
 	for (int i = 0; i < NumberofLights; i++)
 		scene->AddGameObject(lights[i]);
-
 
 	Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
 	{
@@ -216,26 +229,26 @@ int main()
 	win1->OnUpdate.Subcribe([&](Window* window) 
 	{ 
 		if (Input::IfKeyDown(Keycode::A))
-			camera->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(-0.1f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::D))
-			camera->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(0.1f, 0.0f, 0.0f));
 
 		if (Input::IfKeyDown(Keycode::W))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -0.01f));
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.1f, -0.0f));
 		else if (Input::IfKeyDown(Keycode::S))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.01f));
+			camera->GetTransform()->Translate(glm::vec3(0.0f, -0.1f, 0.0f));
 			
 		if (Input::IfKeyPressed(Keycode::F1))
 			win1->SetVsync(!win1->IsVsyncEnabled());
 
 		if (Input::IfKeyDown(Keycode::LeftArrow))
-			cubes[0]->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
+			crysis->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::RightArrow))
-			cubes[0]->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
+			crysis->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::UpArrow))
-			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, 0.01f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -0.1f));
 		else if (Input::IfKeyDown(Keycode::DownArrow))
-			cubes[1]->GetTransform()->Translate(glm::vec3(0.0f, -0.01f, 0.0f));
+			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.1f));
 
 		if (Input::IfKeyPressed(Keycode::J))
 			camera->SetClearType(ClearType::Skybox);

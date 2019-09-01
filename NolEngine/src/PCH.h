@@ -5,7 +5,6 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
-#include <Windows.h>
 
 #include <typeinfo>
 #include <typeindex>

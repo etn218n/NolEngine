@@ -1,7 +1,7 @@
 #pragma once
 
 const unsigned int MaxLights  = 20;
-const unsigned int MaxTexures = 10;
+const unsigned int MaxTexures = 32;
 
 typedef struct uniform
 {

@@ -83,13 +83,13 @@ namespace Nol
 		GenerateMesh(vertices.data(), indices.data(), false);
 	}
 
-	Mesh::Mesh(const Mesh& other) :
+	/*Mesh::Mesh(const Mesh& other) :
 		numberofVertices(other.numberofVertices),
 		numberofIndices(other.numberofIndices),
 		textures(other.textures),
 		vao(other.vao),
 		vbo(other.vbo),
-		ebo(other.ebo) {}
+		ebo(other.ebo) {}*/
 
 	void Mesh::GenerateMesh(const float* vertices, const unsigned int* indices, bool isPositionOnly)
 	{
@@ -146,6 +146,7 @@ namespace Nol
 			glDeleteBuffers(1, &vbo);
 			glDeleteBuffers(1, &ebo);
 			glDeleteVertexArrays(1, &(*vao));
+			INFO("Successful to delete mesh. (VAO: {0})", *vao);
 		});
 
 		INFO("Successful to generate mesh. (VAO: {0})", *vao);

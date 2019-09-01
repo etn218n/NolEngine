@@ -28,7 +28,7 @@ namespace Nol
 
 		clearColorFn = [this]() 
 		{
-			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+			glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
 			glClear(clearflagMask);
 		};
 
@@ -51,7 +51,7 @@ namespace Nol
 			glDepthMask(GL_TRUE);
 		};
 
-		clearFnSelector = clearSkyboxFn;
+		clearFnSelector = clearColorFn;
 	}
 
 	void Camera::SetPerspectiveView(float fov, float aspectRatio, float nearPlane, float farPlane)

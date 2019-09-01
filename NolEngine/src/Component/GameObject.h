@@ -22,8 +22,8 @@ namespace Nol
 		unsigned int id;
 
 	public:
-		//NOL_API GameObject();
-		NOL_API GameObject(const std::string& name = "None");
+		NOL_API GameObject();
+		NOL_API GameObject(const std::string& name);
 		NOL_API GameObject(const GameObject& other) = delete;
 		NOL_API virtual ~GameObject() = default;
 
@@ -48,6 +48,8 @@ namespace Nol
 		NOL_API void RemoveChild(GameObject* removedChild);
 
 		NOL_API inline unsigned int ID() const { return id; }
+
+		NOL_API inline const std::list<GameObject*>& ChildList() const { return childList; }
 
 		NOL_API inline Transform* GetTransform() const { return transform.get();     }
 		NOL_API inline int NumberofComponents()  const { return componentMap.size(); }

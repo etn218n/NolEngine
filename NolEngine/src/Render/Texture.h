@@ -40,6 +40,7 @@ namespace Nol
 		TextureType type;		
 		
 	public:
+		NOL_API Texture(TextureType type, unsigned char* data);
 		NOL_API Texture(TextureType type, const std::string& filePath); // use default texture setting
 		NOL_API Texture(TextureType type, const std::string& filePath, TextureSetting setting);
 		NOL_API virtual ~Texture() = default;
@@ -58,5 +59,6 @@ namespace Nol
 	private:
 		unsigned char* LoadTexture(const std::string& filePath);
 		void GenerateTexture();
+		void GenerateTexture(unsigned char* data);
 	};
 }

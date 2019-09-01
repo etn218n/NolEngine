@@ -28,3 +28,4 @@
 #include "Component/Transform.h"
 #include "Component/Camera.h"
 #include "Component/Material.h"
+#include "Component/Model.h"

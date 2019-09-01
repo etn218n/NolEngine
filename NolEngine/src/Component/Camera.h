@@ -17,12 +17,13 @@ namespace Nol
 
 	class Camera : public GameObject
 	{
+	public:
+		glm::vec4 ClearColor;
+
 	private:
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
 		glm::mat4 projectionViewMatrix;
-
-		glm::vec4 clearColor;
 
 		Skybox skybox;
 

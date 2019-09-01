@@ -35,7 +35,6 @@ namespace Nol
 		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<unsigned int>& indices);
 		NOL_API Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture> textures);
 		NOL_API Mesh(const std::vector<float>& vertices,  const std::vector<unsigned int>& indices, const std::vector<Texture> textures);
-		NOL_API Mesh(const Mesh& other);
 		NOL_API virtual ~Mesh() = default;
 
 		NOL_API inline unsigned int VAO() const { return *vao; }

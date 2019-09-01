@@ -39,7 +39,6 @@ namespace Nol
 		std::string title;
 		unsigned int width;
 		unsigned int height;
-		glm::vec4 backgroundColor;
 		bool isVsyncEnabled;
 		bool isClosed;
 
@@ -51,8 +50,6 @@ namespace Nol
 		NOL_API void Update();
 		NOL_API void Close();
 		NOL_API void SetVsync(bool val);
-
-		NOL_API inline void SetBackgroundColor(const glm::vec4& color) { backgroundColor = color; }
 
 		NOL_API inline GLFWwindow* GetGLFWWindow() const { return glfwWindow;	  }
 		NOL_API inline const std::string& Title()  const { return title;		  }
