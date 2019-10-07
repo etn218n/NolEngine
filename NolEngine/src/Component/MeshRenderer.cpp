@@ -33,17 +33,17 @@ namespace Nol
 			{
 				uploadUniformFn(shader);
 
-				for (unsigned int i = 0; i < mesh.NumberofTextures(); i++)
+				for (size_t i = 0; i < mesh.NumberofTextures(); i++)
 				{
 					shader.SetUniformInt(shader.uniform.Textures[i], (int)i);
 
-					glActiveTexture(GL_TEXTURE0 + i);
+					glActiveTexture(GL_TEXTURE0 + (int)i);
 					glBindTexture(mesh.TextureList()[i].Type(), mesh.TextureList()[i].ID());
 				}
 
 				glBindVertexArray(mesh.VAO());
 
-				glDrawArrays(GL_TRIANGLES, 0, mesh.NumberofVertices());
+				glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh.NumberofVertices());
 			};
 		}
 		else
@@ -52,17 +52,17 @@ namespace Nol
 			{
 				uploadUniformFn(shader);
 
-				for (unsigned int i = 0; i < mesh.NumberofTextures(); i++)
+				for (size_t i = 0; i < mesh.NumberofTextures(); i++)
 				{
 					shader.SetUniformInt(shader.uniform.Textures[i], (int)i);
 
-					glActiveTexture(GL_TEXTURE0 + i);
+					glActiveTexture(GL_TEXTURE0 + (int)i);
 					glBindTexture(mesh.TextureList()[i].Type(), mesh.TextureList()[i].ID());
 				}
 
 				glBindVertexArray(mesh.VAO());
 
-				glDrawElements(GL_TRIANGLES, mesh.NumberofIndices(), GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, (GLsizei)mesh.NumberofIndices(), GL_UNSIGNED_INT, 0);
 			};
 		}
 	}

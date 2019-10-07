@@ -118,12 +118,12 @@ namespace Nol
 		if (activeWindow == nullptr)
 			return false;
 
-		return stateArray[(int)keycode] == KeyState::Up|| stateArray[(int)keycode] == KeyState::Released;
+		return stateArray[(int)keycode] == KeyState::Up || stateArray[(int)keycode] == KeyState::Released;
 	}
 
 	void Input::UpdateInputState(double timeStamp)
 	{
-		for (int i = 0; i < holdKeys.size(); i++)
+		for (size_t i = 0; i < holdKeys.size(); i++)
 		{
 			if (holdKeys[i].first == KeyState::Pressed)
 			{
@@ -135,7 +135,7 @@ namespace Nol
 			}
 		}
 
-		for (int i = indexOfUpdatedKeys.size() - 1; i >= 0; i--)
+		for (size_t i = indexOfUpdatedKeys.size(); i-- > 0;)
 		{
 			int keyIndex = indexOfUpdatedKeys[i];
 

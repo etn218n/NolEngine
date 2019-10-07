@@ -116,7 +116,7 @@ int main()
 	std::vector<FireFly> fireFlies;
 	fireFlies.reserve(20);
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	for (int i = 0; i < NumberofLights; i++)
 	{

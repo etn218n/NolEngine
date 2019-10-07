@@ -20,8 +20,8 @@ namespace Nol
 	{
 	private:
 		std::vector<Texture> textures;
-		unsigned int numberofVertices;
-		unsigned int numberofIndices;
+		size_t numberofVertices;
+		size_t numberofIndices;
 		std::shared_ptr<unsigned int> vao;
 		unsigned int vbo;
 		unsigned int ebo;
@@ -43,9 +43,9 @@ namespace Nol
 
 		NOL_API inline const std::vector<Texture>& TextureList() const { return textures; }
 
-		NOL_API inline unsigned int NumberofVertices() const { return numberofVertices; }
-		NOL_API inline unsigned int NumberofIndices()  const { return numberofIndices;  }
-		NOL_API inline unsigned int NumberofTextures() const { return textures.size();  }
+		NOL_API inline size_t NumberofVertices() const { return numberofVertices; }
+		NOL_API inline size_t NumberofIndices()  const { return numberofIndices;  }
+		NOL_API inline size_t NumberofTextures() const { return textures.size();  }
 
 	private:
 		void GenerateMesh(const float* vertices, const unsigned int* indices, bool isPositionOnly);

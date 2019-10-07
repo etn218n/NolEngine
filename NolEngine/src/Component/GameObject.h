@@ -52,7 +52,7 @@ namespace Nol
 		NOL_API inline const std::list<GameObject*>& ChildList() const { return childList; }
 
 		NOL_API inline Transform* GetTransform() const { return transform.get();     }
-		NOL_API inline int NumberofComponents()  const { return componentMap.size(); }
+		NOL_API inline size_t NumberofComponents()  const { return componentMap.size(); }
 		NOL_API inline const std::string& Name() const { return name; }
 	};
 }

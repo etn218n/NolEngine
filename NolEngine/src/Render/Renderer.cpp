@@ -50,7 +50,7 @@ namespace Nol
 
 			shader.SetUniformVec3(shader.uniform.CameraPosition, scene->mainCamera->GetTransform()->Position());
 
-			shader.SetUniformInt(shader.uniform.NumberofLights, scene->lightList.size());
+			shader.SetUniformInt(shader.uniform.NumberofLights, (int)scene->lightList.size());
 
 			for (int i = 0; i < scene->lightList.size(); i++)
 			{

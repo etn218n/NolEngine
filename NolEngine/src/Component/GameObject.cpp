@@ -52,7 +52,7 @@ namespace Nol
 
 	void GameObject::RemoveChild(GameObject* removedChild)
 	{
-		int originalSize = childList.size();
+		size_t originalSize = childList.size();
 
 		childList.erase(
 			std::remove_if(childList.begin(), childList.end(),

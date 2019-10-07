@@ -30,7 +30,7 @@ namespace Nol
 		NOL_API void RemoveGameObject(GameObject* removedGameObject);
 		NOL_API bool Contain(GameObject* searchedGameObject);
 
-		NOL_API inline const int NumberofGameObjects() const { return gameobjectList.size(); }
+		NOL_API inline size_t NumberofGameObjects() const { return gameobjectList.size(); }
 	};
 }
 

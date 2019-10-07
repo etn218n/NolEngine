@@ -93,7 +93,7 @@ namespace Nol
 
 	void Camera::ClearFlags()
 	{
-		for (int i = flags.size() - 1; i <= 0; i--)
+		for (size_t i = flags.size() - 1; i-- < 0;)
 		{
 			glDisable(flags[i]);
 			flags.pop_back();
