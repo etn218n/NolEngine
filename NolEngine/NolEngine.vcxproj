@@ -136,13 +136,13 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{AAFF8979-4742-4495-91FF-D7FD4F4EFABB}</ProjectGuid>
     <RootNamespace>NolEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -182,6 +182,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)NolEngine\src;$(SolutionDir)NolEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /y "$(OutDir)NolEngine.dll" "$(SolutionDir)Sandbox\bin\$(Configuration)\"</Command>
