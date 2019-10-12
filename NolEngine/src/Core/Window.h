@@ -45,7 +45,9 @@ namespace Nol
 	public:
 		NOL_API Window(const std::string& title = "Untitled", unsigned int width = 800, unsigned int height = 600, bool isVsyncEnable = false);
 		NOL_API Window(const Window& other) = delete;
-		NOL_API virtual ~Window() = default;
+		NOL_API virtual ~Window() { Close(); }
+
+		NOL_API inline void Bind() { glfwMakeContextCurrent(this->glfwWindow); }
 
 		NOL_API void Update();
 		NOL_API void Close();

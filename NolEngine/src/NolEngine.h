@@ -10,6 +10,7 @@
 #include "Core/Log.h"
 #include "Core/Time.h"
 #include "Core/Window.h"
+#include "Core/Engine.h"
 
 #include "Event/Observable.h"
 

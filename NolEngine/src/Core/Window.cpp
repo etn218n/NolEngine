@@ -49,7 +49,7 @@ namespace Nol
 
 		double currentTime = glfwGetTime();
 
-		glfwMakeContextCurrent(this->glfwWindow);
+		//glfwMakeContextCurrent(this->glfwWindow);
 
 		// For testing purpose
 		OnUpdate.Publish(this);

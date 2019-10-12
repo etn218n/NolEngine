@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Component\Model.h" />
     <ClInclude Include="src\Render\CubeMap.h" />
     <ClInclude Include="include\assimp\ai_assert.h" />
@@ -82,6 +83,7 @@
     <ClInclude Include="src\Render\Uniform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Component\Model.cpp" />
     <ClCompile Include="src\Render\CubeMap.cpp" />
     <ClCompile Include="src\Component\Skybox.cpp" />
