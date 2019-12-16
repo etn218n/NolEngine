@@ -5,15 +5,18 @@ namespace Nol
 {
 	#pragma region <Initialization>
 	/*-------------------------------------------------------------------------------------------------------*/
-	Window::Window(const std::string& title, unsigned int width, unsigned int height, bool isVsyncEnabled) :
+	Window::Window(const std::string& title, unsigned int width, unsigned int height, bool isVsyncEnabled, GLFWwindow* sharedContextWindow) :
 		title(title), width(width), height(height), isVsyncEnabled(isVsyncEnabled), isClosed(false)
 	{
-		glfwInit();
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		if (sharedContextWindow == nullptr)
+		{
+			glfwInit();
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		}
 
-		glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+		glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, sharedContextWindow);
 
 		if (glfwWindow == nullptr)
 		{
@@ -34,9 +37,9 @@ namespace Nol
 
 		SetupWindowEvent();
 
-		SetVsync(isVsyncEnabled);
-
 		glfwMakeContextCurrent(NULL);
+
+		SetVsync(isVsyncEnabled);
 	}
 
 	void Window::SetupWindowEvent()
@@ -54,7 +57,6 @@ namespace Nol
 
 			if (isFocused)
 			{
-				Input::UpdateInputState(glfwGetTime());
 				currentWindow->OnFocused.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window gained focus.", currentWindow->Title());
 			}
@@ -144,6 +146,8 @@ namespace Nol
 			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
 
 			currentWindow->OnPositionChanged.Publish(currentWindow, x, y);
+
+			INFO("(Window \"{0}\") Window moved to ({1}, {2}).", currentWindow->Title(), x, y);
 		});
 	}
 	/*-------------------------------------------------------------------------------------------------------*/
@@ -174,7 +178,7 @@ namespace Nol
 
 	void Window::SetVsync(bool val)
 	{
-		glfwMakeContextCurrent(this->glfwWindow);
+		glfwMakeContextCurrent(glfwWindow);
 
 		if (val == true)
 			glfwSwapInterval(1);

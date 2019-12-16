@@ -11,10 +11,9 @@ namespace Nol
 {
 	class Engine
 	{
-	public:
-		NOL_API static Window* GameWindow;
-
 	private:
+		static Window* gameWindow;
+		static Window* testWindow;
 		static bool isRunning;
 
 	public:
@@ -24,12 +23,12 @@ namespace Nol
 		NOL_API static Observable<> OnLateUpdate;
 		NOL_API static Observable<> OnRender;
 
-		NOL_API static bool IsRunning() { return isRunning; }
+		NOL_API inline static Window* GameWindow() { return gameWindow; }
+		NOL_API inline static bool IsRunning()	   { return isRunning;  }
 
 	public:
 		NOL_API static void Start();
-		NOL_API static void GameLoop();
+		NOL_API static void Update();
 		NOL_API static void Stop();
 	};
 }
-

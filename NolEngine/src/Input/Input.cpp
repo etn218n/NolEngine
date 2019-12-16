@@ -21,11 +21,7 @@ namespace Nol
 
 	glm::vec2 Input::mousePosition;
 
-	// TODO: unreliable code since it depends on initialization order of compiler
-	// Need a system to init this Input::instance
-	Input* Input::instance = new Input();
-
-	Input::Input()
+	void Input::Init()
 	{
 		indexOfUpdatedKeys.reserve(10);
 		holdKeys.reserve(10);
@@ -99,7 +95,7 @@ namespace Nol
 
 	#pragma region <Core Functionalities>
 	/*-------------------------------------------------------------------------------------------------------*/
-	void Input::UpdateInputState(double timeStamp)
+	void Input::Update(double timeStamp)
 	{
 		for (size_t i = 0; i < holdKeys.size(); i++)
 		{

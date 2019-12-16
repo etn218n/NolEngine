@@ -6,7 +6,8 @@ namespace Nol
 	#pragma region <Initialization>
 	/*-------------------------------------------------------------------------------------------------------*/
 	bool Engine::isRunning = false;
-	Window* Engine::GameWindow = nullptr;
+	Window* Engine::gameWindow = nullptr;
+	Window* Engine::testWindow = nullptr;
 
 	Observable<> Engine::OnAwake;
 	Observable<> Engine::OnUpdate;
@@ -28,36 +29,50 @@ namespace Nol
 
 		isRunning = true;
 
+		Input::Init();
 		Log::Init();
 
-		GameWindow = new Window();
-		GameWindow->SetVsync(true);
-		GameWindow->Bind();
-
-		GameLoop();
-	}
-
-	void Engine::GameLoop()
-	{
+		gameWindow = new Window("Game", 800, 600, false, nullptr);
+		gameWindow->Bind();
 		OnAwake.Publish();
 
+		/*testWindow = new Window("Test", 800, 600, false, gameWindow->GetGLFWWindow());
+		testWindow->Bind();
+		OnAwake.Publish();*/
+
+		Update();
+	}
+
+	void Engine::Update()
+	{
 		while (isRunning)
 		{
-			if (!GameWindow->IsClosed())
+			double currentTime = glfwGetTime();
+
+			OnFixedUpdate.Publish();
+			OnUpdate.Publish();
+			OnLateUpdate.Publish();
+
+			if (!gameWindow->IsClosed())
 			{
-				OnUpdate.Publish();
-
-				// TODO: define fixed update
-				OnFixedUpdate.Publish();
-
-				OnLateUpdate.Publish();
+				gameWindow->Bind();
 
 				OnRender.Publish();
 
-				Input::UpdateInputState(glfwGetTime());
-				GameWindow->Bind();
-				GameWindow->Update();
+				gameWindow->SwapBuffer();
 			}
+
+			/*if (!testWindow->IsClosed())
+			{
+				testWindow->Bind();
+
+				OnRender.Publish();
+
+				testWindow->SwapBuffer();
+			}	*/
+
+			Input::Update(currentTime);
+			glfwPollEvents();
 		}
 	}
 

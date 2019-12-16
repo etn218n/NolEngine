@@ -1,5 +1,4 @@
 #include <NolEngine.h>
-
 #include <stdlib.h> 
 #include <time.h> 
 
@@ -33,6 +32,8 @@ int main()
 
 	Engine::OnAwake.Subcribe([&]()
 	{
+			Engine::GameWindow()->OnKeyPressed.Subcribe(Bar);
+
 			std::vector<float> cubeVertices = {
 				/*   Position    */   /*    Normal    */    /*Texture*/
 			   -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f,  0.0f,
@@ -173,57 +174,36 @@ int main()
 			scene->AddGameObject(plane);
 
 			for (int i = 0; i < NumberofLights; i++)
-				scene->AddGameObject(lights[i]);
-
-			Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
-				{
-					switch (keycode)
-					{
-					case Keycode::Alpha0: scene->Contain(lights[0]) ? scene->RemoveGameObject(lights[0]) : scene->AddGameObject(lights[0]); break;
-					case Keycode::Alpha1: scene->Contain(lights[1]) ? scene->RemoveGameObject(lights[1]) : scene->AddGameObject(lights[1]); break;
-					case Keycode::Alpha2: scene->Contain(lights[2]) ? scene->RemoveGameObject(lights[2]) : scene->AddGameObject(lights[2]); break;
-					case Keycode::Alpha3: scene->Contain(lights[3]) ? scene->RemoveGameObject(lights[3]) : scene->AddGameObject(lights[3]); break;
-					case Keycode::Alpha4: scene->Contain(lights[4]) ? scene->RemoveGameObject(lights[4]) : scene->AddGameObject(lights[4]); break;
-					case Keycode::Alpha5: scene->Contain(lights[5]) ? scene->RemoveGameObject(lights[5]) : scene->AddGameObject(lights[5]); break;
-					case Keycode::Alpha6: scene->Contain(lights[6]) ? scene->RemoveGameObject(lights[6]) : scene->AddGameObject(lights[6]); break;
-					case Keycode::Alpha7: scene->Contain(lights[7]) ? scene->RemoveGameObject(lights[7]) : scene->AddGameObject(lights[7]); break;
-					case Keycode::Alpha8: scene->Contain(lights[8]) ? scene->RemoveGameObject(lights[8]) : scene->AddGameObject(lights[8]); break;
-					case Keycode::Alpha9: scene->Contain(lights[9]) ? scene->RemoveGameObject(lights[9]) : scene->AddGameObject(lights[9]); break;
-			}
-		});
+				scene->AddGameObject(lights[i]);	
 	});
 
-	
+	Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
+	{
+		switch (keycode)
+		{
+			case Keycode::Alpha0: scene->Contain(lights[0]) ? scene->RemoveGameObject(lights[0]) : scene->AddGameObject(lights[0]); break;
+			case Keycode::Alpha1: scene->Contain(lights[1]) ? scene->RemoveGameObject(lights[1]) : scene->AddGameObject(lights[1]); break;
+			case Keycode::Alpha2: scene->Contain(lights[2]) ? scene->RemoveGameObject(lights[2]) : scene->AddGameObject(lights[2]); break;
+			case Keycode::Alpha3: scene->Contain(lights[3]) ? scene->RemoveGameObject(lights[3]) : scene->AddGameObject(lights[3]); break;
+			case Keycode::Alpha4: scene->Contain(lights[4]) ? scene->RemoveGameObject(lights[4]) : scene->AddGameObject(lights[4]); break;
+			case Keycode::Alpha5: scene->Contain(lights[5]) ? scene->RemoveGameObject(lights[5]) : scene->AddGameObject(lights[5]); break;
+			case Keycode::Alpha6: scene->Contain(lights[6]) ? scene->RemoveGameObject(lights[6]) : scene->AddGameObject(lights[6]); break;
+			case Keycode::Alpha7: scene->Contain(lights[7]) ? scene->RemoveGameObject(lights[7]) : scene->AddGameObject(lights[7]); break;
+			case Keycode::Alpha8: scene->Contain(lights[8]) ? scene->RemoveGameObject(lights[8]) : scene->AddGameObject(lights[8]); break;
+			case Keycode::Alpha9: scene->Contain(lights[9]) ? scene->RemoveGameObject(lights[9]) : scene->AddGameObject(lights[9]); break;
+		}
+	});
 
 	Renderer renderer(scene);
 
 	Engine::OnUpdate.Subcribe([&]() 
 	{ 
-		/*if (Input::IfKeyDown(Keycode::A))
-			camera->GetTransform()->Translate(glm::vec3(-0.1f, 0.0f, 0.0f));
-		else if (Input::IfKeyDown(Keycode::D))
-			camera->GetTransform()->Translate(glm::vec3(0.1f, 0.0f, 0.0f));
-
-		if (Input::IfKeyDown(Keycode::W))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.1f, -0.0f));
-		else if (Input::IfKeyDown(Keycode::S))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, -0.1f, 0.0f));*/
-
 		if (Input::IfKeyPressed(Keycode::F1))
-			Engine::GameWindow->SetVsync(!Engine::GameWindow->IsVsyncEnabled());
+			INFO("Key pressed");
+	});
 
-		/*if (Input::IfKeyDown(Keycode::LeftArrow))
-			crysis->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
-		else if (Input::IfKeyDown(Keycode::RightArrow))
-			crysis->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));
-		else if (Input::IfKeyDown(Keycode::UpArrow))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, -0.1f));
-		else if (Input::IfKeyDown(Keycode::DownArrow))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 0.1f));
-
-		if (Input::IfKeyPressed(Keycode::J))
-			camera->SetClearType(ClearType::Skybox);*/
-
+	Engine::OnFixedUpdate.Subcribe([&]()
+	{
 		for (int i = 0; i < NumberofLights; i++)
 		{
 			float x = glm::cos(fireFlies[i].angle.x) * fireFlies[i].range.x;
@@ -234,7 +214,10 @@ int main()
 
 			lights[i]->GetTransform()->SetPosition(glm::vec3(x, y, z));
 		}
+	});
 
+	Engine::OnRender.Subcribe([&]() 
+	{
 		renderer.Update();
 	});
 

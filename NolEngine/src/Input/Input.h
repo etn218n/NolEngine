@@ -6,6 +6,7 @@
 #include "Input/Keycode.h"
 
 #include "Core/Log.h"
+#include "Core/Window.h"
 
 #include "Event/Observable.h"
 
@@ -28,8 +29,7 @@ namespace Nol
 		NOL_API static Observable<Keycode> OnMouseReleased;
 
 	private:
-		static Input*  instance;
-		static double  delayBeforeMouseHold;
+		static double delayBeforeMouseHold;
 		static KeyState stateArray[400];
 		static std::vector<int> indexOfUpdatedKeys;
 		static std::vector<std::pair<KeyState, double>> holdKeys;
@@ -51,9 +51,8 @@ namespace Nol
 		NOL_API static inline glm::vec2& GetMousePostion() { return mousePosition; }
 
 	private:
-		Input();
-
-		static void UpdateInputState(double timeStamp);
+		static void Init();
+		static void Update(double timeStamp);
 	};
 }
 
