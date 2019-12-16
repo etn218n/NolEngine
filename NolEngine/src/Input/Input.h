@@ -5,7 +5,6 @@
 
 #include "Input/Keycode.h"
 
-#include "Core/Window.h"
 #include "Core/Log.h"
 
 #include "Event/Observable.h"
@@ -17,6 +16,7 @@ namespace Nol
 	class Input
 	{
 	friend class Window;
+	friend class Engine;
 
 	public:
 		NOL_API static Observable<Keycode> OnKeyPressed;
@@ -29,12 +29,10 @@ namespace Nol
 
 	private:
 		static Input*  instance;
-		static Window* activeWindow;
 		static double  delayBeforeMouseHold;
 		static KeyState stateArray[400];
 		static std::vector<int> indexOfUpdatedKeys;
 		static std::vector<std::pair<KeyState, double>> holdKeys;
-
 		static glm::vec2 mousePosition;
 
 	public:

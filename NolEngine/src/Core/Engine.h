@@ -11,9 +11,11 @@ namespace Nol
 {
 	class Engine
 	{
+	public:
+		NOL_API static Window* GameWindow;
+
 	private:
-		static bool IsRunning;
-		static Window* MainWindow;
+		static bool isRunning;
 
 	public:
 		NOL_API static Observable<> OnAwake;
@@ -21,6 +23,8 @@ namespace Nol
 		NOL_API static Observable<> OnFixedUpdate;
 		NOL_API static Observable<> OnLateUpdate;
 		NOL_API static Observable<> OnRender;
+
+		NOL_API static bool IsRunning() { return isRunning; }
 
 	public:
 		NOL_API static void Start();

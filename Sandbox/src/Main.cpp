@@ -23,50 +23,7 @@ struct FireFly
 
 int main()
 {
-	
-
-	
-
-	/*Log::Init();
-
-	Window* win1 = new Window("First", 800, 600);
-	win1->OnKeyPressed.Subcribe(Bar);
-	win1->SetVsync(true);
-
-	win1->Update();*/
-
-	
-	
-
-	//Camera* camera2 = new Camera();
-	//camera2->GetTransform()->Translate(glm::vec3(3.0f, 0.0f, 13.0f));
-	//camera2->GetTransform()->Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>("Example");
-	
-	
-
-	/*cubes[0]->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	cubes[2]->GetTransform()->Translate(glm::vec3(-3.0f, 0.0f, 0.0f));
-	cubes[1]->SetParent(cubes[0]);
-	cubes[2]->SetParent(cubes[1]);*/
-
-	//scene->AddGameObject(cubes[0]);
-
-	/*for (int i = 0; i < NumberofCubes; i++)
-		scene->AddGameObject(cubes[i]);*/
-
-	//GameObject* crysis = Model::GenerateModel("./resource/models/scene.fbx", testShader);
-
-	
-
-	/*for (auto& gameobj : Model::GameObjectList)
-	{
-		scene->AddGameObject(gameobj);
-		MeshRenderer* rn = gameobj->GetComponent<MeshRenderer>();
-
-		INFO("VAO: {0} | ShaderID: {1}", rn->GetMesh().VAO(), rn->GetShader().ID());
-	}*/
 
 	std::vector<Light*> lights;
 	lights.reserve(20);
@@ -155,19 +112,12 @@ int main()
 			MeshRenderer lightMeshRenderer(cubeMesh, lightSourceShader);
 			MeshRenderer planeMeshRenderer(planeMesh, testShader);
 
-			
-
 			srand((unsigned int)time(NULL));
-
-
 
 			GameObject* plane = new GameObject();
 
-
 			std::vector<GameObject*> cubes;
 			cubes.reserve(20);
-
-
 
 			Camera* camera = new Camera();
 
@@ -257,12 +207,12 @@ int main()
 		if (Input::IfKeyDown(Keycode::W))
 			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.1f, -0.0f));
 		else if (Input::IfKeyDown(Keycode::S))
-			camera->GetTransform()->Translate(glm::vec3(0.0f, -0.1f, 0.0f));
-			
-		if (Input::IfKeyPressed(Keycode::F1))
-			win1->SetVsync(!win1->IsVsyncEnabled());
+			camera->GetTransform()->Translate(glm::vec3(0.0f, -0.1f, 0.0f));*/
 
-		if (Input::IfKeyDown(Keycode::LeftArrow))
+		if (Input::IfKeyPressed(Keycode::F1))
+			Engine::GameWindow->SetVsync(!Engine::GameWindow->IsVsyncEnabled());
+
+		/*if (Input::IfKeyDown(Keycode::LeftArrow))
 			crysis->GetTransform()->Translate(glm::vec3(-0.01f, 0.0f, 0.0f));
 		else if (Input::IfKeyDown(Keycode::RightArrow))
 			crysis->GetTransform()->Translate(glm::vec3(0.01f, 0.0f, 0.0f));

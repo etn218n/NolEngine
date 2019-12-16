@@ -3,30 +3,36 @@
 
 namespace Nol
 {
-	bool Engine::IsRunning = false;
-	Window* Engine::MainWindow = nullptr;
+	#pragma region <Initialization>
+	/*-------------------------------------------------------------------------------------------------------*/
+	bool Engine::isRunning = false;
+	Window* Engine::GameWindow = nullptr;
 
 	Observable<> Engine::OnAwake;
 	Observable<> Engine::OnUpdate;
 	Observable<> Engine::OnFixedUpdate;
 	Observable<> Engine::OnLateUpdate;
 	Observable<> Engine::OnRender;
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
 
+	#pragma region <Core Functionalities>
+	/*-------------------------------------------------------------------------------------------------------*/
 	void Engine::Start()
 	{
-		if (IsRunning)
+		if (isRunning)
 		{
 			WARN("Engine is already started.");
 			return;
 		}
 
-		IsRunning = true;
+		isRunning = true;
 
 		Log::Init();
 
-		MainWindow = new Window();
-		MainWindow->SetVsync(true);
-		MainWindow->Bind();
+		GameWindow = new Window();
+		GameWindow->SetVsync(true);
+		GameWindow->Bind();
 
 		GameLoop();
 	}
@@ -35,30 +41,36 @@ namespace Nol
 	{
 		OnAwake.Publish();
 
-		while (IsRunning)
+		while (isRunning)
 		{
-			if (!MainWindow->IsClosed())
-				MainWindow->Update();
+			if (!GameWindow->IsClosed())
+			{
+				OnUpdate.Publish();
 
-			OnUpdate.Publish();
+				// TODO: define fixed update
+				OnFixedUpdate.Publish();
 
-			// define fixed update
-			OnFixedUpdate.Publish();
+				OnLateUpdate.Publish();
 
-			OnLateUpdate.Publish();
+				OnRender.Publish();
 
-			OnRender.Publish();
+				Input::UpdateInputState(glfwGetTime());
+				GameWindow->Bind();
+				GameWindow->Update();
+			}
 		}
 	}
 
 	void Engine::Stop()
 	{
-		if (!IsRunning)
+		if (!isRunning)
 		{
 			WARN("Engine has not started.");
 			return;
 		}
 
-		IsRunning = false;
+		isRunning = false;
 	}
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
 }

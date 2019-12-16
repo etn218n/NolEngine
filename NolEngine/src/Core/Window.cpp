@@ -3,6 +3,8 @@
 
 namespace Nol
 {
+	#pragma region <Initialization>
+	/*-------------------------------------------------------------------------------------------------------*/
 	Window::Window(const std::string& title, unsigned int width, unsigned int height, bool isVsyncEnabled) :
 		title(title), width(width), height(height), isVsyncEnabled(isVsyncEnabled), isClosed(false)
 	{
@@ -34,65 +36,12 @@ namespace Nol
 
 		SetVsync(isVsyncEnabled);
 
-		Input::activeWindow = this;
-
-		glfwMakeContextCurrent(NULL);
-	}
-
-	void Window::Update()
-	{
-		if (isClosed)
-		{
-			WARN("(Window \"{0}\") Trying to update a closed window.", title);
-			return;
-		}
-
-		double currentTime = glfwGetTime();
-
-		//glfwMakeContextCurrent(this->glfwWindow);
-
-		// For testing purpose
-		OnUpdate.Publish(this);
-
-		if (Input::activeWindow == this)
-			Input::UpdateInputState(currentTime);
-
-		glfwSwapBuffers(glfwWindow);
-		glfwPollEvents();
-	}
-
-	void Window::Close()
-	{
-		if (isClosed)
-		{
-			WARN("(Window \"{0}\") Window is already closed.", title);
-			return;
-		}
-
-		OnClosed.Publish(this);
-		isClosed = true;
-		glfwDestroyWindow(glfwWindow);
-
-		INFO("(Window \"{0}\") Window successfully close.", title);
-	}
-
-	void Window::SetVsync(bool val)
-	{
-		glfwMakeContextCurrent(this->glfwWindow);
-
-		if (val == true)
-			glfwSwapInterval(1);
-		else
-			glfwSwapInterval(0);
-
-		isVsyncEnabled = val;
-
 		glfwMakeContextCurrent(NULL);
 	}
 
 	void Window::SetupWindowEvent()
 	{
-		glfwSetWindowCloseCallback(this->glfwWindow, [](GLFWwindow* win) 
+		glfwSetWindowCloseCallback(this->glfwWindow, [](GLFWwindow* win)
 		{
 			Window* currentWindow = static_cast<Window*>(glfwGetWindowUserPointer(win));
 
@@ -105,15 +54,12 @@ namespace Nol
 
 			if (isFocused)
 			{
-				Input::activeWindow = currentWindow;
 				Input::UpdateInputState(glfwGetTime());
 				currentWindow->OnFocused.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window gained focus.", currentWindow->Title());
 			}
 			else
 			{
-				Input::activeWindow = nullptr;
-				WARN("Input::activeWindow is NULL.");
 				currentWindow->OnLostFocus.Publish(currentWindow);
 				INFO("(Window \"{0}\") Window lost focus.", currentWindow->Title());
 			}
@@ -140,7 +86,7 @@ namespace Nol
 					currentWindow->OnMousePressed.Publish(currentWindow, (Keycode)button);
 					Input::stateArray[button] = KeyState::Pressed;
 					Input::indexOfUpdatedKeys.push_back(button);
-					Input::holdKeys[button].first  = KeyState::Pressed;
+					Input::holdKeys[button].first = KeyState::Pressed;
 					Input::holdKeys[button].second = glfwGetTime();
 					Input::OnMousePressed.Publish((Keycode)button);
 					break;
@@ -200,4 +146,45 @@ namespace Nol
 			currentWindow->OnPositionChanged.Publish(currentWindow, x, y);
 		});
 	}
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
+
+	#pragma region <Core Functionalities>
+	/*-------------------------------------------------------------------------------------------------------*/
+	void Window::Update()
+	{
+		glfwSwapBuffers(glfwWindow);
+		glfwPollEvents();
+	}
+
+	void Window::Close()
+	{
+		if (isClosed)
+		{
+			WARN("(Window \"{0}\") Window is already closed.", title);
+			return;
+		}
+
+		OnClosed.Publish(this);
+		isClosed = true;
+		glfwDestroyWindow(glfwWindow);
+
+		INFO("(Window \"{0}\") Window successfully close.", title);
+	}
+
+	void Window::SetVsync(bool val)
+	{
+		glfwMakeContextCurrent(this->glfwWindow);
+
+		if (val == true)
+			glfwSwapInterval(1);
+		else
+			glfwSwapInterval(0);
+
+		isVsyncEnabled = val;
+
+		glfwMakeContextCurrent(NULL);
+	}	
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
 }

@@ -31,9 +31,6 @@ namespace Nol
 		Observable<Window*, Keycode> OnMousePressed;
 		Observable<Window*, Keycode> OnMouseReleased;
 
-		// For testing purpose
-		Observable<Window*> OnUpdate;
-
 	private:
 		GLFWwindow* glfwWindow;
 		std::string title;

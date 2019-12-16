@@ -3,8 +3,8 @@
 
 namespace Nol
 {
-	Window* Input::activeWindow = nullptr;
-
+	#pragma region <Initializtion>
+	/*-------------------------------------------------------------------------------------------------------*/
 	double Input::delayBeforeMouseHold = 0.2;
 
 	Observable<Keycode> Input::OnKeyPressed;
@@ -36,36 +36,28 @@ namespace Nol
 		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Reserved Mouse button
 		holdKeys.push_back(std::pair<KeyState, double>(KeyState::Up, 0)); // Reserved Mouse button
 	}
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
 
+	#pragma region <Input Query Operations>
+	/*-------------------------------------------------------------------------------------------------------*/
 	bool Input::IfKeyPressed(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Pressed;
 	}
 
 	bool Input::IfKeyHold(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Hold;
 	}
-
+	
 	bool Input::IfKeyReleased(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Released;
 	}
 
 	bool Input::IfKeyDown(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Hold || 
 			   stateArray[(int)keycode] == KeyState::Down || 
 			   stateArray[(int)keycode] == KeyState::Pressed;
@@ -73,41 +65,26 @@ namespace Nol
 
 	bool Input::IfKeyUp(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Up || stateArray[(int)keycode] == KeyState::Released;
 	}
 
 	bool Input::IfMousePressed(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Pressed;
 	}
 
 	bool Input::IfMouseHold(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Hold;
 	}
 
 	bool Input::IfMouseReleased(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Released;
 	}
 
 	bool Input::IfMouseDown(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Hold ||
 			   stateArray[(int)keycode] == KeyState::Down ||
 			   stateArray[(int)keycode] == KeyState::Pressed;
@@ -115,12 +92,13 @@ namespace Nol
 
 	bool Input::IfMouseUp(Keycode keycode)
 	{
-		if (activeWindow == nullptr)
-			return false;
-
 		return stateArray[(int)keycode] == KeyState::Up || stateArray[(int)keycode] == KeyState::Released;
 	}
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
 
+	#pragma region <Core Functionalities>
+	/*-------------------------------------------------------------------------------------------------------*/
 	void Input::UpdateInputState(double timeStamp)
 	{
 		for (size_t i = 0; i < holdKeys.size(); i++)
@@ -147,4 +125,6 @@ namespace Nol
 			indexOfUpdatedKeys.pop_back();
 		}
 	}
+	/*-------------------------------------------------------------------------------------------------------*/
+	#pragma endregion
 }
