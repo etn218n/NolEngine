@@ -44,7 +44,7 @@ namespace Nol
 
 			glm::mat4 projectionView = projectionMatrix * glm::mat4(glm::mat3(viewMatrix));
 
-			shader.SetUniformVec4Ptr(shader.uniform.ProjectionView, glm::value_ptr(projectionView));
+			shader.SetProjectionViewMatrix(glm::value_ptr(projectionView));
 
 			skybox.Render();
 

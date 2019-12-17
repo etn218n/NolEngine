@@ -133,9 +133,11 @@ int main()
 				light->SetColor(glm::vec3(r, g, b));
 				light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
 				light->GetComponent<MeshRenderer>()->SetUniformsFn([light](const Shader& shader)
-					{
-						shader.SetUniformVec4(shader.uniform.Color, light->Color());
-					});
+				{
+					//shader.SetUniformVec4(shader.uniform.Color, light->Color());
+					//shader.SetMaterialColor(light->Color());
+					shader.SetColor(light->Color());
+				});
 
 				FireFly fireFly;
 				fireFly.range = glm::vec3((float)rand() / RAND_MAX + 4.5f, (float)rand() / RAND_MAX + 4.5f, (float)rand() / RAND_MAX + 4);
@@ -199,7 +201,7 @@ int main()
 	Engine::OnUpdate.Subcribe([&]() 
 	{ 
 		if (Input::IfKeyPressed(Keycode::F1))
-			INFO("Key pressed");
+			Engine::GameWindow()->SetVsync(!Engine::GameWindow()->IsVsyncEnabled());
 	});
 
 	Engine::OnFixedUpdate.Subcribe([&]()

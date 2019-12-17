@@ -30,6 +30,7 @@ void main()
 
 struct Material 
 {
+	vec4 Color;
     vec3 Ambient;
     vec3 Diffuse;
     vec3 Specular;
@@ -43,8 +44,8 @@ struct Light
 	vec3 Direction;
     vec3 Color;
 
-	float Cutoff;
-	float OuterCutoff;
+	float CutoffAngle;
+	float OuterCutoffAngle;
 	float Constant;
     float Linear;
     float Quadratic;
@@ -135,8 +136,8 @@ vec3 SpotLighting(Light light)
 	vec3 specular = light.Color * uMaterial.Specular * specularIntensity;
 		
 	float theta     = dot(lightDirection, normalize(-light.Direction)); 
-	float epsilon   = (light.Cutoff - light.OuterCutoff);
-	float intensity = clamp((theta - light.OuterCutoff) / epsilon, 0.0, 1.0);
+	float epsilon   = (light.CutoffAngle - light.OuterCutoffAngle);
+	float intensity = clamp((theta - light.OuterCutoffAngle) / epsilon, 0.0, 1.0);
 
 	diffuse  *= intensity;
 	specular *= intensity;

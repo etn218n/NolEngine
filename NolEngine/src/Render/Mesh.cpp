@@ -3,17 +3,17 @@
 
 namespace Nol
 {
-	Mesh::Mesh(const std::vector<Vertex>& vertices, bool isPositionOnly)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, bool hasPositionOnly)
 	{
 		numberofVertices = vertices.size();
 		numberofIndices = 0;
 
-		GenerateMesh((const float*)vertices.data(), nullptr, isPositionOnly);
+		GenerateMesh((const float*)vertices.data(), nullptr, hasPositionOnly);
 	}
 
-	Mesh::Mesh(const std::vector<float>& vertices, bool isPositionOnly)
+	Mesh::Mesh(const std::vector<float>& vertices, bool hasPositionOnly)
 	{
-		if (isPositionOnly)
+		if (hasPositionOnly)
 		{
 			numberofVertices = vertices.size() / 3;
 			numberofIndices = 0;
@@ -24,20 +24,20 @@ namespace Nol
 			numberofIndices = 0;
 		}
 
-		GenerateMesh(vertices.data(), nullptr, isPositionOnly);
+		GenerateMesh(vertices.data(), nullptr, hasPositionOnly);
 	}
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures, bool isPositionOnly) : textures(textures)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<Texture> textures, bool hasPositionOnly) : textures(textures)
 	{
 		numberofVertices = vertices.size();
 		numberofIndices  = 0;
 
-		GenerateMesh((const float*)vertices.data(), nullptr, isPositionOnly);
+		GenerateMesh((const float*)vertices.data(), nullptr, hasPositionOnly);
 	}
 
-	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<Texture> textures, bool isPositionOnly) : textures(textures)
+	Mesh::Mesh(const std::vector<float>& vertices, const std::vector<Texture> textures, bool hasPositionOnly) : textures(textures)
 	{
-		if (isPositionOnly)
+		if (hasPositionOnly)
 		{
 			numberofVertices = vertices.size() / 3;
 			numberofIndices = 0;
@@ -48,7 +48,7 @@ namespace Nol
 			numberofIndices = 0;
 		}
 
-		GenerateMesh(vertices.data(), nullptr, isPositionOnly);
+		GenerateMesh(vertices.data(), nullptr, hasPositionOnly);
 	}
 
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
@@ -91,7 +91,7 @@ namespace Nol
 		vbo(other.vbo),
 		ebo(other.ebo) {}*/
 
-	void Mesh::GenerateMesh(const float* vertices, const unsigned int* indices, bool isPositionOnly)
+	void Mesh::GenerateMesh(const float* vertices, const unsigned int* indices, bool hasPositionOnly)
 	{
 		unsigned int newVAO;
 
@@ -112,7 +112,7 @@ namespace Nol
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberofIndices * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 		}
 
-		if (isPositionOnly)
+		if (hasPositionOnly)
 		{
 			glGenBuffers(1, &vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);

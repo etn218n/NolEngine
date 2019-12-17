@@ -21,9 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shaders\LightSource.gl" />
+    <None Include="resource\shaders\Skybox.gl" />
     <None Include="resource\shaders\TestShader.gl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="resource\shaders\Skybox.gl" />
   </ItemGroup>
 </Project>

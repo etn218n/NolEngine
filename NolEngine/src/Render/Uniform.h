@@ -3,23 +3,22 @@
 const unsigned int MaxLights  = 20;
 const unsigned int MaxTexures = 32;
 
-typedef struct uniform
-{
+typedef struct matrixUniformLocation {
 	int Model;
 	int View;
 	int Projection;
 	int ProjectionView;
+} MatrixUniformLocation;
 
+typedef struct materialUniformLocation {
 	int Color;
+	int Ambient;
+	int Diffuse;
+	int Specular;
+	int Shininess;
+} MaterialUniformLocation;
 
-	struct _Material
-	{
-		int Ambient;
-		int Diffuse;
-		int Specular;
-		int Shininess;
-	};
-
+typedef struct lightUniformLocation {
 	struct _Light
 	{
 		int Type;
@@ -27,18 +26,22 @@ typedef struct uniform
 		int Direction;
 		int Color;
 
-		int Cutoff;
-		int OuterCutoff;
+		int CutoffAngle;
+		int OuterCutoffAngle;
 		int Constant;
 		int Linear;
 		int Quadratic;
 	};
 
 	_Light Lights[MaxLights];
-	_Material Material;
-
 	int NumberofLights;
-	int Textures[MaxTexures];
-	int CameraPosition;
+} LightUniformLocation;
 
-} Uniform;
+typedef struct textureUniformLocation {
+	int Textures[MaxTexures];
+} TextureUniformLocation;
+
+typedef struct generalUniformLocation {
+	int Color;
+	int CameraPosition;
+} GeneralUniformLocation;

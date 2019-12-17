@@ -35,7 +35,7 @@ namespace Nol
 
 				for (size_t i = 0; i < mesh.NumberofTextures(); i++)
 				{
-					shader.SetUniformInt(shader.uniform.Textures[i], (int)i);
+					shader.SetTextureIndex(i, (int)i);
 
 					glActiveTexture(GL_TEXTURE0 + (int)i);
 					glBindTexture(mesh.TextureList()[i].Type(), mesh.TextureList()[i].ID());
@@ -54,7 +54,7 @@ namespace Nol
 
 				for (size_t i = 0; i < mesh.NumberofTextures(); i++)
 				{
-					shader.SetUniformInt(shader.uniform.Textures[i], (int)i);
+					shader.SetTextureIndex(i, (int)i);
 
 					glActiveTexture(GL_TEXTURE0 + (int)i);
 					glBindTexture(mesh.TextureList()[i].Type(), mesh.TextureList()[i].ID());
