@@ -12,6 +12,11 @@ out vertex
 	vec3 FragmentPosition;
 } Vertex;
 
+layout (std140) uniform CameraBuffer
+{
+    mat4 ProjectionView;
+};
+
 uniform mat4 uModel;
 uniform mat4 uProjectionView;
 

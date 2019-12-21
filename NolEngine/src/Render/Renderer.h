@@ -4,23 +4,25 @@
 #include "NolAPI.h"
 
 #include "Scene.h"
-#include "Uniform.h"
+#include "UniformBuffer.h"
 
 namespace Nol
 {
 	class Renderer
 	{
 	private:
-		std::shared_ptr<Scene> scene;
+		static std::shared_ptr<Scene> activeScene;
+		static UniformBuffer* cameraBuffer;
 
 	public:
-		NOL_API Renderer() = default;
-		NOL_API Renderer(std::shared_ptr<Scene> scene);
-		NOL_API virtual ~Renderer() = default;
+		//NOL_API Renderer() = delete;
+		//NOL_API Renderer(std::shared_ptr<Scene> scene);
+		NOL_API static void Init();
+		//NOL_API virtual ~Renderer() = default;
 
-		NOL_API void SetScene(std::shared_ptr<Scene> scene);
+		NOL_API static void SetScene(std::shared_ptr<Scene> scene);
 
-		NOL_API void Update();
+		NOL_API static void Update();
 	};
 }
 

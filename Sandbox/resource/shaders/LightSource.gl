@@ -3,6 +3,11 @@
 
 layout(location = 0) in vec3 Position;
 
+layout (std140) uniform CameraBuffer
+{
+    mat4 ProjectionView;
+};
+
 uniform mat4 uModel;
 uniform mat4 uProjectionView;
 

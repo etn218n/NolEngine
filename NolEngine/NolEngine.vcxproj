@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Component\ObjectRenderer3D.h" />
+    <ClInclude Include="src\Render\ShaderTechnique.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Component\Model.h" />
     <ClInclude Include="src\Render\CubeMap.h" />
@@ -80,9 +82,14 @@
     <ClInclude Include="src\Core\Test.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Render\Texture.h" />
-    <ClInclude Include="src\Render\Uniform.h" />
+    <ClInclude Include="src\Render\UniformLocation.h" />
+    <ClInclude Include="src\Render\UniformBuffer.h" />
+    <ClInclude Include="src\Render\UniformPermutation.h" />
+    <ClInclude Include="src\Render\TextureHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Component\ObjectRenderer3D.cpp" />
+    <ClCompile Include="src\Render\ShaderTechnique.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Component\Model.cpp" />
     <ClCompile Include="src\Render\CubeMap.cpp" />
@@ -124,6 +131,8 @@
     </ClCompile>
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Render\Texture.cpp" />
+    <ClCompile Include="src\Render\UniformBuffer.cpp" />
+    <ClCompile Include="src\Render\TextureHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\assimp\color4.inl" />

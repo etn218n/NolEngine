@@ -33,11 +33,7 @@ namespace Nol
 	Shader::Shader(const Shader& other) :
 		fragmentSource(other.fragmentSource),
 		vertexSource(other.vertexSource),
-		lightUniformLocation(other.lightUniformLocation),
-		matrixUniformLocation(other.matrixUniformLocation),
-		generalUniformLocation(other.generalUniformLocation),
-		textureUniformLocation(other.textureUniformLocation),
-		materialUniformLocation(other.materialUniformLocation),
+		uniformLocation(other.uniformLocation),
 		id(other.id) {}
 
 	bool Shader::ParseShaderSource(const std::string& filePath)
@@ -150,44 +146,47 @@ namespace Nol
 
 	void Shader::SetupUniform()
 	{
-		matrixUniformLocation.View  = glGetUniformLocation(*id, "uView");
-		matrixUniformLocation.Model = glGetUniformLocation(*id, "uModel");
-		matrixUniformLocation.Projection	 = glGetUniformLocation(*id, "uProjection");
-		matrixUniformLocation.ProjectionView = glGetUniformLocation(*id, "uProjectionView");
+		uniformLocation.ViewMatrix  = glGetUniformLocation(*id, "uView");
+		uniformLocation.ModelMatrix = glGetUniformLocation(*id, "uModel");
+		uniformLocation.ProjectionMatrix	 = glGetUniformLocation(*id, "uProjection");
+		uniformLocation.ProjectionViewMatrix = glGetUniformLocation(*id, "uProjectionView");
 
-		materialUniformLocation.Color	  = glGetUniformLocation(*id, "uMaterial.Color");
-		materialUniformLocation.Ambient   = glGetUniformLocation(*id, "uMaterial.Ambient");
-		materialUniformLocation.Diffuse   = glGetUniformLocation(*id, "uMaterial.Diffuse");
-		materialUniformLocation.Specular  = glGetUniformLocation(*id, "uMaterial.Specular");
-		materialUniformLocation.Shininess = glGetUniformLocation(*id, "uMaterial.Shininess");
+		uniformLocation.Material.Color	   = glGetUniformLocation(*id, "uMaterial.Color");
+		uniformLocation.Material.Ambient   = glGetUniformLocation(*id, "uMaterial.Ambient");
+		uniformLocation.Material.Diffuse   = glGetUniformLocation(*id, "uMaterial.Diffuse");
+		uniformLocation.Material.Specular  = glGetUniformLocation(*id, "uMaterial.Specular");
+		uniformLocation.Material.Shininess = glGetUniformLocation(*id, "uMaterial.Shininess");
 
-		generalUniformLocation.CameraPosition = glGetUniformLocation(*id, "uCameraPosition");
-		generalUniformLocation.Color = glGetUniformLocation(*id, "uColor");
+		uniformLocation.CameraPosition = glGetUniformLocation(*id, "uCameraPosition");
+		uniformLocation.Color = glGetUniformLocation(*id, "uColor");
 
-		lightUniformLocation.NumberofLights = glGetUniformLocation(*id, "uNumberofLights");
+		unsigned int cameraBlockIndex = glGetUniformBlockIndex(*id, "CameraBuffer");
+		glUniformBlockBinding(*id, cameraBlockIndex, CameraBufferIndex);
 
-		for (int i = 0; i < MaxLights; i++)
+		uniformLocation.NumberofLights = glGetUniformLocation(*id, "uNumberofLights");
+
+		for (size_t i = 0; i < MaxNumberofLightSupported; i++)
 		{
 			std::string index = std::to_string(i);
 
-			lightUniformLocation.Lights[i].Type      = glGetUniformLocation(*id, std::string("uLight["+index+"].Type").c_str());
-			lightUniformLocation.Lights[i].Color	 = glGetUniformLocation(*id, std::string("uLight["+index+"].Color").c_str());
-			lightUniformLocation.Lights[i].Position  = glGetUniformLocation(*id, std::string("uLight["+index+"].Position").c_str());
-			lightUniformLocation.Lights[i].Direction = glGetUniformLocation(*id, std::string("uLight["+index+"].Direction").c_str());
+			uniformLocation.Light[i].Type      = glGetUniformLocation(*id, std::string("uLight["+index+"].Type").c_str());
+			uniformLocation.Light[i].Color	   = glGetUniformLocation(*id, std::string("uLight["+index+"].Color").c_str());
+			uniformLocation.Light[i].Position  = glGetUniformLocation(*id, std::string("uLight["+index+"].Position").c_str());
+			uniformLocation.Light[i].Direction = glGetUniformLocation(*id, std::string("uLight["+index+"].Direction").c_str());
 
-			lightUniformLocation.Lights[i].Constant  = glGetUniformLocation(*id, std::string("uLight["+index+"].Constant").c_str());
-			lightUniformLocation.Lights[i].Linear    = glGetUniformLocation(*id, std::string("uLight["+index+"].Linear").c_str());
-			lightUniformLocation.Lights[i].Quadratic = glGetUniformLocation(*id, std::string("uLight["+index+"].Quadratic").c_str());
+			uniformLocation.Light[i].Constant  = glGetUniformLocation(*id, std::string("uLight["+index+"].Constant").c_str());
+			uniformLocation.Light[i].Linear    = glGetUniformLocation(*id, std::string("uLight["+index+"].Linear").c_str());
+			uniformLocation.Light[i].Quadratic = glGetUniformLocation(*id, std::string("uLight["+index+"].Quadratic").c_str());
 
-			lightUniformLocation.Lights[i].CutoffAngle		= glGetUniformLocation(*id, std::string("uLight["+index+"].CutoffAngle").c_str());
-			lightUniformLocation.Lights[i].OuterCutoffAngle = glGetUniformLocation(*id, std::string("uLight["+index+"].OuterCutoffAngle").c_str());
+			uniformLocation.Light[i].CutoffAngle	  = glGetUniformLocation(*id, std::string("uLight["+index+"].CutoffAngle").c_str());
+			uniformLocation.Light[i].OuterCutoffAngle = glGetUniformLocation(*id, std::string("uLight["+index+"].OuterCutoffAngle").c_str());
 		}
 
-		for (int i = 0; i < MaxTexures; i++)
+		for (size_t i = 0; i < MaxNumberofTextureSupported; i++)
 		{
 			std::string index = std::to_string(i);
 
-			textureUniformLocation.Textures[i] = glGetUniformLocation(*id, std::string("uTexture" + index).c_str());
+			uniformLocation.Texture[i] = glGetUniformLocation(*id, std::string("uTexture" + index).c_str());
 		}
 	}
 }

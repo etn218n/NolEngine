@@ -29,16 +29,15 @@ namespace Nol
 
 		isRunning = true;
 
-		Input::Init();
 		Log::Init();
 
 		gameWindow = new Window("Game", 800, 600, false, nullptr);
 		gameWindow->Bind();
-		OnAwake.Publish();
 
-		/*testWindow = new Window("Test", 800, 600, false, gameWindow->GetGLFWWindow());
-		testWindow->Bind();
-		OnAwake.Publish();*/
+		Input::Init();
+		Renderer::Init();
+
+		OnAwake.Publish();
 
 		Update();
 	}
@@ -57,19 +56,11 @@ namespace Nol
 			{
 				gameWindow->Bind();
 
+				Renderer::Update();
 				OnRender.Publish();
 
 				gameWindow->SwapBuffer();
 			}
-
-			/*if (!testWindow->IsClosed())
-			{
-				testWindow->Bind();
-
-				OnRender.Publish();
-
-				testWindow->SwapBuffer();
-			}	*/
 
 			Input::Update(currentTime);
 			glfwPollEvents();

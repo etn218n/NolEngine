@@ -177,6 +177,8 @@ int main()
 
 			for (int i = 0; i < NumberofLights; i++)
 				scene->AddGameObject(lights[i]);	
+
+			Renderer::SetScene(scene);
 	});
 
 	Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
@@ -196,7 +198,7 @@ int main()
 		}
 	});
 
-	Renderer renderer(scene);
+	
 
 	Engine::OnUpdate.Subcribe([&]() 
 	{ 
@@ -218,10 +220,10 @@ int main()
 		}
 	});
 
-	Engine::OnRender.Subcribe([&]() 
+	/*Engine::OnRender.Subcribe([&]() 
 	{
-		renderer.Update();
-	});
+		Engine::GameRenderer()->Update();
+	});*/
 
 	Engine::Start();
 

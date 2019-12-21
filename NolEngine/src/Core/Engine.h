@@ -7,6 +7,8 @@
 
 #include "Event/Observable.h"
 
+#include "Render/Renderer.h"
+
 namespace Nol
 {
 	class Engine
@@ -24,7 +26,7 @@ namespace Nol
 		NOL_API static Observable<> OnRender;
 
 		NOL_API inline static Window* GameWindow() { return gameWindow; }
-		NOL_API inline static bool IsRunning()	   { return isRunning;  }
+		NOL_API inline static bool IsRunning() { return isRunning;  }
 
 	public:
 		NOL_API static void Start();

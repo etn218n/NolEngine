@@ -3,8 +3,22 @@
 
 namespace Nol
 {
-	Renderer::Renderer(std::shared_ptr<Scene> scene) : scene(scene)
+	std::shared_ptr<Scene> Renderer::activeScene = nullptr;
+	UniformBuffer* Renderer::cameraBuffer = nullptr;
+
+	/*Renderer::Renderer()
 	{
+		cameraBuffer = new UniformBuffer(sizeof(glm::mat4));
+	}
+
+	Renderer::Renderer(std::shared_ptr<Scene> activeScene) : Renderer()
+	{
+		SetScene(activeScene);
+	}*/
+
+	void Renderer::Init()
+	{
+		cameraBuffer = new UniformBuffer(sizeof(glm::mat4));
 	}
 
 	void Renderer::SetScene(std::shared_ptr<Scene> scene)
@@ -15,14 +29,18 @@ namespace Nol
 			return;
 		}
 
-		this->scene = scene;
+		activeScene = scene;
+
+		//cameraBuffer->UpdateData(sizeof(glm::mat4), glm::value_ptr(activeScene->mainCamera->ProjectionViewMatrix()));
+		cameraBuffer->BindToSlot(0);
 	}
 
 	void Renderer::Update()
 	{
-		scene->mainCamera->Clear();
+		activeScene->mainCamera->Clear();
+		//cameraBuffer->UpdateData(sizeof(glm::mat4), glm::value_ptr(activeScene->mainCamera->ProjectionViewMatrix()));
 
-		for (const auto& gameObject : scene->gameobjectList)
+		for (const auto& gameObject : activeScene->gameobjectList)
 		{
 			MeshRenderer* meshRenderer = gameObject->GetComponent<MeshRenderer>();
 
@@ -33,7 +51,7 @@ namespace Nol
 
 			shader.Use();
 
-			shader.SetProjectionViewMatrix(glm::value_ptr(scene->mainCamera->ProjectionViewMatrix()));
+			shader.SetProjectionViewMatrix(glm::value_ptr(activeScene->mainCamera->ProjectionViewMatrix()));
 			shader.SetModelMatrix(gameObject->GetTransform()->DataPointer());
 
 			// temprorary optimization
@@ -43,27 +61,27 @@ namespace Nol
 				continue;
 			}
 
-			shader.SetMaterialColor(meshRenderer->GetMaterial().Color());
-			shader.SetMaterialAmbient(meshRenderer->GetMaterial().Ambient());
-			shader.SetMaterialDiffuse(meshRenderer->GetMaterial().Diffuse());
-			shader.SetMaterialSpecular(meshRenderer->GetMaterial().Specular());
-			shader.SetMaterialShininess(meshRenderer->GetMaterial().Shininess());
+			shader.SetMaterialColor(meshRenderer->GetMaterial().Color);
+			shader.SetMaterialAmbient(meshRenderer->GetMaterial().Ambient);
+			shader.SetMaterialDiffuse(meshRenderer->GetMaterial().Diffuse);
+			shader.SetMaterialSpecular(meshRenderer->GetMaterial().Specular);
+			shader.SetMaterialShininess(meshRenderer->GetMaterial().Shininess);
 
-			shader.SetCameraPosition(scene->mainCamera->GetTransform()->Position());
+			shader.SetCameraPosition(activeScene->mainCamera->GetTransform()->Position());
 
-			shader.SetNumberofLights((int)scene->lightList.size());
+			shader.SetNumberofLights((int)activeScene->lightList.size());
 
-			for (int i = 0; i < scene->lightList.size(); i++)
+			for (int i = 0; i < activeScene->lightList.size(); i++)
 			{
 				std::string index = std::to_string(i);
 
-				switch (scene->lightList[i]->Type())
+				switch (activeScene->lightList[i]->Type())
 				{
 				case LightType::PointLight:
 					shader.SetLightType(i, (int)LightType::PointLight);
 
-					shader.SetLightColor(i, scene->lightList[i]->Color());
-					shader.SetLightPosition(i, scene->lightList[i]->GetTransform()->Position());
+					shader.SetLightColor(i, activeScene->lightList[i]->Color());
+					shader.SetLightPosition(i, activeScene->lightList[i]->GetTransform()->Position());
 
 					shader.SetLightConstant(i, 1.0f);
 					shader.SetLightLinear(i, 0.09f);
@@ -74,8 +92,8 @@ namespace Nol
 				case LightType::DirectionalLight:
 					shader.SetLightType(i, (int)LightType::DirectionalLight);
 
-					shader.SetLightColor(i, scene->lightList[i]->Color());
-					shader.SetLightPosition(i, scene->lightList[i]->GetTransform()->Position());
+					shader.SetLightColor(i, activeScene->lightList[i]->Color());
+					shader.SetLightPosition(i, activeScene->lightList[i]->GetTransform()->Position());
 
 					break;
 
@@ -89,8 +107,8 @@ namespace Nol
 					shader.SetLightLinear(i, 0.09f);
 					shader.SetLightQuadratic(i, 0.032f);
 
-					shader.SetLightColor(i, scene->lightList[i]->Color());
-					shader.SetLightPosition(i, scene->lightList[i]->GetTransform()->Position());
+					shader.SetLightColor(i, activeScene->lightList[i]->Color());
+					shader.SetLightPosition(i, activeScene->lightList[i]->GetTransform()->Position());
 
 					break;
 				}
