@@ -170,6 +170,13 @@ int main()
 			camera->GetTransform()->Translate(glm::vec3(0.0f, 0.0f, 13.0f));
 			camera->ClearColor = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
 
+			GameObject* crysis = Model::GenerateModel("./resource/models/scene.fbx", testShader);
+
+			scene->AddGameObject(crysis);
+
+			crysis->GetTransform()->SetPosition(glm::vec3(0.0f, -4.0f, -2.0f));
+			crysis->GetTransform()->Scale(glm::vec3(0.5f, 0.5f, 0.5f));
+
 			scene->SetMainCamera(camera);
 			scene->AddGameObject(plane);
 
