@@ -134,8 +134,6 @@ int main()
 				light->GetTransform()->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
 				light->GetComponent<MeshRenderer>()->SetUniformsFn([light](const Shader& shader)
 				{
-					//shader.SetUniformVec4(shader.uniform.Color, light->Color());
-					//shader.SetMaterialColor(light->Color());
 					shader.SetColor(light->Color());
 				});
 
@@ -179,6 +177,8 @@ int main()
 				scene->AddGameObject(lights[i]);	
 
 			Renderer::SetScene(scene);
+
+			Engine::GameWindow()->SetVsync(true);
 	});
 
 	Input::OnKeyPressed.Subcribe([&lights, scene](Keycode keycode)
@@ -219,11 +219,6 @@ int main()
 			lights[i]->GetTransform()->SetPosition(glm::vec3(x, y, z));
 		}
 	});
-
-	/*Engine::OnRender.Subcribe([&]() 
-	{
-		Engine::GameRenderer()->Update();
-	});*/
 
 	Engine::Start();
 
